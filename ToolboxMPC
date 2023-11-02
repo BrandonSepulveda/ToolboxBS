@@ -870,7 +870,7 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
-Write-Host "Toolbox MPC Version 1.0"
+Write-Host "Toolbox MPC Version 1.0" -ForegroundColor Red
 
 Write-Host "Hecho por Brandon Sepulveda"
 
