@@ -872,5 +872,5 @@ $Form.ShowDialog()
 
 Write-Host "Toolbox MPC Version 1.0" -ForegroundColor Red
 
-Write-Host "Hecho por Brandon Sepulveda prueba "
+Write-Host "Hecho por Brandon Sepulveda"
 
