@@ -1,0 +1,878 @@
+# Importar la clase Shell32
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+public class Shell32
+{
+    [DllImport("shell32.dll")]
+    public static extern IntPtr ExtractIcon(IntPtr hInst, string lpszExeFileName, int nIconIndex);
+}
+"@
+
+Add-Type -AssemblyName System.Windows.Forms
+
+$Form = New-Object System.Windows.Forms.Form
+$Form.Text = "Toolbox MPC Version 1.0" + [System.Environment]::NewLine +"                                                                                         Powered by: Brandon Sepulveda"
+$Form.Size = New-Object System.Drawing.Size(800, 600)
+$Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
+$Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+# Obtener el icono de la computadora de este equipo
+$icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero, "shell32.dll", 15))
+
+# Asignar el icono de la computadora de este equipo al formulario
+$form.Icon = $icon
+
+# Definir el color de fondo con transparencia
+# $backgroundColor = [System.Drawing.Color]::FromArgb(150, 0, 32, 96)  # Azul 
+
+$Form.BackColor = [System.Drawing.Color]::LightGray
+
+$Form.ForeColor = [System.Drawing.Color]::Black
+$Form.Font = New-Object System.Drawing.Font("Arial", 10)
+
+# Ajustar la opacidad del formulario
+$Form.Opacity = 1  # 
+
+
+$TabControl = New-Object System.Windows.Forms.TabControl
+
+
+$TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
+
+$Form.MaximizeBox = $false
+
+Write-Host "Toolbox MPC Version 1.0" -ForegroundColor Red
+
+Write-Host "Hecho por Brandon Sepulveda"
+
+
+# Sección "Informacion del Sistema"
+$TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
+$TabPage_InfoSistema.Text = "Informacion del Sistema" 
+$TabPage_InfoSistema.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+$Label_InfoSistema = New-Object System.Windows.Forms.Label
+$Label_InfoSistema.Text = "Informacion del Sistema:"
+$Label_InfoSistema.Location = New-Object System.Drawing.Point(50, 20)
+$Label_InfoSistema.Size = New-Object System.Drawing.Size(300, 20)
+$Label_InfoSistema.ForeColor = [System.Drawing.Color]::White
+$TabPage_InfoSistema.Controls.Add($Label_InfoSistema)
+
+$TextBox_InfoSistema = New-Object System.Windows.Forms.TextBox
+$TextBox_InfoSistema.Multiline = $true
+$TextBox_InfoSistema.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
+$TextBox_InfoSistema.Location = New-Object System.Drawing.Point(50, 50)
+$TextBox_InfoSistema.Size = New-Object System.Drawing.Size(710, 420)
+$TextBox_InfoSistema.AutoSize = $true
+$TextBox_InfoSistema.ForeColor = [System.Drawing.Color]::Black
+$TextBox_InfoSistema.BackColor = [System.Drawing.Color]::White
+$TextBox_InfoSistema.ReadOnly = $true
+$TabPage_InfoSistema.Controls.Add($TextBox_InfoSistema)
+
+
+# Obtener informacion del sistema
+$osVersion = (Get-WmiObject Win32_OperatingSystem).Caption
+$osArchitecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+$ramInstalled = (Get-WmiObject Win32_ComputerSystem).TotalPhysicalMemory
+$ramInstalledGB = [math]::Round($ramInstalled / 1GB, 2)
+$diskCapacity = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").Size
+$diskFreeSpace = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace
+$diskCapacityGB = [math]::Round($diskCapacity / 1GB, 2)
+$diskFreeSpaceGB = [math]::Round($diskFreeSpace / 1GB, 2)
+
+
+# Obtener información del procesador
+$processor = Get-WmiObject Win32_Processor
+$processorName = $processor.Name
+
+# Calcular el estado del disco como porcentaje
+$diskUsagePercentage = (($diskCapacity - $diskFreeSpace) / $diskCapacity) * 100
+
+# Obtener información S.M.A.R.T. del disco duro
+$smartInfo = Get-WmiObject -Namespace "root\wmi" -Class MSStorageDriver_FailurePredictStatus
+
+# Verificar si se obtuvo información S.M.A.R.T. correctamente
+if ($smartInfo) {
+    # Calcular el estado del disco como porcentaje
+    $diskCapacity = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").Size
+    $diskFreeSpace = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace
+    $diskUsagePercentage = (($diskCapacity - $diskFreeSpace) / $diskCapacity) * 100
+
+    # Estado de salud del disco basado en el atributo 5 (Reallocated Sectors Count)
+    $reallocatedSectors = $smartInfo.PredictFailure -band 0x05
+    if ($reallocatedSectors) {
+        $diskHealthMessageSmart = "Prestar atencion (Reallocated Sectors Count alto)"
+    } else {
+        $diskHealthMessageSmart = "Bueno"
+    }
+    
+    # Agregar información S.M.A.R.T. al texto del sistema
+    $systemInfo += "Estado de Salud del Disco Duro (S.M.A.R.T.): $diskHealthMessageSmart`r`n"
+} else {
+    # Si no se obtuvo información S.M.A.R.T., mostrar un mensaje
+    $systemInfo += "No se pudo obtener informacion S.M.A.R.T. del disco duro`r`n"
+}
+
+# Obtener la fecha de instalación del sistema operativo
+$osInstallDate = (Get-WmiObject Win32_OperatingSystem).InstallDate
+
+# Convertir la fecha de instalación a un formato legible
+$osInstallDate = [Management.ManagementDateTimeConverter]::ToDateTime($osInstallDate)
+
+
+
+
+$systemInfo = "Version de Windows: $osVersion`r`n"
+$systemInfo += "Procesador: $processorName`r`n"
+$systemInfo += "Arquitectura del Sistema: $osArchitecture`r`n"
+$systemInfo += "Fecha de Instalacion del Sistema: $osInstallDate`r`n"
+$systemInfo += "RAM Instalada: $ramInstalledGB GB`r`n"
+$systemInfo += "Capacidad del Disco Duro: $diskCapacityGB GB`r`n"
+$systemInfo += "Espacio Libre en Disco Duro: $diskFreeSpaceGB GB`r`n"
+$systemInfo += "Estado del Disco Duro: $($diskUsagePercentage.ToString("F2"))% usado`r`n"
+$systemInfo += "Estado de Salud del Disco Duro (S.M.A.R.T.): $diskHealthMessageSmart`r`n"
+
+
+
+# Obtener información de las memorias RAM
+$ramModules = Get-WmiObject Win32_PhysicalMemory
+foreach ($module in $ramModules) {
+    $speedMHz = $module.Speed
+    $capacityBytes = $module.Capacity
+    $capacityGB = [math]::Round($capacityBytes / 1GB, 2)
+    $deviceLocator = $module.DeviceLocator
+    $memoryType = $module.MemoryType
+    $manufacturer = $module.Manufacturer  # Obtener la marca de la memoria RAM
+
+    $memoryTypeString = ""
+switch ($memoryType) {
+    20 { $memoryTypeString = "DDR" }
+    21 { $memoryTypeString = "DDR2" }
+    24 { $memoryTypeString = "DDR3" }
+    26 { $memoryTypeString = "DDR4" }
+    default { $memoryTypeString = "Otro" }
+}
+
+    $systemInfo += "Memoria RAM - Marca: $manufacturer, Slot: $deviceLocator, Tipo: $memoryTypeString, Capacidad: $capacityGB GB, Velocidad: $speedMHz MHz`r`n"
+}
+
+
+# Obtener información adicional del sistema
+$computerSystem = Get-WmiObject Win32_ComputerSystem
+$modeloEquipo = $computerSystem.Model
+$marcaEquipo = $computerSystem.Manufacturer
+
+
+# Obtener información de la BIOS
+$bios = Get-WmiObject Win32_BIOS
+$versionBIOS = $bios.SMBIOSBIOSVersion
+$serialFabrica = $bios.SerialNumber
+
+$systemInfo += "Modelo del Equipo: $modeloEquipo`r`n"
+$systemInfo += "Marca del Equipo: $marcaEquipo`r`n"
+$systemInfo += "Version de la BIOS: $versionBIOS`r`n"
+$systemInfo += "Serial de Fabrica: $serialFabrica`r`n"
+
+# Obtener información de la temperatura de la CPU
+$temperatureInfo = Get-WmiObject -Namespace "root\WMI" -Class MSAcpi_ThermalZoneTemperature
+
+# Verificar si se encontró información de la temperatura de la CPU
+if ($temperatureInfo) {
+    $temperatureCelsius = ($temperatureInfo.CurrentTemperature - 2732) / 10.0
+    $systemInfo += "Temperatura de la CPU: $($temperatureCelsius)C`r`n"
+} else {
+    $systemInfo += "No se encontro informacion de la temperatura de la CPU`r`n"
+}
+
+# Obtener información de la GPU
+$gpuInfo = Get-WmiObject Win32_VideoController
+
+# Verificar si se encontró información de la GPU
+if ($gpuInfo.Count -gt 0) {
+    $systemInfo += "Informacion de la GPU:`r`n"
+    
+    # Iterar a través de las GPUs encontradas
+    foreach ($gpu in $gpuInfo) {
+        # Obtener el nombre y la memoria de la GPU
+        $gpuName = $gpu.Name
+        $gpuMemory = if ($gpu.AdapterRAM) { [math]::Round($gpu.AdapterRAM / 1MB) } else { 0 }
+        
+        # Agregar información de la GPU al texto del sistema
+        $systemInfo += "Nombre de la GPU: $gpuName`r`n"
+        $systemInfo += "Memoria de la GPU: ${gpuMemory} MB`r`n"
+    }
+} else {
+    $systemInfo += "No se encontro informacion de la GPU`r`n"
+}
+
+
+
+
+# Establecer el texto en el cuadro de texto
+$TextBox_InfoSistema.Text = $systemInfo
+
+# Agregar la pestaña "Información del Sistema" al control TabControl
+$TabControl.TabPages.Add($TabPage_InfoSistema)
+
+
+# Actualizar el contenido del cuadro de texto
+$TextBox_InfoSistema.Text = $systemInfo
+
+
+
+#sección Apps
+
+$TabPage_Apps = New-Object System.Windows.Forms.TabPage
+$TabPage_Apps.Text = "Apps"
+$TabPage_Apps.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+$Label_APPS = New-Object System.Windows.Forms.Label
+$Label_APPS.Text = "Aplicaciones:"
+$Label_APPS.Location = New-Object System.Drawing.Point(250, 20)
+$Label_APPS.Size = New-Object System.Drawing.Size(300, 20)
+$Label_APPS.ForeColor = [System.Drawing.Color]::White
+$TabPage_APPS.Controls.Add($Label_APPS)
+
+$ListBox_Apps = New-Object System.Windows.Forms.CheckedListBox
+$ListBox_Apps.Location = New-Object System.Drawing.Point(150, 40)
+$ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
+
+# Agrega las aplicaciones a la lista
+
+$ListBox_Apps.Items.Add("Lenovo System Update")
+$ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
+$ListBox_Apps.Items.Add("TeamViewer")
+$ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
+$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
+$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
+$ListBox_Apps.Items.Add("Anydesk")
+
+
+
+
+
+$Button_DownloadExecute = New-Object System.Windows.Forms.Button
+$Button_DownloadExecute.Text = "Descargar y Ejecutar"
+$Button_DownloadExecute.Location = New-Object System.Drawing.Point(250, 450)
+$Button_DownloadExecute.Size = New-Object System.Drawing.Size(300, 40)
+$Button_DownloadExecute.ForeColor = [System.Drawing.Color]::Black
+$Button_DownloadExecute.BackColor = [System.Drawing.Color]::White
+
+$Button_DownloadExecute.Add_Click({
+    $AppsToDownload = @()
+    foreach ($app in $ListBox_Apps.CheckedItems) {
+        switch ($app) {
+            "Lenovo System Update" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://download.lenovo.com/pccbbs/thinkvantage_en/system_update_5.08.01.exe"
+                    Extension = ".exe"
+                }
+            }
+            "Hard Disk Sentinel Professional" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://drive.google.com/uc?export=download&id=1E_UwJdrdXwfLSrQX8kd8hvk_oaQlHfCm&confirm=t"
+                    Extension = ".bat"
+                }
+            }
+            
+            
+            "TeamViewer" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
+                    Extension = ".exe"
+                }
+            }
+            "Herramienta de Soporte de Desinstalacion de Microsoft 365" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://aka.ms/SaRA-officeUninstallFromPC"
+                    Extension = ".exe"
+                }
+            }
+            "Intel Driver & Support Assistant (Intel DSA)" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://dsadata.intel.com/installer"
+                    Extension = ".exe"
+                }
+            }
+			
+            
+            "Lenovo Diagnostics Evolution" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://drive.google.com/uc?export=download&id=1lGN8Ma3DKgXASetsljCecsMWdlfcsBlK&confirm=t"
+                    Extension = ".bat"
+                }
+            }
+
+            "Anydesk" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://drive.google.com/uc?export=download&id=1yayqGa6zR05hKmSBLSZ8SMOoGReoGKa7&confirm=t"
+                    Extension = ".bat"
+                }
+            }
+            
+        }
+    }
+
+    if ($AppsToDownload.Count -gt 0) {
+        foreach ($app in $AppsToDownload) {  
+            $OutputPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "$($app.Name)$($app.Extension)")
+            Invoke-WebRequest -Uri $app.URL -OutFile $OutputPath
+            if ($app.Extension -eq ".bat") {
+                $batContent = Get-Content -Path $OutputPath
+                Set-Content -Path $OutputPath -Value $batContent -Encoding ASCII
+            }
+            Start-Process -FilePath $OutputPath
+        }
+        [System.Windows.Forms.MessageBox]::Show("Descarga y ejecucion completadas.", "Completado")
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Por favor, selecciona al menos una aplicacion para descargar y ejecutar.", "Error")
+    }
+})
+
+$TabPage_Apps.Controls.Add($ListBox_Apps)
+$TabPage_Apps.Controls.Add($Button_DownloadExecute)
+$TabControl.Controls.Add($TabPage_Apps)
+
+
+
+$TabPage2 = New-Object System.Windows.Forms.TabPage
+$TabPage2.Text = "Limpieza"
+$TabPage2.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+
+# Lógica para los botones de la sección "limpieza"...
+
+
+# Agregar el menú desplegable de limpieza
+$Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
+$Button_Menu_Limpieza.Text = "Limpieza"
+$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(50, 50)
+$Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(500, 60)
+$Button_Menu_Limpieza.ForeColor = [System.Drawing.Color]::Black
+$Button_Menu_Limpieza.BackColor = [System.Drawing.Color]::White
+
+$ContextMenu_Limpieza = New-Object System.Windows.Forms.ContextMenuStrip
+
+$MenuItem_Temporales = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Temporales.Text = "Eliminar archivos temporales"
+$MenuItem_Temporales.Add_Click({
+    try {
+        $tempFolderPath = "C:\Windows\Temp"
+
+        # Elimina todos los archivos y carpetas en la carpeta de archivos temporales
+        Remove-Item -Path "$tempFolderPath\*" -Force -Recurse
+
+        [System.Windows.Forms.MessageBox]::Show("Archivos temporales eliminados.", "Completado")
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al eliminar archivos temporales:`n$error", "Error")
+    }
+})
+
+$MenuItem_CacheActualizacion = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_CacheActualizacion.Text = "Eliminar cache de actualizacion"
+$MenuItem_CacheActualizacion.Add_Click({
+    Stop-Service -Name "wuauserv" -Force
+    Stop-Service -Name "UsoSvc" -Force
+    Remove-Item -Path "$env:WINDIR\SoftwareDistribution" -Force -Recurse
+    New-Item -Path "$env:WINDIR\SoftwareDistribution" -ItemType Directory
+    Start-Service -Name "wuauserv"
+    Start-Service -Name "UsoSvc"
+    [System.Windows.Forms.MessageBox]::Show("Cache de actualizacion eliminado.", "Completado")
+})
+
+# Nueva opción: Limpiar caché DNS
+$MenuItem_LimpiarCacheDNS = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_LimpiarCacheDNS.Text = "Limpiar cache DNS"
+$MenuItem_LimpiarCacheDNS.Add_Click({
+    Invoke-Expression -Command "ipconfig /flushdns 2>&1"
+    if ($LASTEXITCODE -eq 0) {
+        [System.Windows.Forms.MessageBox]::Show("Cache DNS limpiado correctamente.", "Completado")
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Error al limpiar el cache DNS.", "Error")
+    }
+})
+
+$ContextMenu_Limpieza.Items.AddRange(@($MenuItem_Temporales, $MenuItem_CacheActualizacion, $MenuItem_LimpiarCacheDNS))
+$Button_Menu_Limpieza.Add_Click({
+    $menuLocation = $Button_Menu_Limpieza.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Limpieza.Height))
+    $menuLocation.X += ($Button_Menu_Limpieza.Width - $ContextMenu_Limpieza.Width) / 2
+    $ContextMenu_Limpieza.Show($menuLocation)
+})
+
+
+$TabPage2.Controls.Add($Button_Menu_Limpieza)
+
+
+
+
+
+
+$TabPage2.Controls.Add($Button5_S2)
+
+$TabPage3 = New-Object System.Windows.Forms.TabPage
+$TabPage3.Text = "Repositorio MilenioPC"
+$TabPage3.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+# Botón para abrir el repositorio
+$Button_OpenWebsite = New-Object System.Windows.Forms.Button
+$Button_OpenWebsite.Text = "Abrir Repositorio MilenioPC"
+$Button_OpenWebsite.Location = New-Object System.Drawing.Point(50, 80)
+$Button_OpenWebsite.Size = New-Object System.Drawing.Size(500, 60)
+$Button_OpenWebsite.ForeColor = [System.Drawing.Color]::Black
+$Button_OpenWebsite.BackColor = [System.Drawing.Color]::White
+
+$Button_OpenWebsite.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas&ga=1"
+})
+$TabPage3.Controls.Add($Button_OpenWebsite)
+
+# Botón y menú desplegable para opciones de Office en el lado izquierdo
+$Button_Menu_Office = New-Object System.Windows.Forms.Button
+$Button_Menu_Office.Text = "Descargar Office"
+$Button_Menu_Office.Location = New-Object System.Drawing.Point(50, 200)
+$Button_Menu_Office.Size = New-Object System.Drawing.Size(220, 60)
+$Button_Menu_Office.ForeColor = [System.Drawing.Color]::Black
+$Button_Menu_Office.BackColor = [System.Drawing.Color]::White
+
+$ContextMenu_Office = New-Object System.Windows.Forms.ContextMenuStrip
+
+# Opciones del menú desplegable para Office
+$MenuItem_Office365 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Office365.Text = "Office 365"
+$MenuItem_Office365.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FOFFICE%20Y%20ANTIVIRUS%2F365"
+})
+
+$MenuItem_Office2013 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Office2013.Text = "Office 2013"
+$MenuItem_Office2013.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FOFFICE%20Y%20ANTIVIRUS%2FOFFICE%202013"
+})
+
+$MenuItem_Office2016 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Office2016.Text = "Office 2016"
+$MenuItem_Office2016.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FOFFICE%20Y%20ANTIVIRUS%2FOFFICE%202016"
+})
+
+$MenuItem_Office2019 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Office2019.Text = "Office 2019"
+$MenuItem_Office2019.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FOFFICE%20Y%20ANTIVIRUS%2FOFFICE%202019"
+})
+
+
+$ContextMenu_Office.Items.AddRange(@($MenuItem_Office365, $MenuItem_Office2013, $MenuItem_Office2016, $MenuItem_Office2019))
+
+$Button_Menu_Office.Add_Click({ 
+    $position = $Button_Menu_Office.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Office.Height))
+    $ContextMenu_Office.Show($position) 
+})
+
+
+$TabPage3.Controls.Add($Button_Menu_Office)
+
+
+# Botón para opciones de Sistemas Operativos en el lado derecho
+$Button_Menu_SistemasOperativos = New-Object System.Windows.Forms.Button
+$Button_Menu_SistemasOperativos.Text = "Sistemas Operativos"
+$Button_Menu_SistemasOperativos.Location = New-Object System.Drawing.Point(280, 200)
+$Button_Menu_SistemasOperativos.Size = New-Object System.Drawing.Size(220, 60)
+$Button_Menu_SistemasOperativos.ForeColor = [System.Drawing.Color]::Black
+$Button_Menu_SistemasOperativos.BackColor = [System.Drawing.Color]::White
+
+$ContextMenu_SistemasOperativos = New-Object System.Windows.Forms.ContextMenuStrip
+
+# Opciones del menú desplegable para Sistemas Operativos
+$MenuItem_ImagenesEstandar = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_ImagenesEstandar.Text = "Imagenes Estandar"
+$MenuItem_ImagenesEstandar.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FRECOVERY%20MPC%2FIMAGENES%20STAND"
+})
+
+$MenuItem_ImagenesClientesBAQ = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_ImagenesClientesBAQ.Text = "Imagenes Clientes BAQ"
+$MenuItem_ImagenesClientesBAQ.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FRECOVERY%20MPC%2FClientes%2FBAQ"
+})
+
+$MenuItem_ImagenesClientesBOG = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_ImagenesClientesBOG.Text = "Imagenes Clientes BOG"
+$MenuItem_ImagenesClientesBOG.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FRECOVERY%20MPC%2FClientes%2FBOG"
+})
+
+$MenuItem_ImagenesClientesCAL = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_ImagenesClientesCAL.Text = "Imagenes Clientes CAL"
+$MenuItem_ImagenesClientesCAL.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FRECOVERY%20MPC%2FClientes%2FCAL"
+})
+
+$MenuItem_ImagenesClientesMED = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_ImagenesClientesMED.Text = "Imagenes Clientes MED"
+$MenuItem_ImagenesClientesMED.Add_Click({
+    Start-Process "https://mileniopcsa-my.sharepoint.com/personal/imagenesmds_mileniopcsa_onmicrosoft_com/_layouts/15/onedrive.aspx?ga=1&id=%2Fpersonal%2Fimagenesmds%5Fmileniopcsa%5Fonmicrosoft%5Fcom%2FDocuments%2FHerramientas%2FRECOVERY%20MPC%2FClientes%2FMED"
+})
+
+$ContextMenu_SistemasOperativos.Items.AddRange(@($MenuItem_ImagenesEstandar, $MenuItem_ImagenesClientesBAQ, $MenuItem_ImagenesClientesBOG, $MenuItem_ImagenesClientesCAL, $MenuItem_ImagenesClientesMED))
+
+$Button_Menu_SistemasOperativos.Add_Click({ 
+    $position = $Button_Menu_SistemasOperativos.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_SistemasOperativos.Height))
+    $ContextMenu_SistemasOperativos.Show($position) 
+})
+
+# Agrega el botón al TabPage3
+$TabPage3.Controls.Add($Button_Menu_SistemasOperativos)
+
+
+
+# Crear una nueva pestaña para la sección de Restauración y Verificación
+$TabPage_Restauracion = New-Object System.Windows.Forms.TabPage
+$TabPage_Restauracion.Text = "Restauracion y Verificacion"
+$TabPage_Restauracion.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+# Crear botones para crear punto de restauración y verificar archivos del sistema
+$Button_CrearRestauracion = New-Object System.Windows.Forms.Button
+$Button_CrearRestauracion.Text = "Crear Punto de Restauracion"
+$Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 80)
+$Button_CrearRestauracion.Size = New-Object System.Drawing.Size(500, 60)
+$Button_CrearRestauracion.ForeColor = [System.Drawing.Color]::Black
+$Button_CrearRestauracion.BackColor = [System.Drawing.Color]::White
+
+$Button_VerificarArchivos = New-Object System.Windows.Forms.Button
+$Button_VerificarArchivos.Text = "Verificar y Reparar Archivos del Sistema"
+$Button_VerificarArchivos.Location = New-Object System.Drawing.Point(50, 160)
+$Button_VerificarArchivos.Size = New-Object System.Drawing.Size(500, 60)
+$Button_VerificarArchivos.ForeColor = [System.Drawing.Color]::Black
+$Button_VerificarArchivos.BackColor = [System.Drawing.Color]::White
+
+
+
+$Button_BSOD_Info = New-Object System.Windows.Forms.Button
+$Button_BSOD_Info.Text = "Informacion de Pantallazos Azules"
+$Button_BSOD_Info.Location = New-Object System.Drawing.Point(50, 240) 
+$Button_BSOD_Info.Size = New-Object System.Drawing.Size(500, 60)
+$Button_BSOD_Info.ForeColor = [System.Drawing.Color]::Black
+$Button_BSOD_Info.BackColor = [System.Drawing.Color]::White
+
+# Crear un botón para generar el informe de la batería
+$Button_BatteryReport = New-Object System.Windows.Forms.Button
+$Button_BatteryReport.Text = "Generar Informe de Bateria"
+$Button_BatteryReport.Location = New-Object System.Drawing.Point(50, 320)  # Ajusta la posición vertical según sea necesario
+$Button_BatteryReport.Size = New-Object System.Drawing.Size(500, 60)
+$Button_BatteryReport.ForeColor = [System.Drawing.Color]::Black
+$Button_BatteryReport.BackColor = [System.Drawing.Color]::White
+
+
+
+
+
+# Manejadores de eventos para los botones
+$Button_CrearRestauracion.Add_Click({
+    # Crear un punto de restauración
+    $description = "Punto de restauracion creado por Toolbox MPC"
+    $restorePointType = "MODIFY_SETTINGS"
+    Checkpoint-Computer -Description $description -RestorePointType $restorePointType
+
+    # Mostrar un mensaje para informar al usuario que se ha creado el punto de restauración
+    [System.Windows.Forms.MessageBox]::Show("Se ha creado un punto de restauracion.", "Punto de Restauracion Creado")
+})
+
+$Button_VerificarArchivos.Add_Click({
+    try {
+        # Verificar si el script se está ejecutando como administrador
+        if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+            [System.Windows.Forms.MessageBox]::Show("Debes ejecutar el script como administrador para verificar y reparar archivos del sistema.", "Error de Permiso")
+            return
+        }
+
+        # Abrir una nueva instancia de PowerShell y ejecutar los comandos en secuencia
+        $script = @"
+        chkdsk;
+        Start-Sleep -Seconds 1;
+        sfc /scannow;
+        Start-Sleep -Seconds 1;
+        DISM.exe /Online /Cleanup-image /Scanhealth;
+        Start-Sleep -Seconds 1;
+        DISM.exe /Online /Cleanup-image /Restorehealth;
+        Start-Sleep -Seconds 1;
+        Dism.exe /Online /Cleanup-Image /startComponentCleanup;
+"@
+        Start-Process powershell -ArgumentList "-NoExit", "-Command", $script
+
+        # Mostrar un mensaje para informar al usuario que la verificación y reparación de archivos se ha iniciado
+        [System.Windows.Forms.MessageBox]::Show("Verificacion y reparacion de archivos iniciada.", "Proceso Iniciado")
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al verificar y reparar archivos del sistema:`n$error", "Error")
+    }
+})
+
+
+$Button_BSOD_Info.Add_Click({
+    # Define la URL de descarga de BlueScreenView
+    $Url = "https://drive.google.com/uc?export=download&id=1ZUt286PKHp0hN0Xp1wxNXu6Ofs7bS5Xo&confirm=t"
+    
+    # Define la ruta de destino para la descarga
+    $OutputPath = "$env:userprofile\Downloads\BlueScreenView.exe"
+    
+    # Descarga BlueScreenView
+    Invoke-WebRequest -Uri $Url -OutFile $OutputPath
+    
+    # Ejecuta BlueScreenView después de la descarga
+    Start-Process -FilePath $OutputPath
+})
+
+# Agregar un controlador de eventos para el clic del botón
+$Button_BatteryReport.Add_Click({
+    try {
+        # Ejecutar el comando para generar el informe de la batería
+        $batteryReportCommand = "powercfg /batteryreport /output `"C:\battery_report.html`""
+        Invoke-Expression -Command $batteryReportCommand
+
+        # Mostrar un mensaje emergente con la ubicación del informe
+        [System.Windows.Forms.MessageBox]::Show("El informe de la bateria se ha generado correctamente en C:\battery_report.html", "Informe Generado")
+
+    } catch {
+        # Mostrar un mensaje de error si ocurre algún problema
+        [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
+    }
+})
+
+# Agregar botones a la pestaña
+$TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
+$TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
+$TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
+$TabPage_Restauracion.Controls.Add($Button_BatteryReport)
+
+# Agregar la pestaña "Restauración y Verificación" al control TabControl
+$TabControl.TabPages.Add($TabPage_Restauracion)
+
+# menu seleccionable
+$TabPage4 = New-Object System.Windows.Forms.TabPage
+$TabPage4.Text = "Tweaks"
+$TabPage4.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+
+# Opciones en la izquierda
+$CheckBox_ActivarModoMaximoRendimiento = New-Object System.Windows.Forms.CheckBox
+$CheckBox_ActivarModoMaximoRendimiento.Text = "Activar Modo Maximo Rendimiento"
+$CheckBox_ActivarModoMaximoRendimiento.Location = New-Object System.Drawing.Point(50, 50)
+$CheckBox_ActivarModoMaximoRendimiento.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_ActivarModoMaximoRendimiento.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_ActivarModoMaximoRendimiento)
+
+$CheckBox_MejorRespuesta = New-Object System.Windows.Forms.CheckBox
+$CheckBox_MejorRespuesta.Text = "Mejor Respuesta"
+$CheckBox_MejorRespuesta.Location = New-Object System.Drawing.Point(50, 80)
+$CheckBox_MejorRespuesta.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_MejorRespuesta.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_MejorRespuesta)
+
+$CheckBox_DeshabilitarTransparencia = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
+$CheckBox_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(50, 110)
+$CheckBox_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarTransparencia.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarTransparencia)
+
+$CheckBox_DeshabilitarAnimaciones = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarAnimaciones.Text = "Deshabilitar Animaciones"
+$CheckBox_DeshabilitarAnimaciones.Location = New-Object System.Drawing.Point(50, 140)
+$CheckBox_DeshabilitarAnimaciones.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarAnimaciones.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarAnimaciones)
+
+# Opciones en la derecha
+$CheckBox_DeshabilitarActualizaciones = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarActualizaciones.Text = "Deshabilitar Actualizaciones de Drivers"
+$CheckBox_DeshabilitarActualizaciones.Location = New-Object System.Drawing.Point(400, 50)
+$CheckBox_DeshabilitarActualizaciones.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarActualizaciones.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarActualizaciones)
+
+$CheckBox_DeshabilitarAppsSegundoPlano = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarAppsSegundoPlano.Text = "Deshabilitar Apps en Segundo Plano"
+$CheckBox_DeshabilitarAppsSegundoPlano.Location = New-Object System.Drawing.Point(400, 80)
+$CheckBox_DeshabilitarAppsSegundoPlano.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarAppsSegundoPlano.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarAppsSegundoPlano)
+
+$CheckBox_DeshabilitarOptimizacionesPantallaCompleta = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Text = "Deshabilitar Optimizaciones de Pantalla Completa"
+$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Location = New-Object System.Drawing.Point(400, 110)
+$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarOptimizacionesPantallaCompleta)
+
+$Button_Optimizar = New-Object System.Windows.Forms.Button
+$Button_Optimizar.Text = "Ejecutar Optimizacion"
+$Button_Optimizar.Location = New-Object System.Drawing.Point(50, 200)
+$Button_Optimizar.Size = New-Object System.Drawing.Size(150, 30)
+$Button_Optimizar.ForeColor = [System.Drawing.Color]::Black
+$Button_Optimizar.BackColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($Button_Optimizar)
+
+
+$Button_Optimizar.Add_Click({
+    $opcionesSeleccionadas = @()
+
+    # Crear un punto de restauración antes de realizar modificaciones
+$description = "Punto de restauracion antes de realizar ajustes"
+$restorePointType = "MODIFY_SETTINGS"
+Checkpoint-Computer -Description $description -RestorePointType $restorePointType
+
+# Realizar modificaciones...
+
+    if ($CheckBox_ActivarModoMaximoRendimiento.Checked) { $opcionesSeleccionadas += "Activar modo maximo rendimiento" }
+    if ($CheckBox_MejorRespuesta.Checked) { $opcionesSeleccionadas += "Mejor respuesta" }
+    if ($CheckBox_DeshabilitarTransparencia.Checked) { $opcionesSeleccionadas += "Deshabilitar transparencia" }
+    if ($CheckBox_DeshabilitarAnimaciones.Checked) { $opcionesSeleccionadas += "Deshabilitar animaciones" }
+    if ($CheckBox_DeshabilitarActualizacionesDrivers.Checked) { $opcionesSeleccionadas += "Deshabilitar actualizaciones de drivers" }
+    if ($CheckBox_DeshabilitarAppsSegundoPlano.Checked) { $opcionesSeleccionadas += "Deshabilitar apps en segundo plano" }
+    if ($CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Checked) { $opcionesSeleccionadas += "Deshabilitar optimizaciones de pantalla completa" }
+     
+
+
+    if ($opcionesSeleccionadas.Count -gt 0) {
+        $opcionesTexto = $opcionesSeleccionadas -join ", "
+        [System.Windows.Forms.MessageBox]::Show("Se ejecutaran las siguientes opciones: $opcionesTexto", "Optimizacion Completada")
+
+
+        # Ejecutar las funciones correspondientes a las opciones seleccionadas
+       
+
+
+       if ($opcionesSeleccionadas -contains "Mejor respuesta") {
+    Write-Host "Aplicando configuracion para mejor respuesta..."
+
+    # Configurar valores para una mejor respuesta del sistema
+    $settingsPath = "HKCU:\Control Panel\Desktop"
+    Set-ItemProperty -Path $settingsPath -Name "AutoEndTasks" -Value 1
+    Set-ItemProperty -Path $settingsPath -Name "HungAppTimeout" -Value 1000
+    Set-ItemProperty -Path $settingsPath -Name "MenuShowDelay" -Value 8
+    Set-ItemProperty -Path $settingsPath -Name "WaitToKillAppTimeout" -Value 2000
+    Set-ItemProperty -Path $settingsPath -Name "LowLevelHooksTimeout" -Value 1000
+
+    Write-Host "Configuracion de mejor respuesta aplicada."
+}
+
+
+if ($opcionesSeleccionadas -contains "Deshabilitar animaciones") {
+    Write-Host "Deshabilitando animaciones..."
+
+     # Validar valor de enable
+    if ($Checked) {
+        $enable = $true
+    } else {
+        $enable = $false
+    }
+
+    # Configurar valores para deshabilitar animaciones
+    $settingsPath = "HKCU:\Control Panel\Desktop"
+    Set-ItemProperty -Path $settingsPath -Name "DragFullWindows" -Value ($enable -eq $true)
+    Set-ItemProperty -Path $settingsPath -Name "UserPreferencesMask" -Value ([byte[]]@(0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00))
+
+    $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+    Set-ItemProperty -Path $settingsPath -Name "DisablePreviewDesktop" -Value ($enable -ne $true)
+
+    $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
+    Set-ItemProperty -Path $settingsPath -Name "VisualFXSetting" -Value 3
+
+    # Mensaje de éxito
+    Write-Host "Animaciones deshabilitadas."
+}
+
+if ($opcionesSeleccionadas -contains "Deshabilitar actualizaciones de drivers") {
+    Write-Host "Deshabilitando actualizaciones de drivers..."
+
+    # Configurar valor para deshabilitar actualizaciones de drivers
+    $settingsPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching"
+    Set-ItemProperty -Path $settingsPath -Name "SearchOrderConfig" -Value 0
+
+    Write-Host "Actualizaciones de drivers deshabilitadas."
+}
+
+if ($opcionesSeleccionadas -contains "Deshabilitar actualizaciones de drivers") {
+    Write-Host "Deshabilitando actualizaciones de drivers..."
+
+    # Desactivar las actualizaciones automáticas de drivers utilizando Set-ItemProperty
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" -Name "SearchOrderConfig" -Value 0
+
+    Write-Host "Actualizaciones automáticas de drivers desactivadas."
+}
+
+ # Agrega aquí la lógica correspondiente a la Opción 7
+
+    # Contenido del archivo de registro para deshabilitar transparencia
+
+if ($opcionesSeleccionadas -contains "Deshabilitar transparencia") {
+    Write-Host "Deshabilitando transparencia..."
+
+    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Value 0
+    Write-Host "Transparencia de Windows deshabilitada."
+}
+
+   
+
+if ($opcionesSeleccionadas -contains "Deshabilitar optimizaciones de pantalla completa") {
+    Write-Host "Deshabilitando optimizaciones de pantalla completa..."
+
+    # Configurar valores para deshabilitar optimizaciones de pantalla completa
+    $settingsPath = "HKCU:\System\GameConfigStore"
+    Set-ItemProperty -Path $settingsPath -Name "GameDVR_Enabled" -Value 0
+    Set-ItemProperty -Path $settingsPath -Name "GameDVR_FSEBehaviorMode" -Value 2
+    Set-ItemProperty -Path $settingsPath -Name "GameDVR_HonorUserFSEBehaviorMode" -Value 0
+    Set-ItemProperty -Path $settingsPath -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Value 0
+    Set-ItemProperty -Path $settingsPath -Name "GameDVR_EFSEFeatureFlags" -Value 0
+
+    # Eliminar claves relacionadas para deshabilitar optimizaciones de pantalla completa
+    Remove-ItemProperty -Path $settingsPath -Name "Children" -ErrorAction SilentlyContinue
+    Remove-ItemProperty -Path $settingsPath -Name "Parents" -ErrorAction SilentlyContinue
+
+    Write-Host "Optimizaciones de pantalla completa deshabilitadas."
+}
+
+if ($opcionesSeleccionadas -contains "Activar modo maximo rendimiento") {
+    Write-Host "Activando modo máximo rendimiento..."
+
+    # Usar powercfg para activar el esquema de energía de máximo rendimiento
+    powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+
+    Write-Host "Modo máximo rendimiento activado."
+}
+
+
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Por favor, selecciona al menos una opcion.", "Error")
+    }
+})
+
+$TabPage4.Controls.Add($Button_Optimizar)
+
+
+
+$TabControl.TabPages.Add($TabPage2)
+$TabControl.TabPages.Add($TabPage3)
+$TabControl.TabPages.Add($TabPage4)
+
+
+
+$Form.Controls.Add($TabControl)
+
+
+$Form.ShowDialog()
+
+Write-Host "Toolbox MPC Version 1.0"
+
+Write-Host "Hecho por Brandon Sepulveda"
+
+# Al final del script, agregas la línea para eliminarlo
+Remove-Item -Path "$env:USERPROFILE\Downloads\Toolbox MPC.ps1" -Force
