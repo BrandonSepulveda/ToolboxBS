@@ -13,7 +13,7 @@ public class Shell32
 Add-Type -AssemblyName System.Windows.Forms
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox MPC Version 1.0" + [System.Environment]::NewLine +"                                                                                         Powered by: Brandon Sepulveda"
+$Form.Text = "Toolbox Version 1.0" + [System.Environment]::NewLine +"                                                                                         Powered by: Brandon Sepulveda"
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -43,7 +43,7 @@ $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 
 $Form.MaximizeBox = $false
 
-Write-Host "Toolbox MPC Version 1.0" -ForegroundColor Red
+Write-Host "Toolbox Version 1.0" -ForegroundColor Red
 
 Write-Host "Hecho por Brandon Sepulveda"
 
@@ -870,6 +870,6 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
-Write-Host "Toolbox MPC Version 1.0" -ForegroundColor Red
+Write-Host "Toolbox Version 1.0" -ForegroundColor Red
 
 Write-Host "Hecho por Brandon Sepulveda"
