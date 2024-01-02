@@ -860,7 +860,7 @@ $TabPage4.Controls.Add($Button_Optimizar)
 
 
 $TabControl.TabPages.Add($TabPage2)
-$TabControl.TabPages.Add($TabPage3)
+#$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
 
 
