@@ -417,7 +417,7 @@ $TabPage2.Controls.Add($Button_Menu_Limpieza)
 
 
 $TabPage2.Controls.Add($Button5_S2)
-
+<#
 $TabPage3 = New-Object System.Windows.Forms.TabPage
 $TabPage3.Text = "Repositorio MilenioPC"
 $TabPage3.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
@@ -533,7 +533,7 @@ $Button_Menu_SistemasOperativos.Add_Click({
 # Agrega el botón al TabPage3
 $TabPage3.Controls.Add($Button_Menu_SistemasOperativos)
 
-
+#>
 
 # Crear una nueva pestaña para la sección de Restauración y Verificación
 $TabPage_Restauracion = New-Object System.Windows.Forms.TabPage
