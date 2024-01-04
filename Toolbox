@@ -355,8 +355,8 @@ $TabPage2.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
 # Agregar el menú desplegable de limpieza
 $Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
 $Button_Menu_Limpieza.Text = "Limpieza"
-$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(50, 50)
-$Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(500, 60)
+$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(200, 50)
+$Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(300, 40)
 $Button_Menu_Limpieza.ForeColor = [System.Drawing.Color]::Black
 $Button_Menu_Limpieza.BackColor = [System.Drawing.Color]::White
 
@@ -544,14 +544,14 @@ $TabPage_Restauracion.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # 
 $Button_CrearRestauracion = New-Object System.Windows.Forms.Button
 $Button_CrearRestauracion.Text = "Crear Punto de Restauracion"
 $Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 80)
-$Button_CrearRestauracion.Size = New-Object System.Drawing.Size(500, 60)
+$Button_CrearRestauracion.Size = New-Object System.Drawing.Size(150, 50)
 $Button_CrearRestauracion.ForeColor = [System.Drawing.Color]::Black
 $Button_CrearRestauracion.BackColor = [System.Drawing.Color]::White
 
 $Button_VerificarArchivos = New-Object System.Windows.Forms.Button
 $Button_VerificarArchivos.Text = "Verificar y Reparar Archivos del Sistema"
-$Button_VerificarArchivos.Location = New-Object System.Drawing.Point(50, 160)
-$Button_VerificarArchivos.Size = New-Object System.Drawing.Size(500, 60)
+$Button_VerificarArchivos.Location = New-Object System.Drawing.Point(210, 80)
+$Button_VerificarArchivos.Size = New-Object System.Drawing.Size(150, 50)
 $Button_VerificarArchivos.ForeColor = [System.Drawing.Color]::Black
 $Button_VerificarArchivos.BackColor = [System.Drawing.Color]::White
 
@@ -559,18 +559,27 @@ $Button_VerificarArchivos.BackColor = [System.Drawing.Color]::White
 
 $Button_BSOD_Info = New-Object System.Windows.Forms.Button
 $Button_BSOD_Info.Text = "Informacion de Pantallazos Azules"
-$Button_BSOD_Info.Location = New-Object System.Drawing.Point(50, 240) 
-$Button_BSOD_Info.Size = New-Object System.Drawing.Size(500, 60)
+$Button_BSOD_Info.Location = New-Object System.Drawing.Point(370, 80) 
+$Button_BSOD_Info.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BSOD_Info.ForeColor = [System.Drawing.Color]::Black
 $Button_BSOD_Info.BackColor = [System.Drawing.Color]::White
 
 # Crear un botón para generar el informe de la batería
 $Button_BatteryReport = New-Object System.Windows.Forms.Button
 $Button_BatteryReport.Text = "Generar Informe de Bateria"
-$Button_BatteryReport.Location = New-Object System.Drawing.Point(50, 320)  # Ajusta la posición vertical según sea necesario
-$Button_BatteryReport.Size = New-Object System.Drawing.Size(500, 60)
+$Button_BatteryReport.Location = New-Object System.Drawing.Point(530, 80)  # Ajusta la posición vertical según sea necesario
+$Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BatteryReport.ForeColor = [System.Drawing.Color]::Black
 $Button_BatteryReport.BackColor = [System.Drawing.Color]::White
+
+# Botón para descargar AIDA 64
+$Button_DescargarAIDA64 = New-Object System.Windows.Forms.Button
+$Button_DescargarAIDA64.Text = "AIDA 64"
+$Button_DescargarAIDA64.Location = New-Object System.Drawing.Point(50, 150)  # Ajusta la posición según sea necesario
+$Button_DescargarAIDA64.Size = New-Object System.Drawing.Size(150, 50)
+$Button_DescargarAIDA64.ForeColor = [System.Drawing.Color]::Black
+$Button_DescargarAIDA64.BackColor = [System.Drawing.Color]::White
+
 
 
 
@@ -645,6 +654,23 @@ $Button_BatteryReport.Add_Click({
         # Mostrar un mensaje de error si ocurre algún problema
         [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
     }
+
+$Button_DescargarAIDA64.Add_Click({
+    # Define la URL de descarga de AIDA 64
+    $Url = "https://drive.google.com/uc?export=download&id=1AAc8Doc-OE1cmbiht9DdjheZpBis3MID&confirm=t"
+    
+    # Define la ruta de destino para la descarga
+    $OutputPath = "$env:userprofile\Downloads\AIDA64.bat"
+    
+    # Descarga AIDA 64
+    Invoke-WebRequest -Uri $Url -OutFile $OutputPath
+    
+    # Ejecuta AIDA 64 después de la descarga
+    Start-Process -FilePath $OutputPath
+})
+
+
+
 })
 
 # Agregar botones a la pestaña
@@ -652,6 +678,7 @@ $TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
 $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
 $TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
 $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
+$TabPage_Restauracion.Controls.Add($Button_DescargarAIDA64)
 
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
 $TabControl.TabPages.Add($TabPage_Restauracion)
@@ -719,6 +746,47 @@ $Button_Optimizar.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Optimizar.ForeColor = [System.Drawing.Color]::Black
 $Button_Optimizar.BackColor = [System.Drawing.Color]::White
 $TabPage4.Controls.Add($Button_Optimizar)
+# Botón para ejecutar Christitus
+$Button_EjecutarChristitus = New-Object System.Windows.Forms.Button
+$Button_EjecutarChristitus.Text = "Ejecutar Christitus"
+$Button_EjecutarChristitus.Location = New-Object System.Drawing.Point(210, 200)  # Ajusta la posición según sea necesario
+$Button_EjecutarChristitus.Size = New-Object System.Drawing.Size(150, 30)
+$Button_EjecutarChristitus.ForeColor = [System.Drawing.Color]::Black
+$Button_EjecutarChristitus.BackColor = [System.Drawing.Color]::White
+
+$Button_EjecutarChristitus.Add_Click({
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://christitus.com/win | iex" -Verb RunAs
+})
+
+$TabPage4.Controls.Add($Button_EjecutarChristitus)
+
+# Botón para ejecutar Debloat
+$Button_EjecutarDebloat = New-Object System.Windows.Forms.Button
+$Button_EjecutarDebloat.Text = "Ejecutar Debloat"
+$Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(370, 200)  # Ajusta la posición según sea necesario
+$Button_EjecutarDebloat.Size = New-Object System.Drawing.Size(150, 30)
+$Button_EjecutarDebloat.ForeColor = [System.Drawing.Color]::Black
+$Button_EjecutarDebloat.BackColor = [System.Drawing.Color]::White
+
+$Button_EjecutarDebloat.Add_Click({
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://git.io/debloat | iex" -Verb RunAs
+})
+
+$TabPage4.Controls.Add($Button_EjecutarDebloat)
+
+# Botón para instalar Winget
+$Button_InstalarWinget = New-Object System.Windows.Forms.Button
+$Button_InstalarWinget.Text = "Instalar Winget"
+$Button_InstalarWinget.Location = New-Object System.Drawing.Point(530, 200)  # Ajusta la posición según sea necesario
+$Button_InstalarWinget.Size = New-Object System.Drawing.Size(150, 30)
+$Button_InstalarWinget.ForeColor = [System.Drawing.Color]::Black
+$Button_InstalarWinget.BackColor = [System.Drawing.Color]::White
+
+$Button_InstalarWinget.Add_Click({
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client" -Verb RunAs
+})
+
+$TabPage4.Controls.Add($Button_InstalarWinget)
 
 
 $Button_Optimizar.Add_Click({
