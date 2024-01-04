@@ -357,8 +357,8 @@ $Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
 $Button_Menu_Limpieza.Text = "Limpieza"
 $Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(50, 50)
 $Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(500, 60)
-$Button_Menu_Limpieza.ForeColor = [System.Drawing.Color]::white
-
+$Button_Menu_Limpieza.ForeColor = [System.Drawing.Color]::Black
+$Button_Menu_Limpieza.BackColor = [System.Drawing.Color]::White
 
 $ContextMenu_Limpieza = New-Object System.Windows.Forms.ContextMenuStrip
 
@@ -545,15 +545,15 @@ $Button_CrearRestauracion = New-Object System.Windows.Forms.Button
 $Button_CrearRestauracion.Text = "Crear Punto de Restauracion"
 $Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 80)
 $Button_CrearRestauracion.Size = New-Object System.Drawing.Size(500, 60)
-$Button_CrearRestauracion.ForeColor = [System.Drawing.Color]::white
-
+$Button_CrearRestauracion.ForeColor = [System.Drawing.Color]::Black
+$Button_CrearRestauracion.BackColor = [System.Drawing.Color]::White
 
 $Button_VerificarArchivos = New-Object System.Windows.Forms.Button
 $Button_VerificarArchivos.Text = "Verificar y Reparar Archivos del Sistema"
 $Button_VerificarArchivos.Location = New-Object System.Drawing.Point(50, 160)
 $Button_VerificarArchivos.Size = New-Object System.Drawing.Size(500, 60)
-$Button_VerificarArchivos.ForeColor = [System.Drawing.Color]::white
-
+$Button_VerificarArchivos.ForeColor = [System.Drawing.Color]::Black
+$Button_VerificarArchivos.BackColor = [System.Drawing.Color]::White
 
 
 
@@ -561,16 +561,16 @@ $Button_BSOD_Info = New-Object System.Windows.Forms.Button
 $Button_BSOD_Info.Text = "Informacion de Pantallazos Azules"
 $Button_BSOD_Info.Location = New-Object System.Drawing.Point(50, 240) 
 $Button_BSOD_Info.Size = New-Object System.Drawing.Size(500, 60)
-$Button_BSOD_Info.ForeColor = [System.Drawing.Color]::white
-
+$Button_BSOD_Info.ForeColor = [System.Drawing.Color]::Black
+$Button_BSOD_Info.BackColor = [System.Drawing.Color]::White
 
 # Crear un botón para generar el informe de la batería
 $Button_BatteryReport = New-Object System.Windows.Forms.Button
 $Button_BatteryReport.Text = "Generar Informe de Bateria"
 $Button_BatteryReport.Location = New-Object System.Drawing.Point(50, 320)  # Ajusta la posición vertical según sea necesario
 $Button_BatteryReport.Size = New-Object System.Drawing.Size(500, 60)
-$Button_BatteryReport.ForeColor = [System.Drawing.Color]::white
-
+$Button_BatteryReport.ForeColor = [System.Drawing.Color]::Black
+$Button_BatteryReport.BackColor = [System.Drawing.Color]::White
 
 
 
