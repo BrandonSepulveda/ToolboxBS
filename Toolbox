@@ -13,7 +13,7 @@ public class Shell32
 Add-Type -AssemblyName System.Windows.Forms
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version 1.1" + [System.Environment]::NewLine +"                                                                                            Powered by: Brandon Sepulveda"
+$Form.Text = "Toolbox Version 1.1" + [System.Environment]::NewLine +"                                                                                                        Powered by: Brandon Sepulveda"
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -24,11 +24,10 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 # Asignar el icono de la computadora de este equipo al formulario
 $form.Icon = $icon
 
-# Definir el color de fondo con transparencia
-# $backgroundColor = [System.Drawing.Color]::FromArgb(150, 0, 32, 96)  # Azul 
 
-$Form.BackColor = [System.Drawing.Color]::LightGray
 
+
+$Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
 $Form.Font = New-Object System.Drawing.Font("Arial", 10)
 
@@ -51,7 +50,7 @@ Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
-$TabPage_InfoSistema.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage_InfoSistema.BackColor =  [System.Drawing.Color]::Black  # Cambiar a negro
 
 $Label_InfoSistema = New-Object System.Windows.Forms.Label
 $Label_InfoSistema.Text = "Informacion del Sistema:"
@@ -226,7 +225,7 @@ $TextBox_InfoSistema.Text = $systemInfo
 
 $TabPage_Apps = New-Object System.Windows.Forms.TabPage
 $TabPage_Apps.Text = "Apps"
-$TabPage_Apps.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 $Label_APPS = New-Object System.Windows.Forms.Label
 $Label_APPS.Text = "Aplicaciones:"
@@ -254,11 +253,12 @@ $ListBox_Apps.Items.Add("Anydesk")
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
+$Button_DownloadExecute.FlatStyle = 'Flat'
 $Button_DownloadExecute.Text = "Descargar y Ejecutar"
 $Button_DownloadExecute.Location = New-Object System.Drawing.Point(250, 450)
 $Button_DownloadExecute.Size = New-Object System.Drawing.Size(300, 40)
-$Button_DownloadExecute.ForeColor = [System.Drawing.Color]::Black
-$Button_DownloadExecute.BackColor = [System.Drawing.Color]::White
+$Button_DownloadExecute.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $Button_DownloadExecute.Add_Click({
     $AppsToDownload = @()
@@ -346,7 +346,7 @@ $TabControl.Controls.Add($TabPage_Apps)
 
 $TabPage2 = New-Object System.Windows.Forms.TabPage
 $TabPage2.Text = "Limpieza"
-$TabPage2.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage2.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 
 # Lógica para los botones de la sección "limpieza"...
@@ -354,11 +354,12 @@ $TabPage2.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
 
 # Agregar el menú desplegable de limpieza
 $Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
+$Button_Menu_Limpieza.FlatStyle = 'Flat'
 $Button_Menu_Limpieza.Text = "Limpieza"
 $Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(200, 50)
 $Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(300, 40)
-$Button_Menu_Limpieza.ForeColor = [System.Drawing.Color]::Black
-$Button_Menu_Limpieza.BackColor = [System.Drawing.Color]::White
+$Button_Menu_Limpieza.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $ContextMenu_Limpieza = New-Object System.Windows.Forms.ContextMenuStrip
 
@@ -420,7 +421,7 @@ $TabPage2.Controls.Add($Button5_S2)
 <#
 $TabPage3 = New-Object System.Windows.Forms.TabPage
 $TabPage3.Text = "Repositorio MilenioPC"
-$TabPage3.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage3.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 # Botón para abrir el repositorio
 $Button_OpenWebsite = New-Object System.Windows.Forms.Button
@@ -538,47 +539,51 @@ $TabPage3.Controls.Add($Button_Menu_SistemasOperativos)
 # Crear una nueva pestaña para la sección de Restauración y Verificación
 $TabPage_Restauracion = New-Object System.Windows.Forms.TabPage
 $TabPage_Restauracion.Text = "Restauracion y Verificacion"
-$TabPage_Restauracion.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage_Restauracion.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 # Crear botones para crear punto de restauración y verificar archivos del sistema
 $Button_CrearRestauracion = New-Object System.Windows.Forms.Button
+$Button_CrearRestauracion.FlatStyle = 'Flat'
 $Button_CrearRestauracion.Text = "Crear Punto de Restauracion"
 $Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 80)
 $Button_CrearRestauracion.Size = New-Object System.Drawing.Size(150, 50)
-$Button_CrearRestauracion.ForeColor = [System.Drawing.Color]::Black
-$Button_CrearRestauracion.BackColor = [System.Drawing.Color]::White
+$Button_CrearRestauracion.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 $Button_VerificarArchivos = New-Object System.Windows.Forms.Button
+$Button_VerificarArchivos.FlatStyle = 'Flat'
 $Button_VerificarArchivos.Text = "Verificar y Reparar Archivos del Sistema"
 $Button_VerificarArchivos.Location = New-Object System.Drawing.Point(210, 80)
 $Button_VerificarArchivos.Size = New-Object System.Drawing.Size(150, 50)
-$Button_VerificarArchivos.ForeColor = [System.Drawing.Color]::Black
-$Button_VerificarArchivos.BackColor = [System.Drawing.Color]::White
+$Button_VerificarArchivos.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 
 
 $Button_BSOD_Info = New-Object System.Windows.Forms.Button
+$Button_BSOD_Info.FlatStyle = 'Flat'
 $Button_BSOD_Info.Text = "Informacion de Pantallazos Azules"
 $Button_BSOD_Info.Location = New-Object System.Drawing.Point(370, 80) 
 $Button_BSOD_Info.Size = New-Object System.Drawing.Size(150, 50)
-$Button_BSOD_Info.ForeColor = [System.Drawing.Color]::Black
-$Button_BSOD_Info.BackColor = [System.Drawing.Color]::White
+$Button_BSOD_Info.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 # Crear un botón para generar el informe de la batería
 $Button_BatteryReport = New-Object System.Windows.Forms.Button
+$Button_BatteryReport.FlatStyle = 'Flat'
 $Button_BatteryReport.Text = "Generar Informe de Bateria"
 $Button_BatteryReport.Location = New-Object System.Drawing.Point(530, 80)  # Ajusta la posición vertical según sea necesario
 $Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
-$Button_BatteryReport.ForeColor = [System.Drawing.Color]::Black
-$Button_BatteryReport.BackColor = [System.Drawing.Color]::White
+$Button_BatteryReport.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 # Botón para descargar AIDA 64
 $Button_DescargarAIDA64 = New-Object System.Windows.Forms.Button
+$Button_DescargarAIDA64.FlatStyle = 'Flat'
 $Button_DescargarAIDA64.Text = "AIDA 64"
 $Button_DescargarAIDA64.Location = New-Object System.Drawing.Point(50, 150)  # Ajusta la posición según sea necesario
 $Button_DescargarAIDA64.Size = New-Object System.Drawing.Size(150, 50)
-$Button_DescargarAIDA64.ForeColor = [System.Drawing.Color]::Black
-$Button_DescargarAIDA64.BackColor = [System.Drawing.Color]::White
+$Button_DescargarAIDA64.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 
 
@@ -686,7 +691,7 @@ $TabControl.TabPages.Add($TabPage_Restauracion)
 # menu seleccionable
 $TabPage4 = New-Object System.Windows.Forms.TabPage
 $TabPage4.Text = "Tweaks"
-$TabPage4.BackColor = [System.Drawing.Color]::FromArgb(0, 32, 96) # Azul oscuro
+$TabPage4.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 # Opciones en la izquierda
 $CheckBox_ActivarModoMaximoRendimiento = New-Object System.Windows.Forms.CheckBox
@@ -740,19 +745,21 @@ $CheckBox_DeshabilitarOptimizacionesPantallaCompleta.ForeColor = [System.Drawing
 $TabPage4.Controls.Add($CheckBox_DeshabilitarOptimizacionesPantallaCompleta)
 
 $Button_Optimizar = New-Object System.Windows.Forms.Button
+$Button_Optimizar.FlatStyle = 'Flat'
 $Button_Optimizar.Text = "Ejecutar Optimizacion"
 $Button_Optimizar.Location = New-Object System.Drawing.Point(50, 200)
 $Button_Optimizar.Size = New-Object System.Drawing.Size(150, 30)
-$Button_Optimizar.ForeColor = [System.Drawing.Color]::Black
-$Button_Optimizar.BackColor = [System.Drawing.Color]::White
+$Button_Optimizar.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 $TabPage4.Controls.Add($Button_Optimizar)
 # Botón para ejecutar Christitus
 $Button_EjecutarChristitus = New-Object System.Windows.Forms.Button
+$Button_EjecutarChristitus.FlatStyle = 'Flat'
 $Button_EjecutarChristitus.Text = "Ejecutar Christitus"
 $Button_EjecutarChristitus.Location = New-Object System.Drawing.Point(210, 200)  # Ajusta la posición según sea necesario
 $Button_EjecutarChristitus.Size = New-Object System.Drawing.Size(150, 30)
-$Button_EjecutarChristitus.ForeColor = [System.Drawing.Color]::Black
-$Button_EjecutarChristitus.BackColor = [System.Drawing.Color]::White
+$Button_EjecutarChristitus.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $Button_EjecutarChristitus.Add_Click({
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://christitus.com/win | iex" -Verb RunAs
@@ -762,11 +769,12 @@ $TabPage4.Controls.Add($Button_EjecutarChristitus)
 
 # Botón para ejecutar Debloat
 $Button_EjecutarDebloat = New-Object System.Windows.Forms.Button
+$Button_EjecutarDebloat.FlatStyle = 'Flat'
 $Button_EjecutarDebloat.Text = "Ejecutar Debloat"
 $Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(370, 200)  # Ajusta la posición según sea necesario
 $Button_EjecutarDebloat.Size = New-Object System.Drawing.Size(150, 30)
-$Button_EjecutarDebloat.ForeColor = [System.Drawing.Color]::Black
-$Button_EjecutarDebloat.BackColor = [System.Drawing.Color]::White
+$Button_EjecutarDebloat.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $Button_EjecutarDebloat.Add_Click({
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://git.io/debloat | iex" -Verb RunAs
@@ -776,11 +784,12 @@ $TabPage4.Controls.Add($Button_EjecutarDebloat)
 
 # Botón para instalar Winget
 $Button_InstalarWinget = New-Object System.Windows.Forms.Button
+$Button_InstalarWinget.FlatStyle = 'Flat'
 $Button_InstalarWinget.Text = "Instalar Winget"
 $Button_InstalarWinget.Location = New-Object System.Drawing.Point(530, 200)  # Ajusta la posición según sea necesario
 $Button_InstalarWinget.Size = New-Object System.Drawing.Size(150, 30)
-$Button_InstalarWinget.ForeColor = [System.Drawing.Color]::Black
-$Button_InstalarWinget.BackColor = [System.Drawing.Color]::White
+$Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $Button_InstalarWinget.Add_Click({
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client" -Verb RunAs
