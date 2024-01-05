@@ -13,7 +13,7 @@ public class Shell32
 Add-Type -AssemblyName System.Windows.Forms
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version 1.0" + [System.Environment]::NewLine +"                                                                                         Powered by: Brandon Sepulveda"
+$Form.Text = "Toolbox Version 1.1" + [System.Environment]::NewLine +"                                                                                            Powered by: Brandon Sepulveda"
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -43,9 +43,9 @@ $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 
 $Form.MaximizeBox = $false
 
-Write-Host "Toolbox Version 1.0" -ForegroundColor Red
+Write-Host "Toolbox Version 1.1" -ForegroundColor green
 
-Write-Host "Hecho por Brandon Sepulveda"
+Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
 
 
 # Sección "Informacion del Sistema"
@@ -588,7 +588,7 @@ $Button_DescargarAIDA64.BackColor = [System.Drawing.Color]::White
 # Manejadores de eventos para los botones
 $Button_CrearRestauracion.Add_Click({
     # Crear un punto de restauración
-    $description = "Punto de restauracion creado por Toolbox MPC"
+    $description = "Punto de restauracion creado por Toolbox "
     $restorePointType = "MODIFY_SETTINGS"
     Checkpoint-Computer -Description $description -RestorePointType $restorePointType
 
@@ -938,6 +938,6 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
-Write-Host "Toolbox Version 1.0" -ForegroundColor Red
+Write-Host "Toolbox Version 1.1" -ForegroundColor green
 
-Write-Host "Hecho por Brandon Sepulveda"
+Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
