@@ -797,6 +797,36 @@ $Button_InstalarWinget.Add_Click({
 
 $TabPage4.Controls.Add($Button_InstalarWinget)
 
+# Botón para Activarwindows
+$Button_Activarwindows = New-Object System.Windows.Forms.Button
+$Button_Activarwindows.FlatStyle = 'Flat'
+$Button_Activarwindows.Text = "Activar Windows"
+$Button_Activarwindows.Location = New-Object System.Drawing.Point(50, 250)  # Ajusta la posición según sea necesario
+$Button_Activarwindows.Size = New-Object System.Drawing.Size(150, 30)
+$Button_Activarwindows.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
+$Button_Activarwindows.Add_Click({
+    # URL del archivo a descargar
+    $url = "https://drive.google.com/uc?export=download&id=1iPf4rDTmW5gcCTGYI--MKSjiaW0yAWpV&confirm=t"
+
+    # Ruta donde se guardará el archivo
+    $archivoDescargado = "$env:TEMP\activador_windows.bat"
+
+    # Descargar el archivo
+    Invoke-WebRequest -Uri $url -OutFile $archivoDescargado
+
+    # Mostrar mensaje de confirmación antes de ejecutar
+    $confirmacion = [System.Windows.Forms.MessageBox]::Show("¿Deseas ejecutar el activador de Windows?", "Confirmar Ejecución", "YesNo", "Question")
+
+    # Si se confirma, ejecutar el archivo descargado
+    if ($confirmacion -eq "Yes") {
+        Start-Process "cmd.exe" -ArgumentList "/c `"$archivoDescargado`""
+    }
+})
+
+
+
+$TabPage4.Controls.Add($Button_Activarwindows)
 
 $Button_Optimizar.Add_Click({
     $opcionesSeleccionadas = @()
