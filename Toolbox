@@ -660,19 +660,18 @@ $Button_BatteryReport.Add_Click({
         [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
     }
 
-$Button_DescargarAIDA64.Add_Click({
-    # Define la URL de descarga de AIDA 64
-    $Url = "https://drive.google.com/uc?export=download&id=1AAc8Doc-OE1cmbiht9DdjheZpBis3MID&confirm=t"
-    
-    # Define la ruta de destino para la descarga
-    $OutputPath = "$env:userprofile\Downloads\AIDA64.bat"
-    
-    # Descarga AIDA 64
-    Invoke-WebRequest -Uri $Url -OutFile $OutputPath
-    
-    # Ejecuta AIDA 64 después de la descarga
-    Start-Process -FilePath $OutputPath
-})
+    $Button_DescargarAIDA64.Add_Click({
+        Write-Host "Descargando AIDA64..."
+        $aida64ZipPath = "$env:TEMP\aida64extreme700.zip"
+        $aida64ExtractPath = "$env:TEMP\AIDA64_Extracted"
+        Invoke-WebRequest -Uri "https://download.aida64.com/aida64extreme700.zip" -OutFile $aida64ZipPath
+        
+        Write-Host "Extrayendo archivos..."
+        Expand-Archive -Path $aida64ZipPath -DestinationPath $aida64ExtractPath
+        
+        Write-Host "Ejecutando AIDA64..."
+        Start-Process -FilePath "$aida64ExtractPath\aida64.exe"
+    })
 
 
 
@@ -684,7 +683,7 @@ $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
 $TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
 $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
 $TabPage_Restauracion.Controls.Add($Button_DescargarAIDA64)
-
+                            
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
 $TabControl.TabPages.Add($TabPage_Restauracion)
 
