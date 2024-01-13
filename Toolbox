@@ -274,28 +274,8 @@ $Button_DownloadExecute.Add_Click({
           "Hard Disk Sentinel Professional" {
                 $AppsToDownload += @{
                     Name = $app
-                    Script = {
-                        $url = "https://www.hdsentinel.com/beta6/hdsentinel_pro_setup_6105-dcms.zip"
-                        $zipFile = "$env:USERPROFILE\Downloads\hdsentinel_pro_setup_6105-dcms.zip"
-                        $extractFolder = "$env:USERPROFILE\Downloads\hdsentinel_pro_setup_6105-dcms"
-                        $batchFile = $MyInvocation.MyCommand.Definition
-
-                        Write-Host "Descargando archivo ZIP..."
-                        Invoke-WebRequest -Uri $url -OutFile $zipFile
-
-                        Write-Host "Descomprimiendo archivo ZIP..."
-                        Expand-Archive -Path $zipFile -DestinationPath $extractFolder -Force
-
-                        Write-Host "Ejecutando Sentinel..."
-                        Set-Location $extractFolder
-                        Start-Process hdsentinel_pro_setup.exe -Wait
-
-                        Write-Host "Eliminando el script..."
-                        Start-Sleep -Seconds 3
-                        Remove-Item $batchFile -Force
-
-                        Write-Host "Script completado."
-                    }
+                    URL = "https://drive.google.com/uc?export=download&id=1E_UwJdrdXwfLSrQX8kd8hvk_oaQlHfCm&confirm=t"
+                    Extension = ".bat"
                 }
             }
             
