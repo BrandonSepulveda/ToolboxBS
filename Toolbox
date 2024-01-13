@@ -632,17 +632,40 @@ $Button_VerificarArchivos.Add_Click({
 
 
 $Button_BSOD_Info.Add_Click({
-    # Define la URL de descarga de BlueScreenView
-    $Url = "https://drive.google.com/uc?export=download&id=1ZUt286PKHp0hN0Xp1wxNXu6Ofs7bS5Xo&confirm=t"
+    # Define la URL de descarga de BlueScreenView.zip
+    $Url = "https://www.nirsoft.net/utils/bluescreenview.zip"
     
-    # Define la ruta de destino para la descarga
-    $OutputPath = "$env:userprofile\Downloads\BlueScreenView.exe"
+    # Define la ruta de destino para la descarga y la extracción
+    $ZipPath = Join-Path $env:TEMP "bluescreenview.zip"
+    $ExtractPath = Join-Path $env:TEMP "BlueScreenView"
     
-    # Descarga BlueScreenView
-    Invoke-WebRequest -Uri $Url -OutFile $OutputPath
+    # Descarga el archivo zip
+    try {
+        Invoke-WebRequest -Uri $Url -OutFile $ZipPath
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al descargar BlueScreenView: $_", "Error de Descarga")
+        return
+    }
     
-    # Ejecuta BlueScreenView después de la descarga
-    Start-Process -FilePath $OutputPath
+    # Extrae el contenido del archivo zip
+    try {
+        Expand-Archive -Path $ZipPath -DestinationPath $ExtractPath -Force
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al extraer BlueScreenView: $_", "Error de Extracción")
+        return
+    }
+    
+    # Ejecuta BlueScreenView.exe
+    $ExePath = Join-Path $ExtractPath "BlueScreenView.exe"
+    if (Test-Path -Path $ExePath) {
+        try {
+            Start-Process -FilePath $ExePath
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show("Error al ejecutar BlueScreenView: $_", "Error de Ejecución")
+        }
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("No se encontró BlueScreenView.exe en la carpeta extraída.", "Archivo No Encontrado")
+    }
 })
 
 # Agregar un controlador de eventos para el clic del botón
