@@ -245,8 +245,9 @@ $ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
 $ListBox_Apps.Items.Add("TeamViewer")
 $ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
 $ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
+$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
 $ListBox_Apps.Items.Add("Anydesk")
-
+$ListBox_Apps.Items.Add("AIDA64")
 
 
 
@@ -303,6 +304,14 @@ $Button_DownloadExecute.Add_Click({
                 }
             }
 			
+            
+            "Lenovo Diagnostics Evolution" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://drive.google.com/uc?export=download&id=1lGN8Ma3DKgXASetsljCecsMWdlfcsBlK&confirm=t"
+                    Extension = ".bat"
+                }
+            }
 
             "Anydesk" {
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
@@ -313,7 +322,17 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar AnyDesk: $_", "Error de Instalación")
                 }
             }
-            
+
+            "AIDA64" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                    Start-Process -FilePath "winget" -ArgumentList "install FinalWire.AIDA64.Extreme" -Wait -NoNewWindow
+                    [System.Windows.Forms.MessageBox]::Show("AIDA64 Extreme Edition instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar AIDA64 Extreme Edition: $_", "Error de Instalación")
+                }
+            }
         }
     }
 
@@ -571,19 +590,6 @@ $Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BatteryReport.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 
-# Botón para descargar AIDA 64
-$Button_DescargarAIDA64 = New-Object System.Windows.Forms.Button
-$Button_DescargarAIDA64.FlatStyle = 'Flat'
-$Button_DescargarAIDA64.Text = "AIDA 64"
-$Button_DescargarAIDA64.Location = New-Object System.Drawing.Point(50, 150)  # Ajusta la posición según sea necesario
-$Button_DescargarAIDA64.Size = New-Object System.Drawing.Size(150, 50)
-$Button_DescargarAIDA64.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
-
-
-
-
-
 
 # Manejadores de eventos para los botones
 $Button_CrearRestauracion.Add_Click({
@@ -678,21 +684,6 @@ $Button_BatteryReport.Add_Click({
         [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
     }
 
-    $Button_DescargarAIDA64.Add_Click({
-        Write-Host "Descargando AIDA64..."
-        $aida64ZipPath = "$env:TEMP\aida64extreme700.zip"
-        $aida64ExtractPath = "$env:TEMP\AIDA64_Extracted"
-        Invoke-WebRequest -Uri "https://download.aida64.com/aida64extreme700.zip" -OutFile $aida64ZipPath
-        
-        Write-Host "Extrayendo archivos..."
-        Expand-Archive -Path $aida64ZipPath -DestinationPath $aida64ExtractPath
-        
-        Write-Host "Ejecutando AIDA64..."
-        Start-Process -FilePath "$aida64ExtractPath\aida64.exe"
-    })
-
-
-
 })
 
 # Agregar botones a la pestaña
@@ -700,7 +691,7 @@ $TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
 $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
 $TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
 $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
-$TabPage_Restauracion.Controls.Add($Button_DescargarAIDA64)
+
                             
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
 $TabControl.TabPages.Add($TabPage_Restauracion)
