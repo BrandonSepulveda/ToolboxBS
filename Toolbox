@@ -245,7 +245,6 @@ $ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
 $ListBox_Apps.Items.Add("TeamViewer")
 $ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
 $ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
-$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
 $ListBox_Apps.Items.Add("Anydesk")
 
 
@@ -271,11 +270,13 @@ $Button_DownloadExecute.Add_Click({
                     Extension = ".exe"
                 }
             }
-          "Hard Disk Sentinel Professional" {
-                $AppsToDownload += @{
-                    Name = $app
-                    URL = "https://drive.google.com/uc?export=download&id=1E_UwJdrdXwfLSrQX8kd8hvk_oaQlHfCm&confirm=t"
-                    Extension = ".bat"
+            "Hard Disk Sentinel Professional" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process -FilePath "winget" -ArgumentList "install XPDNXG5333CSVK --accept-package-agreements" -Wait -NoNewWindow
+                    [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Hard Disk Sentinel: $_", "Error de Instalación")
                 }
             }
             
@@ -302,20 +303,14 @@ $Button_DownloadExecute.Add_Click({
                 }
             }
 			
-            
-            "Lenovo Diagnostics Evolution" {
-                $AppsToDownload += @{
-                    Name = $app
-                    URL = "https://drive.google.com/uc?export=download&id=1lGN8Ma3DKgXASetsljCecsMWdlfcsBlK&confirm=t"
-                    Extension = ".bat"
-                }
-            }
 
             "Anydesk" {
-                $AppsToDownload += @{
-                    Name = $app
-                    URL = "https://drive.google.com/uc?export=download&id=1yayqGa6zR05hKmSBLSZ8SMOoGReoGKa7&confirm=t"
-                    Extension = ".bat"
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    Start-Process -FilePath "winget" -ArgumentList "install AnyDeskSoftwareGmbH.AnyDesk --accept-package-agreements" -Wait -NoNewWindow
+                    [System.Windows.Forms.MessageBox]::Show("AnyDesk instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar AnyDesk: $_", "Error de Instalación")
                 }
             }
             
