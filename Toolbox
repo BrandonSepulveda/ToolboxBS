@@ -240,14 +240,15 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 
 # Agrega las aplicaciones a la lista
 
-$ListBox_Apps.Items.Add("Lenovo System Update")
-$ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
-$ListBox_Apps.Items.Add("TeamViewer")
-$ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
-$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
-$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
-$ListBox_Apps.Items.Add("Anydesk")
-$ListBox_Apps.Items.Add("AIDA64")
+# Agregar elementos al ListBox sin mostrar la salida en el terminal
+[void]$ListBox_Apps.Items.Add("Lenovo System Update")
+[void]$ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
+[void]$ListBox_Apps.Items.Add("TeamViewer")
+[void]$ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
+[void]$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
+[void]$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
+[void]$ListBox_Apps.Items.Add("Anydesk")
+[void]$ListBox_Apps.Items.Add("AIDA64")
 
 
 
