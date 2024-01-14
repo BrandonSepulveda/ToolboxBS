@@ -178,8 +178,9 @@ $systemInfo += "Serial de Fabrica: $serialFabrica`r`n"
 $temperatureInfo = Get-WmiObject -Namespace "root\WMI" -Class MSAcpi_ThermalZoneTemperature
 
 # Verificar si se encontró información de la temperatura de la CPU
+# Verificar si se encontró información de la temperatura de la CPU
 if ($temperatureInfo) {
-    $temperatureCelsius = ($temperatureInfo.CurrentTemperature - 2732) / 10.0
+    $temperatureCelsius = ($temperatureInfo.CurrentTemperature[0] - 2732) / 10.0
     $systemInfo += "Temperatura de la CPU: $($temperatureCelsius)C`r`n"
 } else {
     $systemInfo += "No se encontro informacion de la temperatura de la CPU`r`n"
@@ -249,8 +250,6 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
 [void]$ListBox_Apps.Items.Add("Anydesk")
 [void]$ListBox_Apps.Items.Add("AIDA64")
-
-
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
