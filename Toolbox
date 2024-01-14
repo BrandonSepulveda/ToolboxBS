@@ -99,6 +99,8 @@ if ($smartInfo) {
     $diskFreeSpace = (Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace
     $diskUsagePercentage = (($diskCapacity - $diskFreeSpace) / $diskCapacity) * 100
 
+    
+
     # Estado de salud del disco basado en el atributo 5 (Reallocated Sectors Count)
     $reallocatedSectors = $smartInfo.PredictFailure -band 0x05
     if ($reallocatedSectors) {
@@ -274,7 +276,7 @@ $Button_DownloadExecute.Add_Click({
             "Hard Disk Sentinel Professional" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process -FilePath "winget" -ArgumentList "install XPDNXG5333CSVK --accept-package-agreements" -Wait -NoNewWindow
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XPDNXG5333CSVK --accept-package-agreements`""
                     [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalación Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Hard Disk Sentinel: $_", "Error de Instalación")
@@ -327,7 +329,7 @@ $Button_DownloadExecute.Add_Click({
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
                 try {
                     # Ejecutar winget para instalar AIDA64 Extreme Edition
-                    Start-Process -FilePath "winget" -ArgumentList "install FinalWire.AIDA64.Extreme" -Wait -NoNewWindow
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install FinalWire.AIDA64.Extreme`""
                     [System.Windows.Forms.MessageBox]::Show("AIDA64 Extreme Edition instalado correctamente.", "Instalación Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar AIDA64 Extreme Edition: $_", "Error de Instalación")
