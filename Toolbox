@@ -249,7 +249,6 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("TeamViewer")
 [void]$ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
 [void]$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
-[void]$ListBox_Apps.Items.Add("Lenovo Diagnostics Evolution")
 [void]$ListBox_Apps.Items.Add("Anydesk")
 [void]$ListBox_Apps.Items.Add("AIDA64")
 
@@ -303,15 +302,6 @@ $Button_DownloadExecute.Add_Click({
                     Name = $app
                     URL = "https://dsadata.intel.com/installer"
                     Extension = ".exe"
-                }
-            }
-			
-            
-            "Lenovo Diagnostics Evolution" {
-                $AppsToDownload += @{
-                    Name = $app
-                    URL = "https://drive.google.com/uc?export=download&id=1lGN8Ma3DKgXASetsljCecsMWdlfcsBlK&confirm=t"
-                    Extension = ".bat"
                 }
             }
 
