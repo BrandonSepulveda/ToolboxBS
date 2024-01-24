@@ -256,6 +256,8 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("HP PC Hardware Diagnostics Windows")
 [void]$ListBox_Apps.Items.Add("HP Smart")
 [void]$ListBox_Apps.Items.Add("MyASUS")
+[void]$ListBox_Apps.Items.Add("Rufus")
+[void]$ListBox_Apps.Items.Add("Ventoy")
 
 
 
@@ -384,6 +386,26 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("MyASUS instalado correctamente.", "Instalación Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar MyASUS: $_", "Error de Instalación")
+                }
+            }
+
+            "Rufus" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9PC3H3V7Q9CH --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Rufus correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Rufus: $_", "Error de Instalación")
+                }
+            }
+
+            "Ventoy" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Ventoy.Ventoy --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Ventoy  correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Ventoy: $_", "Error de Instalación")
                 }
             }
 
