@@ -854,7 +854,7 @@ $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#
 
 
 $Button_InstalarWinget.Add_Click({
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client" -Verb RunAs
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client -Force -AcceptLicense" -Verb RunAs
 })
 
 $TabPage4.Controls.Add($Button_InstalarWinget)
