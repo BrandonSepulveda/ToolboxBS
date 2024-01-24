@@ -251,6 +251,12 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
 [void]$ListBox_Apps.Items.Add("Anydesk")
 [void]$ListBox_Apps.Items.Add("AIDA64")
+[void]$ListBox_Apps.Items.Add("Dell Command Update")
+[void]$ListBox_Apps.Items.Add("Lenovo Vantage")
+[void]$ListBox_Apps.Items.Add("HP PC Hardware Diagnostics Windows")
+[void]$ListBox_Apps.Items.Add("HP Smart")
+[void]$ListBox_Apps.Items.Add("MyASUS")
+
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
@@ -325,6 +331,62 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar AIDA64 Extreme Edition: $_", "Error de Instalación")
                 }
             }
+
+            "Dell Command Update" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Dell.CommandUpdate`""
+                    [System.Windows.Forms.MessageBox]::Show("Dell command Update instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Dell command Update: $_", "Error de Instalación")
+                }
+            }
+
+            "Lenovo Vantage" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9WZDNCRFJ4MV`""
+                    [System.Windows.Forms.MessageBox]::Show("Lenovo Vantage instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Lenovo Vantage: $_", "Error de Instalación")
+                }
+            }
+
+            "HP PC Hardware Diagnostics Windows" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9P4PNDG7L782`""
+                    [System.Windows.Forms.MessageBox]::Show("HP PC Hardware Diagnostics Windows instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar HP PC Hardware Diagnostics Windows: $_", "Error de Instalación")
+                }
+            }
+
+            "HP Smart" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9WZDNCRFHWLH`""
+                    [System.Windows.Forms.MessageBox]::Show("HP Smart instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar HP Smart: $_", "Error de Instalación")
+                }
+            }
+
+            "MyASUS" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9N7R5S6B0ZZH`""
+                    [System.Windows.Forms.MessageBox]::Show("MyASUS instalado correctamente.", "Instalación Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar MyASUS: $_", "Error de Instalación")
+                }
+            }
+
         }
     }
 
@@ -955,6 +1017,8 @@ if ($opcionesSeleccionadas -contains "Activar modo maximo rendimiento") {
         [System.Windows.Forms.MessageBox]::Show("Por favor, selecciona al menos una opcion.", "Error")
     }
 })
+
+
 
 $TabPage4.Controls.Add($Button_Optimizar)
 
