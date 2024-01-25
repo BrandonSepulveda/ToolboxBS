@@ -42,9 +42,9 @@ $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 
 $Form.MaximizeBox = $false
 
-Write-Host "Toolbox Version 1.1" -ForegroundColor green
+Write-Host "Toolbox 💻 Version 1.1 " -ForegroundColor green
 
-Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
+Write-Host "Hecho por Brandon Sepulveda 👦🏽" -ForegroundColor green
 
 
 # Sección "Informacion del Sistema"
@@ -1057,6 +1057,6 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
-Write-Host "Toolbox Version 1.1" -ForegroundColor green
+Write-Host "Adios 💪" -ForegroundColor green
 
-Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
+
