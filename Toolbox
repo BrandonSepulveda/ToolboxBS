@@ -1,6 +1,17 @@
 # Configurar la fuente y codificación para admitir emojis
-$host.UI.RawUI.FontFamily = "Segoe UI Emoji"
-$OutputEncoding = [System.Text.Encoding]::UTF8
+function Set-ConsoleFont {
+    param (
+        [string]$fontName = "Lucida Console",
+        [int]$fontSize = 16
+    )
+
+    $font = New-Object System.Drawing.Font($fontName, $fontSize)
+
+    $console = $host.UI.RawUI
+    $console.GetType().GetProperty("Font").SetValue($console, $font, $null)
+}
+
+Set-ConsoleFont -fontName "Segoe UI Emoji" -fontSize 16
 
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
