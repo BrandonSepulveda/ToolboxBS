@@ -1,3 +1,7 @@
+# Configurar la fuente y codificación para admitir emojis
+$host.UI.RawUI.FontFamily = "Segoe UI Emoji"
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
 using System;
