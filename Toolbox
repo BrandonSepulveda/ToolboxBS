@@ -47,7 +47,7 @@ Write-Host "Toolbox 💻 Version 1.1 " -ForegroundColor green
 Write-Host "Hecho por Brandon Sepulveda 👦🏽🦇 ©" -ForegroundColor green
 
 
-# Sección "Informacion del Sistema 🖥"
+# Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
 $TabPage_InfoSistema.BackColor =  [System.Drawing.Color]::Black  # Cambiar a negro
