@@ -289,7 +289,7 @@ $Button_DownloadExecute.Add_Click({
             "Lenovo System Update" {
                 $AppsToDownload += @{
                     Name = $app
-                    URL = "https://download.lenovo.com/pccbbs/thinkvantage_en/system_update_5.08.01.exe"
+                    URL = "https://download.lenovo.com/pccbbs/thinkvantage_en/system_update_5.08.02.25.exe"
                     Extension = ".exe"
                 }
             }
