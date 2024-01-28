@@ -289,12 +289,14 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe" -Verb RunAs
 }
 
+
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
 $Button_DownloadExecute.FlatStyle = 'Flat'
 $Button_DownloadExecute.Text = "Descargar y Ejecutar"
 $Button_DownloadExecute.Location = New-Object System.Drawing.Point(250, 450)
 $Button_DownloadExecute.Size = New-Object System.Drawing.Size(300, 40)
 $Button_DownloadExecute.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 
 $Button_DownloadExecute.Add_Click({
@@ -794,6 +796,15 @@ $Button_BatteryReport.Location = New-Object System.Drawing.Point(530, 80)  # Aju
 $Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BatteryReport.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
+# Crear botón para obtener información de drivers
+
+$Button_InfoDrivers = New-Object System.Windows.Forms.Button
+$Button_InfoDrivers.FlatStyle = 'Flat'
+$Button_InfoDrivers.Text = "Informacion de Drivers"
+$Button_InfoDrivers.Location = New-Object System.Drawing.Point(50, 140)
+$Button_InfoDrivers.Size = New-Object System.Drawing.Size(150, 50)
+$Button_InfoDrivers.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 
 # Manejadores de eventos para los botones
@@ -890,12 +901,26 @@ $Button_BatteryReport.Add_Click({
     }
 
 })
+# Crear botón para obtener información de drivers
+$Button_InfoDrivers = New-Object System.Windows.Forms.Button
+$Button_InfoDrivers.FlatStyle = 'Flat'
+$Button_InfoDrivers.Text = "Informacion de Drivers"
+$Button_InfoDrivers.Location = New-Object System.Drawing.Point(50, 140)
+$Button_InfoDrivers.Size = New-Object System.Drawing.Size(150, 50)
+$Button_InfoDrivers.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
+
+$Button_InfoDrivers.Add_Click({
+# Obtener información de los controladores del sistema
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "Get-WmiObject -Query 'SELECT * FROM Win32_SystemDriver' | Select-Object DisplayName, Description, PathName, StartMode, State, Status | Out-File -FilePath 'informacion_controladores.txt'; Invoke-Item -Path 'informacion_controladores.txt'"
+
+})
 # Agregar botones a la pestaña
 $TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
 $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
 $TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
 $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
+$TabPage_Restauracion.Controls.Add($Button_InfoDrivers)
 
                             
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
@@ -1201,28 +1226,19 @@ if ($opcionesSeleccionadas -contains "Activar modo maximo rendimiento") {
     Write-Host "Modo maximo rendimiento activado."
 }
 
-
     } else {
         [System.Windows.Forms.MessageBox]::Show("Por favor, selecciona al menos una opcion.", "Error")
     }
 })
 
-
-
 $TabPage4.Controls.Add($Button_Optimizar)
-
-
 
 $TabControl.TabPages.Add($TabPage2)
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
 
-
-
 $Form.Controls.Add($TabControl)
 
-
 $Form.ShowDialog()
-
 
 Write-Host "Adios $rockEmoji" -ForegroundColor green
