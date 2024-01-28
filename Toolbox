@@ -40,7 +40,8 @@ $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 
 $Form.MaximizeBox = $false
 
-Write-Host "Toolbox Version 1.1" -ForegroundColor green
+$computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
+Write-Host "Toolbox Version 1.1 $computerEmoji" -ForegroundColor green
 
 Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
 
