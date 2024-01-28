@@ -25,8 +25,6 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 $form.Icon = $icon
 
 
-
-
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
 $Form.Font = New-Object System.Drawing.Font("Arial", 10)
@@ -955,17 +953,21 @@ if ($opcionesSeleccionadas -contains "Deshabilitar animaciones") {
     Write-Host "Deshabilitando animaciones..."
 
   
-
-    # Configurar valores para deshabilitar animaciones
+# Configurar valores para deshabilitar animaciones y suavizar bordes de fuentes
     $settingsPath = "HKCU:\Control Panel\Desktop"
     Set-ItemProperty -Path $settingsPath -Name "DragFullWindows" -Value 0
     Set-ItemProperty -Path $settingsPath -Name "UserPreferencesMask" -Value ([byte[]]@(0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00))
-    
+    Set-ItemProperty -Path $settingsPath -Name "FontSmoothing" -Value 2  # Suavizar bordes de fuentes
+
     $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
     Set-ItemProperty -Path $settingsPath -Name "DisablePreviewDesktop" -Value 1
     
     $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
     Set-ItemProperty -Path $settingsPath -Name "VisualFXSetting" -Value 2
+
+    # Reiniciar el proceso explorer.exe
+Stop-Process -Name explorer
+Start-Process explorer
 
     # Mensaje de éxito
     Write-Host "Animaciones deshabilitadas."
