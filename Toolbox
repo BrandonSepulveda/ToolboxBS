@@ -41,10 +41,11 @@ $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 $Form.MaximizeBox = $false
 
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
+$batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
+$rockEmoji = [char]::ConvertFromUtf32(0x1F918)
+
 Write-Host "Toolbox Version 1.1 $computerEmoji" -ForegroundColor green
-
-Write-Host "Hecho por Brandon Sepulveda" -ForegroundColor green
-
+Write-Host "Hecho por Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
@@ -1056,4 +1057,4 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
-Write-Host "Adios <3 !" -ForegroundColor green
+Write-Host "Adios $rockEmoji" -ForegroundColor green
