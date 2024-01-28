@@ -271,6 +271,18 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("MyASUS")
 [void]$ListBox_Apps.Items.Add("Rufus")
 [void]$ListBox_Apps.Items.Add("Ventoy")
+[void]$ListBox_Apps.Items.Add("Google Chrome")
+[void]$ListBox_Apps.Items.Add("7-Zip")
+[void]$ListBox_Apps.Items.Add("WinRAR")
+[void]$ListBox_Apps.Items.Add("Notepad++")
+[void]$ListBox_Apps.Items.Add("Visual Studio Code")
+[void]$ListBox_Apps.Items.Add("Brave Browser")
+[void]$ListBox_Apps.Items.Add("WhatsApp")
+[void]$ListBox_Apps.Items.Add("Discord")
+[void]$ListBox_Apps.Items.Add("PowerShell")
+[void]$ListBox_Apps.Items.Add("Microsoft PowerToys")
+[void]$ListBox_Apps.Items.Add("Windows Terminal")
+
 
 
 
@@ -419,6 +431,107 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("Ventoy  correctamente.", "Instalación Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Ventoy: $_", "Error de Instalación")
+                }
+            }
+
+            "Google Chrome" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Google.Chrome --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Google Chromel instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Google Chrome: $_", "Error de Instalacion")
+                }
+            }
+            
+            "7-Zip" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 7zip.7zip --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("7-Zip instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar 7-Zip: $_", "Error de Instalacion")
+                }
+            }
+
+            "WinRAR" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install RARLab.WinRAR --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("WinRAR instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar WinRAR: $_", "Error de Instalacion")
+                }
+            }
+
+            "Notepad++" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Notepad++.Notepad++ --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Notepad++ instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Notepad++ $_", "Error de Instalacion")
+                }
+            }
+            
+              
+            "Brave Browser" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XP8C9QZMS2PC1T --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Brave Browser instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Brave Browser $_", "Error de Instalacion")
+                }
+            }
+                
+            "WhatsApp" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9NKSQGP7F2NH --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("WhatsApp instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar WhatsApp $_", "Error de Instalacion")
+                }
+            }
+
+            "Discord" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Discord.Discord --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Discord instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Discord $_", "Error de Instalacion")
+                }
+            }
+
+            "PowerShell" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install  Microsoft.PowerShell --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("PowerShell instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar PowerShell $_", "Error de Instalacion")
+                }
+            }
+
+            "Microsoft PowerToys" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install  XP89DCGQ3K6VLD --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Microsoft PowerToys instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Microsoft PowerToys $_", "Error de Instalacion")
+                }
+            }
+
+            "Windows Terminal" {
+                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                try {
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9N0DX20HK701 --accept-package-agreements`""
+                    [System.Windows.Forms.MessageBox]::Show("Windows Terminal instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Windows Terminal $_", "Error de Instalacion")
                 }
             }
 
