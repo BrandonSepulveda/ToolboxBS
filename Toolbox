@@ -954,23 +954,18 @@ Checkpoint-Computer -Description $description -RestorePointType $restorePointTyp
 if ($opcionesSeleccionadas -contains "Deshabilitar animaciones") {
     Write-Host "Deshabilitando animaciones..."
 
-     # Validar valor de enable
-    if ($Checked) {
-        $enable = $true
-    } else {
-        $enable = $false
-    }
+  
 
     # Configurar valores para deshabilitar animaciones
     $settingsPath = "HKCU:\Control Panel\Desktop"
-    Set-ItemProperty -Path $settingsPath -Name "DragFullWindows" -Value ($enable -eq $true)
+    Set-ItemProperty -Path $settingsPath -Name "DragFullWindows" -Value 0
     Set-ItemProperty -Path $settingsPath -Name "UserPreferencesMask" -Value ([byte[]]@(0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00))
-
+    
     $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
-    Set-ItemProperty -Path $settingsPath -Name "DisablePreviewDesktop" -Value ($enable -ne $true)
-
+    Set-ItemProperty -Path $settingsPath -Name "DisablePreviewDesktop" -Value 1
+    
     $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
-    Set-ItemProperty -Path $settingsPath -Name "VisualFXSetting" -Value 3
+    Set-ItemProperty -Path $settingsPath -Name "VisualFXSetting" -Value 2
 
     # Mensaje de éxito
     Write-Host "Animaciones deshabilitadas."
@@ -1059,5 +1054,3 @@ $Form.Controls.Add($TabControl)
 $Form.ShowDialog()
 
 Write-Host "Adios!" -ForegroundColor green
-
-
