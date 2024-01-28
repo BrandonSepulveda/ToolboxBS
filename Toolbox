@@ -920,6 +920,44 @@ $Button_Activarwindows.Add_Click({
 
 $TabPage4.Controls.Add($Button_Activarwindows)
 
+
+# Botón para Ejecutar Optimizer
+$Button_Optimizer = New-Object System.Windows.Forms.Button
+$Button_Optimizer.FlatStyle = 'Flat'
+$Button_Optimizer.Text = "Ejecutar Optimizer"
+$Button_Optimizer.Location = New-Object System.Drawing.Point(210, 250)  # Ajusta la posición según sea necesario
+$Button_Optimizer.Size = New-Object System.Drawing.Size(150, 30)
+$Button_Optimizer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
+
+# Agrega un evento al hacer clic en el botón
+$Button_Optimizer.Add_Click({
+    $url = "https://github.com/hellzerg/optimizer/releases/download/16.4/Optimizer-16.4.exe"
+    $outputFolder = "C:\Path\To\Download"
+    $outputPath = Join-Path $outputFolder "Optimizer-16.4.exe"
+
+    # Verifica si la carpeta de destino existe, si no, la crea
+    if (-not (Test-Path -Path $outputFolder -PathType Container)) {
+        New-Item -ItemType Directory -Force -Path $outputFolder
+    }
+
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $outputPath
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al descargar Optimizer: $_", "Error de Descarga")
+        return
+    }
+
+    try {
+        Start-Process -FilePath $outputPath
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al ejecutar Optimizer: $_", "Error de Ejecución")
+    }
+})
+
+
+$TabPage4.Controls.Add($Button_Optimizer)
+
 $Button_Optimizar.Add_Click({
     $opcionesSeleccionadas = @()
 
