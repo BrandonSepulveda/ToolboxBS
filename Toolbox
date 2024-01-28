@@ -283,8 +283,11 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("Microsoft PowerToys")
 [void]$ListBox_Apps.Items.Add("Windows Terminal")
 
-
-
+# Verificar si winget está instalado
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    # Instalar winget
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe" -Verb RunAs
+}
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
 $Button_DownloadExecute.FlatStyle = 'Flat'
