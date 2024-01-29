@@ -1032,7 +1032,7 @@ $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#
 
 $Button_InstalarWinget.Add_Click({
     # Definir el comando de instalación del módulo WinGet
-    $Command = "Install-Module -Name Microsoft.WinGet.Client -Force -AcceptLicense"
+    $Command = "Install-Module -Name Microsoft.WinGet.Client -Force"
 
     # Abrir PowerShell como administrador y ejecutar el comando
     Start-Process powershell -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-Command", $Command -Verb RunAs
