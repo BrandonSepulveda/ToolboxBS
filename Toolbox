@@ -285,9 +285,26 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 
 # Verificar si winget está instalado
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    # Instalar winget
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client -Force -AllowClobber -Scope CurrentUser" -Verb RunAs
+    # Definir el progreso en silencio para evitar mensajes innecesarios
+    $progressPreference = 'silentlyContinue'
+
+    # Descargar WinGet y sus dependencias
+    Write-Information "Downloading WinGet and its dependencies..."
+    Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+    Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
+
+    # Instalar las dependencias
+    Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
+    Add-AppxPackage Microsoft.UI.Xaml.2.7.x64.appx
+
+    # Instalar WinGet
+    Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+
+    # Restaurar la preferencia de progreso a su valor predeterminado
+    $progressPreference = 'Continue'
 }
+
 
 
 
@@ -1031,11 +1048,24 @@ $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#
 
 
 $Button_InstalarWinget.Add_Click({
-    # Definir el comando de instalación del módulo WinGet
-    $Command = "Install-Module -Name Microsoft.WinGet.Client -Force"
+    # Definir el progreso en silencio para evitar mensajes innecesarios
+    $progressPreference = 'silentlyContinue'
 
-    # Abrir PowerShell como administrador y ejecutar el comando
-    Start-Process powershell -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-Command", $Command -Verb RunAs
+    # Descargar WinGet y sus dependencias
+    Write-Information "Downloading WinGet and its dependencies..."
+    Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+    Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
+
+    # Instalar las dependencias
+    Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
+    Add-AppxPackage Microsoft.UI.Xaml.2.7.x64.appx
+
+    # Instalar WinGet
+    Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+
+    # Restaurar la preferencia de progreso a su valor predeterminado
+    $progressPreference = 'Continue'
 })
 
 
