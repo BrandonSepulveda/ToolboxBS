@@ -286,8 +286,9 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 # Verificar si winget está instalado
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     # Instalar winget
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe" -Verb RunAs
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.Winget -Force -AllowClobber -Scope CurrentUser" -Verb RunAs
 }
+
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
@@ -1030,8 +1031,13 @@ $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#
 
 
 $Button_InstalarWinget.Add_Click({
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe" -Verb RunAs
+    # Definir el comando de instalación del módulo WinGet
+    $Command = "Install-Module -Name Microsoft.WinGet.Client -Force -AcceptLicense"
+
+    # Abrir PowerShell como administrador y ejecutar el comando
+    Start-Process powershell -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-Command", $Command -Verb RunAs
 })
+
 
 
 $TabPage4.Controls.Add($Button_InstalarWinget)
