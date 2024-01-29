@@ -286,7 +286,7 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 # Verificar si winget está instalado
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     # Instalar winget
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.Winget -Force -AllowClobber -Scope CurrentUser" -Verb RunAs
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "Install-Module -Name Microsoft.WinGet.Client -Force -AllowClobber -Scope CurrentUser" -Verb RunAs
 }
 
 
