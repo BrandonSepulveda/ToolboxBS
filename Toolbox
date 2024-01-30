@@ -964,16 +964,11 @@ $CheckBox_MejorRespuesta.Size = New-Object System.Drawing.Size(300, 20)
 $CheckBox_MejorRespuesta.ForeColor = [System.Drawing.Color]::White
 $TabPage4.Controls.Add($CheckBox_MejorRespuesta)
 
-$CheckBox_DeshabilitarTransparencia = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
-$CheckBox_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(50, 110)
-$CheckBox_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarTransparencia.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarTransparencia)
+
 
 $CheckBox_DeshabilitarAnimaciones = New-Object System.Windows.Forms.CheckBox
 $CheckBox_DeshabilitarAnimaciones.Text = "Deshabilitar Animaciones"
-$CheckBox_DeshabilitarAnimaciones.Location = New-Object System.Drawing.Point(50, 140)
+$CheckBox_DeshabilitarAnimaciones.Location = New-Object System.Drawing.Point(50, 110)
 $CheckBox_DeshabilitarAnimaciones.Size = New-Object System.Drawing.Size(300, 20)
 $CheckBox_DeshabilitarAnimaciones.ForeColor = [System.Drawing.Color]::White
 $TabPage4.Controls.Add($CheckBox_DeshabilitarAnimaciones)
@@ -993,12 +988,13 @@ $CheckBox_DeshabilitarAppsSegundoPlano.Size = New-Object System.Drawing.Size(300
 $CheckBox_DeshabilitarAppsSegundoPlano.ForeColor = [System.Drawing.Color]::White
 $TabPage4.Controls.Add($CheckBox_DeshabilitarAppsSegundoPlano)
 
-$CheckBox_DeshabilitarOptimizacionesPantallaCompleta = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Text = "Deshabilitar Optimizaciones de Pantalla Completa"
-$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Location = New-Object System.Drawing.Point(400, 110)
-$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarOptimizacionesPantallaCompleta.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarOptimizacionesPantallaCompleta)
+$CheckBox_DeshabilitarTransparencia = New-Object System.Windows.Forms.CheckBox
+$CheckBox_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
+$CheckBox_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(400, 110)
+$CheckBox_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(300, 20)
+$CheckBox_DeshabilitarTransparencia.ForeColor = [System.Drawing.Color]::White
+$TabPage4.Controls.Add($CheckBox_DeshabilitarTransparencia)
+
 
 $Button_Optimizar = New-Object System.Windows.Forms.Button
 $Button_Optimizar.FlatStyle = 'Flat'
@@ -1151,7 +1147,7 @@ Checkpoint-Computer -Description $description -RestorePointType $restorePointTyp
     if ($CheckBox_DeshabilitarAnimaciones.Checked) { $opcionesSeleccionadas += "Deshabilitar animaciones" }
     if ($CheckBox_DeshabilitarActualizacionesDrivers.Checked) { $opcionesSeleccionadas += "Deshabilitar actualizaciones de drivers" }
     if ($CheckBox_DeshabilitarAppsSegundoPlano.Checked) { $opcionesSeleccionadas += "Deshabilitar apps en segundo plano" }
-    if ($CheckBox_DeshabilitarOptimizacionesPantallaCompleta.Checked) { $opcionesSeleccionadas += "Deshabilitar optimizaciones de pantalla completa" }
+ 
      
 
 
@@ -1235,23 +1231,7 @@ if ($opcionesSeleccionadas -contains "Deshabilitar transparencia") {
 
    
 
-if ($opcionesSeleccionadas -contains "Deshabilitar optimizaciones de pantalla completa") {
-    Write-Host "Deshabilitando optimizaciones de pantalla completa..."
 
-    # Configurar valores para deshabilitar optimizaciones de pantalla completa
-    $settingsPath = "HKCU:\System\GameConfigStore"
-    Set-ItemProperty -Path $settingsPath -Name "GameDVR_Enabled" -Value 0
-    Set-ItemProperty -Path $settingsPath -Name "GameDVR_FSEBehaviorMode" -Value 2
-    Set-ItemProperty -Path $settingsPath -Name "GameDVR_HonorUserFSEBehaviorMode" -Value 0
-    Set-ItemProperty -Path $settingsPath -Name "GameDVR_DXGIHonorFSEWindowsCompatible" -Value 0
-    Set-ItemProperty -Path $settingsPath -Name "GameDVR_EFSEFeatureFlags" -Value 0
-
-    # Eliminar claves relacionadas para deshabilitar optimizaciones de pantalla completa
-    Remove-ItemProperty -Path $settingsPath -Name "Children" -ErrorAction SilentlyContinue
-    Remove-ItemProperty -Path $settingsPath -Name "Parents" -ErrorAction SilentlyContinue
-
-    Write-Host "Optimizaciones de pantalla completa deshabilitadas."
-}
 
 if ($opcionesSeleccionadas -contains "Activar modo maximo rendimiento") {
     Write-Host "Activando modo maximo rendimiento..."
