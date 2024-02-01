@@ -1167,7 +1167,7 @@ Checkpoint-Computer -Description $description -RestorePointType $restorePointTyp
     $settingsPath = "HKCU:\Control Panel\Desktop"
     Set-ItemProperty -Path $settingsPath -Name "AutoEndTasks" -Value 1
     Set-ItemProperty -Path $settingsPath -Name "HungAppTimeout" -Value 1000
-    Set-ItemProperty -Path $settingsPath -Name "MenuShowDelay" -Value 8
+    Set-ItemProperty -Path $settingsPath -Name "MenuShowDelay" -Value 1
     Set-ItemProperty -Path $settingsPath -Name "WaitToKillAppTimeout" -Value 2000
     Set-ItemProperty -Path $settingsPath -Name "LowLevelHooksTimeout" -Value 1000
 
