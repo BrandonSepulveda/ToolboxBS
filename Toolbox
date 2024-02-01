@@ -618,7 +618,34 @@ $MenuItem_LimpiarCacheDNS.Add_Click({
     }
 })
 
-$ContextMenu_Limpieza.Items.AddRange(@($MenuItem_Temporales, $MenuItem_CacheActualizacion, $MenuItem_LimpiarCacheDNS))
+# Nueva opción: Limpiar y optimizar RAM
+$MenuItem_LimpiarRAM = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_LimpiarRAM.Text = "Limpiar y optimizar RAM"
+$MenuItem_LimpiarRAM.Add_Click({
+    try {
+        # Descargar el archivo ZIP
+        $zipUrl = "https://download.sysinternals.com/files/RAMMap.zip"
+        $downloadPath = "$env:TEMP\RAMMap.zip"
+        $extractPath = "$env:TEMP\RAMMap"
+
+        Invoke-WebRequest -Uri $zipUrl -OutFile $downloadPath
+
+        # Descomprimir el archivo ZIP
+        Expand-Archive -Path $downloadPath -DestinationPath $extractPath -Force
+
+        # Ruta al ejecutable RAMMap.exe
+        $executablePath = Join-Path $extractPath "RAMMap.exe"
+
+        # Ejecutar RAMMap.exe
+        Start-Process -FilePath $executablePath
+
+        [System.Windows.Forms.MessageBox]::Show("RAMMap ejecutado correctamente", "Completado")
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al limpiar y optimizar la RAM:`n$error", "Error")
+    }
+})
+
+$ContextMenu_Limpieza.Items.AddRange(@($MenuItem_Temporales, $MenuItem_CacheActualizacion, $MenuItem_LimpiarCacheDNS, $MenuItem_LimpiarRAM))
 $Button_Menu_Limpieza.Add_Click({
     $menuLocation = $Button_Menu_Limpieza.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Limpieza.Height))
     $menuLocation.X += ($Button_Menu_Limpieza.Width - $ContextMenu_Limpieza.Width) / 2
