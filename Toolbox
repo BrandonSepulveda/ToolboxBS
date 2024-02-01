@@ -283,29 +283,6 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("Microsoft PowerToys")
 [void]$ListBox_Apps.Items.Add("Windows Terminal")
 
-# Verificar si winget está instalado
-if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    # Definir el progreso en silencio para evitar mensajes innecesarios
-    $progressPreference = 'silentlyContinue'
-
-    # Descargar WinGet y sus dependencias
-    Write-Information "Downloading WinGet and its dependencies..."
-    Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-    Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
-
-    # Instalar las dependencias
-    Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
-    Add-AppxPackage Microsoft.UI.Xaml.2.7.x64.appx
-
-    # Instalar WinGet
-    Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-
-    # Restaurar la preferencia de progreso a su valor predeterminado
-    $progressPreference = 'Continue'
-}
-
-
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
@@ -949,81 +926,25 @@ $TabPage4 = New-Object System.Windows.Forms.TabPage
 $TabPage4.Text = "Tweaks"
 $TabPage4.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
-# Opciones en la izquierda
-$CheckBox_ActivarModoMaximoRendimiento = New-Object System.Windows.Forms.CheckBox
-$CheckBox_ActivarModoMaximoRendimiento.Text = "Activar Modo Maximo Rendimiento"
-$CheckBox_ActivarModoMaximoRendimiento.Location = New-Object System.Drawing.Point(50, 50)
-$CheckBox_ActivarModoMaximoRendimiento.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_ActivarModoMaximoRendimiento.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_ActivarModoMaximoRendimiento)
 
-$CheckBox_MejorRespuesta = New-Object System.Windows.Forms.CheckBox
-$CheckBox_MejorRespuesta.Text = "Mejor Respuesta"
-$CheckBox_MejorRespuesta.Location = New-Object System.Drawing.Point(50, 80)
-$CheckBox_MejorRespuesta.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_MejorRespuesta.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_MejorRespuesta)
-
-
-
-$CheckBox_DeshabilitarAnimaciones = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarAnimaciones.Text = "Deshabilitar Animaciones"
-$CheckBox_DeshabilitarAnimaciones.Location = New-Object System.Drawing.Point(50, 110)
-$CheckBox_DeshabilitarAnimaciones.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarAnimaciones.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarAnimaciones)
-
-# Opciones en la derecha
-$CheckBox_DeshabilitarActualizaciones = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarActualizaciones.Text = "Deshabilitar Actualizaciones de Drivers"
-$CheckBox_DeshabilitarActualizaciones.Location = New-Object System.Drawing.Point(400, 50)
-$CheckBox_DeshabilitarActualizaciones.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarActualizaciones.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarActualizaciones)
-
-$CheckBox_DeshabilitarAppsSegundoPlano = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarAppsSegundoPlano.Text = "Deshabilitar Apps en Segundo Plano"
-$CheckBox_DeshabilitarAppsSegundoPlano.Location = New-Object System.Drawing.Point(400, 80)
-$CheckBox_DeshabilitarAppsSegundoPlano.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarAppsSegundoPlano.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarAppsSegundoPlano)
-
-$CheckBox_DeshabilitarTransparencia = New-Object System.Windows.Forms.CheckBox
-$CheckBox_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
-$CheckBox_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(400, 110)
-$CheckBox_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(300, 20)
-$CheckBox_DeshabilitarTransparencia.ForeColor = [System.Drawing.Color]::White
-$TabPage4.Controls.Add($CheckBox_DeshabilitarTransparencia)
-
-
-$Button_Optimizar = New-Object System.Windows.Forms.Button
-$Button_Optimizar.FlatStyle = 'Flat'
-$Button_Optimizar.Text = "Ejecutar Optimizacion"
-$Button_Optimizar.Location = New-Object System.Drawing.Point(50, 200)
-$Button_Optimizar.Size = New-Object System.Drawing.Size(150, 30)
-$Button_Optimizar.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
-$TabPage4.Controls.Add($Button_Optimizar)
 # Botón para ejecutar Christitus
 $Button_EjecutarChristitus = New-Object System.Windows.Forms.Button
 $Button_EjecutarChristitus.FlatStyle = 'Flat'
 $Button_EjecutarChristitus.Text = "Ejecutar Christitus"
-$Button_EjecutarChristitus.Location = New-Object System.Drawing.Point(210, 200)  # Ajusta la posición según sea necesario
+$Button_EjecutarChristitus.Location = New-Object System.Drawing.Point(50, 50)  # Ajusta la posición según sea necesario
 $Button_EjecutarChristitus.Size = New-Object System.Drawing.Size(150, 30)
 $Button_EjecutarChristitus.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
 
 $Button_EjecutarChristitus.Add_Click({
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://christitus.com/win | iex" -Verb RunAs
 })
 
 $TabPage4.Controls.Add($Button_EjecutarChristitus)
-
 # Botón para ejecutar Debloat
 $Button_EjecutarDebloat = New-Object System.Windows.Forms.Button
 $Button_EjecutarDebloat.FlatStyle = 'Flat'
 $Button_EjecutarDebloat.Text = "Ejecutar Debloat"
-$Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(370, 200)  # Ajusta la posición según sea necesario
+$Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(210, 50)  # Ajusta la posición según sea necesario
 $Button_EjecutarDebloat.Size = New-Object System.Drawing.Size(150, 30)
 $Button_EjecutarDebloat.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -1034,47 +955,31 @@ $Button_EjecutarDebloat.Add_Click({
 
 $TabPage4.Controls.Add($Button_EjecutarDebloat)
 
+
 # Botón para instalar Winget
 $Button_InstalarWinget = New-Object System.Windows.Forms.Button
 $Button_InstalarWinget.FlatStyle = 'Flat'
 $Button_InstalarWinget.Text = "Instalar Winget"
-$Button_InstalarWinget.Location = New-Object System.Drawing.Point(530, 200)  # Ajusta la posición según sea necesario
+$Button_InstalarWinget.Location = New-Object System.Drawing.Point(370, 50)  # Ajusta la posición según sea necesario
 $Button_InstalarWinget.Size = New-Object System.Drawing.Size(150, 30)
 $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 
 $Button_InstalarWinget.Add_Click({
-    # Definir el progreso en silencio para evitar mensajes innecesarios
-    $progressPreference = 'silentlyContinue'
-
-    # Descargar WinGet y sus dependencias
-    Write-Information "Downloading WinGet and its dependencies..."
-    Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-    Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
-
-    # Instalar las dependencias
-    Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
-    Add-AppxPackage Microsoft.UI.Xaml.2.7.x64.appx
-
-    # Instalar WinGet
-    Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-
-    # Restaurar la preferencia de progreso a su valor predeterminado
-    $progressPreference = 'Continue'
+    Start-Process powershell -ArgumentList "-NoExit -Command `"Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle; Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx; Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx; Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx; Add-AppxPackage Microsoft.UI.Xaml.2.7.x64.appx; Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle`""
 })
 
 
 
 $TabPage4.Controls.Add($Button_InstalarWinget)
 
-# Botón para Activar Windows
 $Button_Activarwindows = New-Object System.Windows.Forms.Button
 $Button_Activarwindows.FlatStyle = 'Flat'
 $Button_Activarwindows.Text = "Activar Windows"
-$Button_Activarwindows.Location = New-Object System.Drawing.Point(50, 250)  # Ajusta la posición según sea necesario
+$Button_Activarwindows.Location = New-Object System.Drawing.Point(530, 50)  # Ajusta la posición según sea necesario
 $Button_Activarwindows.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Activarwindows.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 $Button_Activarwindows.Add_Click({
     # Obtener la clave digital usando PowerShell
@@ -1090,15 +995,16 @@ $Button_Activarwindows.Add_Click({
     Write-Host "Clave establecida como predefinida correctamente."
 })
 
-
 $TabPage4.Controls.Add($Button_Activarwindows)
+
+
 
 
 # Botón para Ejecutar Optimizer
 $Button_Optimizer = New-Object System.Windows.Forms.Button
 $Button_Optimizer.FlatStyle = 'Flat'
 $Button_Optimizer.Text = "Ejecutar Optimizer"
-$Button_Optimizer.Location = New-Object System.Drawing.Point(210, 250)  # Ajusta la posición según sea necesario
+$Button_Optimizer.Location = New-Object System.Drawing.Point(50, 90)  # Ajusta la posición según sea necesario
 $Button_Optimizer.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Optimizer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -1131,123 +1037,6 @@ $Button_Optimizer.Add_Click({
 
 $TabPage4.Controls.Add($Button_Optimizer)
 
-$Button_Optimizar.Add_Click({
-    $opcionesSeleccionadas = @()
-
-    # Crear un punto de restauración antes de realizar modificaciones
-$description = "Punto de restauracion antes de realizar ajustes"
-$restorePointType = "MODIFY_SETTINGS"
-Checkpoint-Computer -Description $description -RestorePointType $restorePointType
-
-# Realizar modificaciones...
-
-    if ($CheckBox_ActivarModoMaximoRendimiento.Checked) { $opcionesSeleccionadas += "Activar modo maximo rendimiento" }
-    if ($CheckBox_MejorRespuesta.Checked) { $opcionesSeleccionadas += "Mejor respuesta" }
-    if ($CheckBox_DeshabilitarTransparencia.Checked) { $opcionesSeleccionadas += "Deshabilitar transparencia" }
-    if ($CheckBox_DeshabilitarAnimaciones.Checked) { $opcionesSeleccionadas += "Deshabilitar animaciones" }
-    if ($CheckBox_DeshabilitarActualizacionesDrivers.Checked) { $opcionesSeleccionadas += "Deshabilitar actualizaciones de drivers" }
-    if ($CheckBox_DeshabilitarAppsSegundoPlano.Checked) { $opcionesSeleccionadas += "Deshabilitar apps en segundo plano" }
- 
-     
-
-
-    if ($opcionesSeleccionadas.Count -gt 0) {
-        $opcionesTexto = $opcionesSeleccionadas -join ", "
-        [System.Windows.Forms.MessageBox]::Show("Se ejecutaran las siguientes opciones: $opcionesTexto", "Optimizacion Completada")
-
-
-        # Ejecutar las funciones correspondientes a las opciones seleccionadas
-       
-
-
-       if ($opcionesSeleccionadas -contains "Mejor respuesta") {
-    Write-Host "Aplicando configuracion para mejor respuesta..."
-
-    # Configurar valores para una mejor respuesta del sistema
-    $settingsPath = "HKCU:\Control Panel\Desktop"
-    Set-ItemProperty -Path $settingsPath -Name "AutoEndTasks" -Value 1
-    Set-ItemProperty -Path $settingsPath -Name "HungAppTimeout" -Value 1000
-    Set-ItemProperty -Path $settingsPath -Name "MenuShowDelay" -Value 1
-    Set-ItemProperty -Path $settingsPath -Name "WaitToKillAppTimeout" -Value 2000
-    Set-ItemProperty -Path $settingsPath -Name "LowLevelHooksTimeout" -Value 1000
-
-    Write-Host "Configuracion de mejor respuesta aplicada."
-}
-
-
-if ($opcionesSeleccionadas -contains "Deshabilitar animaciones") {
-    Write-Host "Deshabilitando animaciones..."
-
-  
-# Configurar valores para deshabilitar animaciones y suavizar bordes de fuentes
-    $settingsPath = "HKCU:\Control Panel\Desktop"
-    Set-ItemProperty -Path $settingsPath -Name "DragFullWindows" -Value 0
-    Set-ItemProperty -Path $settingsPath -Name "UserPreferencesMask" -Value ([byte[]]@(0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00))
-    Set-ItemProperty -Path $settingsPath -Name "FontSmoothing" -Value 2  # Suavizar bordes de fuentes
-
-    $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
-    Set-ItemProperty -Path $settingsPath -Name "DisablePreviewDesktop" -Value 1
-    
-    $settingsPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
-    Set-ItemProperty -Path $settingsPath -Name "VisualFXSetting" -Value 2
-
-    # Reiniciar el proceso explorer.exe
-Stop-Process -Name explorer
-Start-Process explorer
-
-    # Mensaje de éxito
-    Write-Host "Animaciones deshabilitadas."
-}
-
-if ($opcionesSeleccionadas -contains "Deshabilitar actualizaciones de drivers") {
-    Write-Host "Deshabilitando actualizaciones de drivers..."
-
-    # Configurar valor para deshabilitar actualizaciones de drivers
-    $settingsPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching"
-    Set-ItemProperty -Path $settingsPath -Name "SearchOrderConfig" -Value 0
-
-    Write-Host "Actualizaciones de drivers deshabilitadas."
-}
-
-if ($opcionesSeleccionadas -contains "Deshabilitar actualizaciones de drivers") {
-    Write-Host "Deshabilitando actualizaciones de drivers..."
-
-    # Desactivar las actualizaciones automáticas de drivers utilizando Set-ItemProperty
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" -Name "SearchOrderConfig" -Value 0
-
-    Write-Host "Actualizaciones automaticas de drivers desactivadas."
-}
-
- # Agrega aquí la lógica correspondiente a la Opción 7
-
-    # Contenido del archivo de registro para deshabilitar transparencia
-
-if ($opcionesSeleccionadas -contains "Deshabilitar transparencia") {
-    Write-Host "Deshabilitando transparencia..."
-
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Value 0
-    Write-Host "Transparencia de Windows deshabilitada."
-}
-
-   
-
-
-
-if ($opcionesSeleccionadas -contains "Activar modo maximo rendimiento") {
-    Write-Host "Activando modo maximo rendimiento..."
-
-    # Usar powercfg para activar el esquema de energía de máximo rendimiento
-    powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-
-    Write-Host "Modo maximo rendimiento activado."
-}
-
-    } else {
-        [System.Windows.Forms.MessageBox]::Show("Por favor, selecciona al menos una opcion.", "Error")
-    }
-})
-
-$TabPage4.Controls.Add($Button_Optimizar)
 
 $TabControl.TabPages.Add($TabPage2)
 #$TabControl.TabPages.Add($TabPage3)
