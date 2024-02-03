@@ -1,3 +1,4 @@
+
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
 using System;
@@ -11,6 +12,10 @@ public class Shell32
 "@
 
 Add-Type -AssemblyName System.Windows.Forms
+
+
+
+
 
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
@@ -829,7 +834,7 @@ $TabControl.TabPages.Add($TabPage_Restauracion)
 
 # menu seleccionable
 $TabPage4 = New-Object System.Windows.Forms.TabPage
-$TabPage4.Text = "Tweaks"
+$TabPage4.Text = "Tweaks y Utilidades"
 $TabPage4.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 
@@ -942,6 +947,58 @@ $Button_Optimizer.Add_Click({
 
 
 $TabPage4.Controls.Add($Button_Optimizer)
+
+
+
+
+
+# Botón para abrir menú desplegable de Windows
+$Button_Menu_Windows = New-Object System.Windows.Forms.Button
+$Button_Menu_Windows.FlatStyle = 'Flat'
+$Button_Menu_Windows.Text = "Windows"
+$Button_Menu_Windows.Location = New-Object System.Drawing.Point(210, 90)  # Ajusta la posición según sea necesario
+$Button_Menu_Windows.Size = New-Object System.Drawing.Size(150, 30)
+$Button_Menu_Windows.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
+
+## Crear menú desplegable para Windows
+$ContextMenu_Windows = New-Object System.Windows.Forms.ContextMenuStrip
+
+$MenuItem_Windows10 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Windows10.Text = "Descargar Windows 10"
+$MenuItem_Windows10.Add_Click({
+    $scriptBlock = {
+        param($url, $outputPath)
+        Invoke-WebRequest -Uri $url -OutFile $outputPath
+    }
+    $url = "https://software.download.prss.microsoft.com/dbazure/Win10_22H2_Spanish_x64v1.iso?t=1795e2e3-ec5b-4997-9bf1-e508f4265d6e&e=1707062029&h=61d0577fdd0c6b7e04f0be6c1fce79483457282163dfdc0173e1b8cd3a460feb"
+    $outputPath = "$env:USERPROFILE\Downloads\Win10_22H2_Spanish_x64v1.iso"
+    Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
+})
+
+$MenuItem_Windows11 = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Windows11.Text = "Descargar Windows 11"
+$MenuItem_Windows11.Add_Click({
+    $scriptBlock = {
+        param($url, $outputPath)
+        Invoke-WebRequest -Uri $url -OutFile $outputPath
+    }
+    $url = "https://software.download.prss.microsoft.com/dbazure/Win11_23H2_Spanish_x64v2.iso?t=ece743b0-aad1-439c-aeb3-64c9909a2af5&e=1707062515&h=32309af95d7ddf137a361652f846bb8ae613efa055827f632d40ca1ab2218646"
+    $outputPath = "$env:USERPROFILE\Downloads\Win11_23H2_Spanish_x64v2.iso"
+    Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
+})
+$ContextMenu_Windows.Items.AddRange(@($MenuItem_Windows10, $MenuItem_Windows11))
+
+# Asignar menú desplegable al botón
+$Button_Menu_Windows.Add_Click({
+    $menuLocation = $Button_Menu_Windows.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Windows.Height))
+    $menuLocation.X += ($Button_Menu_Windows.Width - $ContextMenu_Windows.Width) / 2
+    $ContextMenu_Windows.Show($menuLocation)
+})
+
+$TabPage4.Controls.Add($Button_Menu_Windows)
+
+$TabPage4.Controls.Add($Button_Download_Windows)
 
 
 $TabControl.TabPages.Add($TabPage2)
