@@ -14,6 +14,10 @@ public class Shell32
 Add-Type -AssemblyName System.Windows.Forms
 
 
+[System.Windows.Forms.Application]::EnableVisualStyles()
+
+
+
 
 
 
@@ -63,12 +67,11 @@ Write-Host "Hecho por Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 
 
-
-
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
 $TabPage_InfoSistema.BackColor =  [System.Drawing.Color]::Black  # Cambiar a negro
+
 
 $Label_InfoSistema = New-Object System.Windows.Forms.Label
 $Label_InfoSistema.Text = "Informacion del Sistema:"
@@ -76,6 +79,8 @@ $Label_InfoSistema.Location = New-Object System.Drawing.Point(50, 20)
 $Label_InfoSistema.Size = New-Object System.Drawing.Size(300, 20)
 $Label_InfoSistema.ForeColor = [System.Drawing.Color]::White
 $TabPage_InfoSistema.Controls.Add($Label_InfoSistema)
+$Label_InfoSistema.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Bold)
+
 
 $TextBox_InfoSistema = New-Object System.Windows.Forms.TextBox
 $TextBox_InfoSistema.Multiline = $true
@@ -250,10 +255,11 @@ $TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 $Label_APPS = New-Object System.Windows.Forms.Label
 $Label_APPS.Text = "Aplicaciones:"
-$Label_APPS.Location = New-Object System.Drawing.Point(250, 20)
+$Label_APPS.Location = New-Object System.Drawing.Point(150, 20)
 $Label_APPS.Size = New-Object System.Drawing.Size(300, 20)
 $Label_APPS.ForeColor = [System.Drawing.Color]::White
 $TabPage_APPS.Controls.Add($Label_APPS)
+$Label_APPS.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Bold)
 
 $ListBox_Apps = New-Object System.Windows.Forms.CheckedListBox
 $ListBox_Apps.Location = New-Object System.Drawing.Point(150, 40)
@@ -995,6 +1001,8 @@ $Button_Menu_Windows.Add_Click({
     $menuLocation.X += ($Button_Menu_Windows.Width - $ContextMenu_Windows.Width) / 2
     $ContextMenu_Windows.Show($menuLocation)
 })
+
+
 
 $TabPage4.Controls.Add($Button_Menu_Windows)
 
