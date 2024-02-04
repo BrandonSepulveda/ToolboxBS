@@ -992,7 +992,7 @@ $TabPage4.Controls.Add($Button_Optimizer)
 
 
 
-
+<#
 # Botón para abrir menú desplegable de Windows
 $Button_Menu_Windows = New-Object System.Windows.Forms.Button
 $Button_Menu_Windows.FlatStyle = 'Flat'
@@ -1037,6 +1037,12 @@ $Button_Menu_Windows.Add_Click({
     $ContextMenu_Windows.Show($menuLocation)
 })
 
+$TabPage4.Controls.Add($Button_Menu_Windows)
+
+$TabPage4.Controls.Add($Button_Download_Windows)
+
+#>
+ 
 # Crear una etiqueta para el título "Atajo"
 $Label_Atajo = New-Object System.Windows.Forms.Label
 $Label_Atajo.Text = "Atajos :"
@@ -1085,13 +1091,6 @@ $Button_DeshabilitarTransparencia.Add_Click({
 $TabPage4.Controls.Add($Button_DeshabilitarTransparencia)
 # Agregar el botón a la página
 $TabPage4.Controls.Add($Button_AppearancePerformance)
-
-
-$TabPage4.Controls.Add($Button_Menu_Windows)
-
-$TabPage4.Controls.Add($Button_Download_Windows)
-
-
 
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
