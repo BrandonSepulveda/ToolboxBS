@@ -67,6 +67,7 @@ Write-Host "Hecho por Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 
 
+
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
@@ -571,152 +572,92 @@ $TabControl.Controls.Add($TabPage_Apps)
 
 
 
-$TabPage2 = New-Object System.Windows.Forms.TabPage
-$TabPage2.Text = "Limpieza"
-$TabPage2.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
 
-# Lógica para los botones de la sección "limpieza"...
-
-
-# Agregar el menú desplegable de limpieza
-$Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
-$Button_Menu_Limpieza.FlatStyle = 'Flat'
-$Button_Menu_Limpieza.Text = "Limpieza"
-$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(200, 50)
-$Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(300, 40)
-$Button_Menu_Limpieza.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
-
-$ContextMenu_Limpieza = New-Object System.Windows.Forms.ContextMenuStrip
-
-$MenuItem_Temporales = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_Temporales.Text = "Eliminar archivos temporales"
-$MenuItem_Temporales.Add_Click({
-    try {
-        $tempFolderPath = "C:\Windows\Temp"
-
-        # Elimina todos los archivos y carpetas en la carpeta de archivos temporales
-        Remove-Item -Path "$tempFolderPath\*" -Force -Recurse
-
-        [System.Windows.Forms.MessageBox]::Show("Archivos temporales eliminados.", "Completado")
-    } catch {
-        [System.Windows.Forms.MessageBox]::Show("Error al eliminar archivos temporales:`n$error", "Error")
-    }
-})
-
-$MenuItem_CacheActualizacion = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_CacheActualizacion.Text = "Eliminar cache de actualizacion"
-$MenuItem_CacheActualizacion.Add_Click({
-    Stop-Service -Name "wuauserv" -Force
-    Stop-Service -Name "UsoSvc" -Force
-    Remove-Item -Path "$env:WINDIR\SoftwareDistribution" -Force -Recurse
-    New-Item -Path "$env:WINDIR\SoftwareDistribution" -ItemType Directory
-    Start-Service -Name "wuauserv"
-    Start-Service -Name "UsoSvc"
-    [System.Windows.Forms.MessageBox]::Show("Cache de actualizacion eliminado.", "Completado")
-})
-
-# Nueva opción: Limpiar caché DNS
-$MenuItem_LimpiarCacheDNS = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_LimpiarCacheDNS.Text = "Limpiar cache DNS"
-$MenuItem_LimpiarCacheDNS.Add_Click({
-    Invoke-Expression -Command "ipconfig /flushdns 2>&1"
-    if ($LASTEXITCODE -eq 0) {
-        [System.Windows.Forms.MessageBox]::Show("Cache DNS limpiado correctamente.", "Completado")
-    } else {
-        [System.Windows.Forms.MessageBox]::Show("Error al limpiar el cache DNS.", "Error")
-    }
-})
-
-# Nueva opción: Limpiar y optimizar RAM
-$MenuItem_LimpiarRAM = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_LimpiarRAM.Text = "Limpiar y optimizar RAM"
-$MenuItem_LimpiarRAM.Add_Click({
-    try {
-        # Descargar el archivo ZIP
-        $zipUrl = "https://download.sysinternals.com/files/RAMMap.zip"
-        $downloadPath = "$env:TEMP\RAMMap.zip"
-        $extractPath = "$env:TEMP\RAMMap"
-
-        Invoke-WebRequest -Uri $zipUrl -OutFile $downloadPath
-
-        # Descomprimir el archivo ZIP
-        Expand-Archive -Path $downloadPath -DestinationPath $extractPath -Force
-
-        # Ruta al ejecutable RAMMap.exe
-        $executablePath = Join-Path $extractPath "RAMMap.exe"
-
-        # Ejecutar RAMMap.exe
-        Start-Process -FilePath $executablePath
-
-        [System.Windows.Forms.MessageBox]::Show("RAMMap ejecutado correctamente", "Completado")
-    } catch {
-        [System.Windows.Forms.MessageBox]::Show("Error al limpiar y optimizar la RAM:`n$error", "Error")
-    }
-})
-
-$ContextMenu_Limpieza.Items.AddRange(@($MenuItem_Temporales, $MenuItem_CacheActualizacion, $MenuItem_LimpiarCacheDNS, $MenuItem_LimpiarRAM))
-$Button_Menu_Limpieza.Add_Click({
-    $menuLocation = $Button_Menu_Limpieza.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Limpieza.Height))
-    $menuLocation.X += ($Button_Menu_Limpieza.Width - $ContextMenu_Limpieza.Width) / 2
-    $ContextMenu_Limpieza.Show($menuLocation)
-})
-
-
-$TabPage2.Controls.Add($Button_Menu_Limpieza)
-
-
-$TabPage2.Controls.Add($Button5_S2)
 
 # Crear una nueva pestaña para la sección de Restauración y Verificación
 $TabPage_Restauracion = New-Object System.Windows.Forms.TabPage
 $TabPage_Restauracion.Text = "Restauracion y Verificacion"
 $TabPage_Restauracion.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
-# Crear botones para crear punto de restauración y verificar archivos del sistema
+# Crear una etiqueta para el título "Verificar y Reparar"
+$Label_VerificarReparar = New-Object System.Windows.Forms.Label
+$Label_VerificarReparar.Text = "Verificar y Reparar :"
+$Label_VerificarReparar.Location = New-Object System.Drawing.Point(44, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_VerificarReparar.Size = New-Object System.Drawing.Size(150, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
+$Label_VerificarReparar.ForeColor = [System.Drawing.Color]::White  # Color del texto
+$Label_VerificarReparar.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
+$Label_VerificarReparar.Font = New-Object System.Drawing.Font("Arial", 11, [System.Drawing.FontStyle]::Bold)  # Establecer la fuente en negrita
+
+# Agregar la etiqueta del título a la pestaña
+$TabPage_Restauracion.Controls.Add($Label_VerificarReparar)
 $Button_CrearRestauracion = New-Object System.Windows.Forms.Button
 $Button_CrearRestauracion.FlatStyle = 'Flat'
 $Button_CrearRestauracion.Text = "Crear Punto de Restauracion"
-$Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 80)
+$Button_CrearRestauracion.Location = New-Object System.Drawing.Point(50, 60)
 $Button_CrearRestauracion.Size = New-Object System.Drawing.Size(150, 50)
 $Button_CrearRestauracion.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 $Button_VerificarArchivos = New-Object System.Windows.Forms.Button
 $Button_VerificarArchivos.FlatStyle = 'Flat'
 $Button_VerificarArchivos.Text = "Verificar y Reparar Archivos del Sistema"
-$Button_VerificarArchivos.Location = New-Object System.Drawing.Point(210, 80)
+$Button_VerificarArchivos.Location = New-Object System.Drawing.Point(50, 120)
 $Button_VerificarArchivos.Size = New-Object System.Drawing.Size(150, 50)
 $Button_VerificarArchivos.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
-
-
 
 $Button_BSOD_Info = New-Object System.Windows.Forms.Button
 $Button_BSOD_Info.FlatStyle = 'Flat'
 $Button_BSOD_Info.Text = "Informacion de Pantallazos Azules"
-$Button_BSOD_Info.Location = New-Object System.Drawing.Point(370, 80) 
+$Button_BSOD_Info.Location = New-Object System.Drawing.Point(50, 180) 
 $Button_BSOD_Info.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BSOD_Info.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
 
 # Crear un botón para generar el informe de la batería
 $Button_BatteryReport = New-Object System.Windows.Forms.Button
 $Button_BatteryReport.FlatStyle = 'Flat'
 $Button_BatteryReport.Text = "Generar Informe de Bateria"
-$Button_BatteryReport.Location = New-Object System.Drawing.Point(530, 80)  # Ajusta la posición vertical según sea necesario
+$Button_BatteryReport.Location = New-Object System.Drawing.Point(50, 240)  # Ajusta la posición vertical según sea necesario
 $Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BatteryReport.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 # Crear botón para obtener información de drivers
-
 $Button_InfoDrivers = New-Object System.Windows.Forms.Button
 $Button_InfoDrivers.FlatStyle = 'Flat'
 $Button_InfoDrivers.Text = "Informacion de Drivers"
-$Button_InfoDrivers.Location = New-Object System.Drawing.Point(50, 140)
+$Button_InfoDrivers.Location = New-Object System.Drawing.Point(50, 300)
 $Button_InfoDrivers.Size = New-Object System.Drawing.Size(150, 50)
 $Button_InfoDrivers.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
+
+# Botón para reparar la red
+$Button_RepararRed = New-Object System.Windows.Forms.Button
+$Button_RepararRed.FlatStyle = 'Flat'
+$Button_RepararRed.Text = "Reparar Red"
+$Button_RepararRed.Location = New-Object System.Drawing.Point(50, 360)  # Ajusta la posición según sea necesario
+$Button_RepararRed.Size = New-Object System.Drawing.Size(150, 50)
+$Button_RepararRed.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_RepararRed.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
+
+
+# Crear una etiqueta para el título "Limpieza y Optimización"
+$Label_Title = New-Object System.Windows.Forms.Label
+$Label_Title.Text = "Limpieza y Optimización :"
+$Label_Title.Location = New-Object System.Drawing.Point(490, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_Title.Size = New-Object System.Drawing.Size(200, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
+$Label_Title.ForeColor = [System.Drawing.Color]::White  # Color del texto
+$Label_Title.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
+$Label_Title.Font = New-Object System.Drawing.Font("Arial", 11, [System.Drawing.FontStyle]::Bold)
+
+# Agregar la etiqueta del título a la pestaña
+$TabPage_Restauracion.Controls.Add($Label_Title)
+
+# Agregar el menú desplegable de limpieza
+$Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
+$Button_Menu_Limpieza.FlatStyle = 'Flat'
+$Button_Menu_Limpieza.Text = "Limpieza"
+$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(500, 60)
+$Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(200, 40)
+$Button_Menu_Limpieza.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 
 # Manejadores de eventos para los botones
@@ -813,13 +754,6 @@ $Button_BatteryReport.Add_Click({
     }
 
 })
-# Crear botón para obtener información de drivers
-$Button_InfoDrivers = New-Object System.Windows.Forms.Button
-$Button_InfoDrivers.FlatStyle = 'Flat'
-$Button_InfoDrivers.Text = "Informacion de Drivers"
-$Button_InfoDrivers.Location = New-Object System.Drawing.Point(50, 140)
-$Button_InfoDrivers.Size = New-Object System.Drawing.Size(150, 50)
-$Button_InfoDrivers.ForeColor   = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 
 $Button_InfoDrivers.Add_Click({
@@ -827,13 +761,103 @@ $Button_InfoDrivers.Add_Click({
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "Get-WmiObject -Query 'SELECT * FROM Win32_SystemDriver' | Select-Object DisplayName, Description, PathName, StartMode, State, Status | Out-File -FilePath 'informacion_controladores.txt'; Invoke-Item -Path 'informacion_controladores.txt'"
 
 })
+
+
+$ContextMenu_Limpieza = New-Object System.Windows.Forms.ContextMenuStrip
+
+$MenuItem_Temporales = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_Temporales.Text = "Eliminar archivos temporales"
+$MenuItem_Temporales.Add_Click({
+    try {
+        $tempFolderPath = "C:\Windows\Temp"
+
+        # Elimina todos los archivos y carpetas en la carpeta de archivos temporales
+        Remove-Item -Path "$tempFolderPath\*" -Force -Recurse
+
+        [System.Windows.Forms.MessageBox]::Show("Archivos temporales eliminados.", "Completado")
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al eliminar archivos temporales:`n$error", "Error")
+    }
+})
+
+$MenuItem_CacheActualizacion = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_CacheActualizacion.Text = "Eliminar cache de actualizacion"
+$MenuItem_CacheActualizacion.Add_Click({
+    Stop-Service -Name "wuauserv" -Force
+    Stop-Service -Name "UsoSvc" -Force
+    Remove-Item -Path "$env:WINDIR\SoftwareDistribution" -Force -Recurse
+    New-Item -Path "$env:WINDIR\SoftwareDistribution" -ItemType Directory
+    Start-Service -Name "wuauserv"
+    Start-Service -Name "UsoSvc"
+    [System.Windows.Forms.MessageBox]::Show("Cache de actualizacion eliminado.", "Completado")
+})
+
+# Nueva opción: Limpiar caché DNS
+$MenuItem_LimpiarCacheDNS = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_LimpiarCacheDNS.Text = "Limpiar cache DNS"
+$MenuItem_LimpiarCacheDNS.Add_Click({
+    Invoke-Expression -Command "ipconfig /flushdns 2>&1"
+    if ($LASTEXITCODE -eq 0) {
+        [System.Windows.Forms.MessageBox]::Show("Cache DNS limpiado correctamente.", "Completado")
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Error al limpiar el cache DNS.", "Error")
+    }
+})
+
+# Nueva opción: Limpiar y optimizar RAM
+$MenuItem_LimpiarRAM = New-Object System.Windows.Forms.ToolStripMenuItem
+$MenuItem_LimpiarRAM.Text = "Limpiar y optimizar RAM"
+$MenuItem_LimpiarRAM.Add_Click({
+    try {
+        # Descargar el archivo ZIP
+        $zipUrl = "https://download.sysinternals.com/files/RAMMap.zip"
+        $downloadPath = "$env:TEMP\RAMMap.zip"
+        $extractPath = "$env:TEMP\RAMMap"
+
+        Invoke-WebRequest -Uri $zipUrl -OutFile $downloadPath
+
+        # Descomprimir el archivo ZIP
+        Expand-Archive -Path $downloadPath -DestinationPath $extractPath -Force
+
+        # Ruta al ejecutable RAMMap.exe
+        $executablePath = Join-Path $extractPath "RAMMap.exe"
+
+        # Ejecutar RAMMap.exe
+        Start-Process -FilePath $executablePath
+
+        [System.Windows.Forms.MessageBox]::Show("RAMMap ejecutado correctamente", "Completado")
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Error al limpiar y optimizar la RAM:`n$error", "Error")
+    }
+})
+
+$ContextMenu_Limpieza.Items.AddRange(@($MenuItem_Temporales, $MenuItem_CacheActualizacion, $MenuItem_LimpiarCacheDNS, $MenuItem_LimpiarRAM))
+$Button_Menu_Limpieza.Add_Click({
+    $menuLocation = $Button_Menu_Limpieza.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Limpieza.Height))
+    $menuLocation.X += ($Button_Menu_Limpieza.Width - $ContextMenu_Limpieza.Width) / 2
+    $ContextMenu_Limpieza.Show($menuLocation)
+})
+
+
+# Agregar un controlador de eventos para el clic del botón "Reparar Red"
+$Button_RepararRed.Add_Click({
+    # Ejecutar los comandos para reparar la red
+    netsh winsock reset
+    netsh int ip reset
+    ipconfig /release
+    ipconfig /renew
+
+    # Mostrar un mensaje al usuario una vez que se hayan ejecutado los comandos
+    [System.Windows.Forms.MessageBox]::Show("Proceso de reparación de red completado.", "Reparación de Red")
+})
 # Agregar botones a la pestaña
 $TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
 $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
 $TabPage_Restauracion.Controls.Add($Button_BSOD_Info)
 $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
 $TabPage_Restauracion.Controls.Add($Button_InfoDrivers)
-
+$TabPage_Restauracion.Controls.Add($Button_Menu_Limpieza)
+$TabPage_Restauracion.Controls.Add($Button_RepararRed)
                             
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
 $TabControl.TabPages.Add($TabPage_Restauracion)
@@ -843,6 +867,17 @@ $TabPage4 = New-Object System.Windows.Forms.TabPage
 $TabPage4.Text = "Tweaks y Utilidades"
 $TabPage4.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
 
+# Crear una etiqueta para el título "Mejoras S.O y Utilidades"
+$Label_MejorasUtilidades = New-Object System.Windows.Forms.Label
+$Label_MejorasUtilidades.Text = "Mejoras,Utilidades:"
+$Label_MejorasUtilidades.Location = New-Object System.Drawing.Point(45, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_MejorasUtilidades.Size = New-Object System.Drawing.Size(150, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
+$Label_MejorasUtilidades.ForeColor = [System.Drawing.Color]::White  # Color del texto
+$Label_MejorasUtilidades.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
+$Label_MejorasUtilidades.Font = New-Object System.Drawing.Font("Arial", 11, [System.Drawing.FontStyle]::Bold)  # Establecer la fuente en negrita
+
+# Agregar la etiqueta del título a la pestaña
+$TabPage4.Controls.Add($Label_MejorasUtilidades)
 
 # Botón para ejecutar Christitus
 $Button_EjecutarChristitus = New-Object System.Windows.Forms.Button
@@ -861,7 +896,7 @@ $TabPage4.Controls.Add($Button_EjecutarChristitus)
 $Button_EjecutarDebloat = New-Object System.Windows.Forms.Button
 $Button_EjecutarDebloat.FlatStyle = 'Flat'
 $Button_EjecutarDebloat.Text = "Ejecutar Debloat"
-$Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(210, 50)  # Ajusta la posición según sea necesario
+$Button_EjecutarDebloat.Location = New-Object System.Drawing.Point(50, 90)  # Ajusta la posición según sea necesario
 $Button_EjecutarDebloat.Size = New-Object System.Drawing.Size(150, 30)
 $Button_EjecutarDebloat.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -877,7 +912,7 @@ $TabPage4.Controls.Add($Button_EjecutarDebloat)
 $Button_InstalarWinget = New-Object System.Windows.Forms.Button
 $Button_InstalarWinget.FlatStyle = 'Flat'
 $Button_InstalarWinget.Text = "Instalar Winget"
-$Button_InstalarWinget.Location = New-Object System.Drawing.Point(370, 50)  # Ajusta la posición según sea necesario
+$Button_InstalarWinget.Location = New-Object System.Drawing.Point(50, 130)  # Ajusta la posición según sea necesario
 $Button_InstalarWinget.Size = New-Object System.Drawing.Size(150, 30)
 $Button_InstalarWinget.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -893,7 +928,7 @@ $TabPage4.Controls.Add($Button_InstalarWinget)
 $Button_Activarwindows = New-Object System.Windows.Forms.Button
 $Button_Activarwindows.FlatStyle = 'Flat'
 $Button_Activarwindows.Text = "Activar Windows"
-$Button_Activarwindows.Location = New-Object System.Drawing.Point(530, 50)  # Ajusta la posición según sea necesario
+$Button_Activarwindows.Location = New-Object System.Drawing.Point(50, 170)  # Ajusta la posición según sea necesario
 $Button_Activarwindows.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Activarwindows.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -921,7 +956,7 @@ $TabPage4.Controls.Add($Button_Activarwindows)
 $Button_Optimizer = New-Object System.Windows.Forms.Button
 $Button_Optimizer.FlatStyle = 'Flat'
 $Button_Optimizer.Text = "Ejecutar Optimizer"
-$Button_Optimizer.Location = New-Object System.Drawing.Point(50, 90)  # Ajusta la posición según sea necesario
+$Button_Optimizer.Location = New-Object System.Drawing.Point(50, 210)  # Ajusta la posición según sea necesario
 $Button_Optimizer.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Optimizer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -962,7 +997,7 @@ $TabPage4.Controls.Add($Button_Optimizer)
 $Button_Menu_Windows = New-Object System.Windows.Forms.Button
 $Button_Menu_Windows.FlatStyle = 'Flat'
 $Button_Menu_Windows.Text = "Windows"
-$Button_Menu_Windows.Location = New-Object System.Drawing.Point(210, 90)  # Ajusta la posición según sea necesario
+$Button_Menu_Windows.Location = New-Object System.Drawing.Point(50, 250)  # Ajusta la posición según sea necesario
 $Button_Menu_Windows.Size = New-Object System.Drawing.Size(150, 30)
 $Button_Menu_Windows.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -1002,6 +1037,54 @@ $Button_Menu_Windows.Add_Click({
     $ContextMenu_Windows.Show($menuLocation)
 })
 
+# Crear una etiqueta para el título "Atajo"
+$Label_Atajo = New-Object System.Windows.Forms.Label
+$Label_Atajo.Text = "Atajos :"
+$Label_Atajo.Location = New-Object System.Drawing.Point(405, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_Atajo.Size = New-Object System.Drawing.Size(250, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
+$Label_Atajo.ForeColor = [System.Drawing.Color]::White  # Color del texto
+$Label_Atajo.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
+$Label_Atajo.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Bold)  # Establecer la fuente en negrita y tamaño más grande
+
+# Agregar la etiqueta del título "Atajo" a la página
+$TabPage4.Controls.Add($Label_Atajo)
+# Botón para abrir la ventana de ajustes de rendimiento de Windows
+$Button_AppearancePerformance = New-Object System.Windows.Forms.Button
+$Button_AppearancePerformance.FlatStyle = 'Flat'
+$Button_AppearancePerformance.Text = "Propiedades del Sistema"
+$Button_AppearancePerformance.Location = New-Object System.Drawing.Point(500, 50)  # Ajusta la posición según sea necesario
+$Button_AppearancePerformance.Size = New-Object System.Drawing.Size(250, 30)
+$Button_AppearancePerformance.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_AppearancePerformance.Font = New-Object System.Drawing.Font("Arial",9)  # Establecer el tamaño de la letra más pequeño
+
+$Button_AppearancePerformance.Add_Click({
+    # Abrir la ventana de ajustes de rendimiento de Windows
+    control.exe sysdm.cpl
+})
+
+
+# Botón para deshabilitar la transparencia en la configuración de Windows
+$Button_DeshabilitarTransparencia = New-Object System.Windows.Forms.Button
+$Button_DeshabilitarTransparencia.FlatStyle = 'Flat'
+$Button_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
+$Button_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(500, 90)  # Ajusta la posición según sea necesario
+$Button_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(250, 30)
+$Button_DeshabilitarTransparencia.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_DeshabilitarTransparencia.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
+
+$Button_DeshabilitarTransparencia.Add_Click({
+    # Deshabilitar la transparencia en la configuración de Windows de forma automática
+    $registryPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+    $name = "EnableTransparency"
+    $value = 0
+    Set-ItemProperty -Path $registryPath -Name $name -Value $value
+})
+
+
+# Agregar el botón a la página
+$TabPage4.Controls.Add($Button_DeshabilitarTransparencia)
+# Agregar el botón a la página
+$TabPage4.Controls.Add($Button_AppearancePerformance)
 
 
 $TabPage4.Controls.Add($Button_Menu_Windows)
@@ -1009,11 +1092,12 @@ $TabPage4.Controls.Add($Button_Menu_Windows)
 $TabPage4.Controls.Add($Button_Download_Windows)
 
 
-$TabControl.TabPages.Add($TabPage2)
+
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
 
 $Form.Controls.Add($TabControl)
+
 
 $Form.ShowDialog()
 
