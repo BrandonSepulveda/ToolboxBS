@@ -992,7 +992,7 @@ $TabPage4.Controls.Add($Button_Optimizer)
 
 
 
-<#
+
 # Botón para abrir menú desplegable de Windows
 $Button_Menu_Windows = New-Object System.Windows.Forms.Button
 $Button_Menu_Windows.FlatStyle = 'Flat'
@@ -1012,7 +1012,7 @@ $MenuItem_Windows10.Add_Click({
         param($url, $outputPath)
         Invoke-WebRequest -Uri $url -OutFile $outputPath
     }
-    $url = "https://software.download.prss.microsoft.com/dbazure/Win10_22H2_Spanish_x64v1.iso?t=1795e2e3-ec5b-4997-9bf1-e508f4265d6e&e=1707062029&h=61d0577fdd0c6b7e04f0be6c1fce79483457282163dfdc0173e1b8cd3a460feb"
+    $url = "https://software.download.prss.microsoft.com/dbazure/Win10_22H2_Spanish_x64v1.iso?t=7f287f11-a3b2-480a-83e8-95289fc65fea&e=1707175743&h=0b73f9b84704b7797d33d2501a08d3f96430baa5326f771a4c43037a05089401"
     $outputPath = "$env:USERPROFILE\Downloads\Win10_22H2_Spanish_x64v1.iso"
     Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
 })
@@ -1022,12 +1022,13 @@ $MenuItem_Windows11.Text = "Descargar Windows 11"
 $MenuItem_Windows11.Add_Click({
     $scriptBlock = {
         param($url, $outputPath)
-        Invoke-WebRequest -Uri $url -OutFile $outputPath
+        Invoke-WebRequest -Uri $url -OutFile $outputPath 
     }
-    $url = "https://software.download.prss.microsoft.com/dbazure/Win11_23H2_Spanish_x64v2.iso?t=ece743b0-aad1-439c-aeb3-64c9909a2af5&e=1707062515&h=32309af95d7ddf137a361652f846bb8ae613efa055827f632d40ca1ab2218646"
+    $url = "https://software.download.prss.microsoft.com/dbazure/Win11_23H2_Spanish_x64v2.iso?t=416df54f-5470-4c05-8869-055f84a837c2&e=1707175690&h=c372071690f9670d1ab84ed20933dcb116b0b0098e6b600c797581cae5cf63f4"
     $outputPath = "$env:USERPROFILE\Downloads\Win11_23H2_Spanish_x64v2.iso"
     Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
 })
+
 $ContextMenu_Windows.Items.AddRange(@($MenuItem_Windows10, $MenuItem_Windows11))
 
 # Asignar menú desplegable al botón
@@ -1041,8 +1042,36 @@ $TabPage4.Controls.Add($Button_Menu_Windows)
 
 $TabPage4.Controls.Add($Button_Download_Windows)
 
-#>
- 
+
+
+Add-Type -AssemblyName System.Windows.Forms
+
+# Función para obtener información del sistema
+function ObtenerInformacionEquipo {
+    $modelo = (Get-WmiObject -Class Win32_ComputerSystem).Model
+    $serial = (Get-WmiObject -Class Win32_BIOS).SerialNumber
+    return $modelo, $serial
+}
+
+# Crear botón para buscar drivers
+$buttonBuscarDrivers = New-Object System.Windows.Forms.Button
+$buttonBuscarDrivers.Location = New-Object System.Drawing.Point(50, 290)  # Ajusta la posición según sea necesario
+$buttonBuscarDrivers.Size = New-Object System.Drawing.Size(150, 30)
+$buttonBuscarDrivers.Text = "Buscar Drivers"
+$buttonBuscarDrivers.FlatStyle = 'Flat'
+$buttonBuscarDrivers.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
+# Agregar evento al hacer clic en el botón
+$buttonBuscarDrivers.Add_Click({
+    $modelo, $serial = ObtenerInformacionEquipo
+    Write-Host "Tu equipo es: $modelo, Número de serie: $serial"
+    # Construir la URL con el modelo y número de serie para buscar drivers
+    $url = "https://www.google.com/search?q=$modelo+$serial+drivers"
+    Start-Process $url
+})
+
+
+$TabPage4.Controls.Add($buttonBuscarDrivers)
 # Crear una etiqueta para el título "Atajo"
 $Label_Atajo = New-Object System.Windows.Forms.Label
 $Label_Atajo.Text = "Atajos :"
@@ -1091,6 +1120,11 @@ $Button_DeshabilitarTransparencia.Add_Click({
 $TabPage4.Controls.Add($Button_DeshabilitarTransparencia)
 # Agregar el botón a la página
 $TabPage4.Controls.Add($Button_AppearancePerformance)
+
+
+
+
+
 
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
