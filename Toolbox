@@ -1115,13 +1115,42 @@ $Button_DeshabilitarTransparencia.Add_Click({
     Set-ItemProperty -Path $registryPath -Name $name -Value $value
 })
 
+# Botón para apagar y entrar a la BIOS
+$Button_ApagarBIOS = New-Object System.Windows.Forms.Button
+$Button_ApagarBIOS.FlatStyle = 'Flat'
+$Button_ApagarBIOS.Text = "Apagar y Entrar a BIOS"
+$Button_ApagarBIOS.Location = New-Object System.Drawing.Point(500, 130)  # Ajusta la posición según sea necesario
+$Button_ApagarBIOS.Size = New-Object System.Drawing.Size(250, 30)
+$Button_ApagarBIOS.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_ApagarBIOS.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
+
+$Button_ApagarBIOS.Add_Click({
+    # Apagar y entrar a la BIOS como administrador
+    Start-Process -FilePath "shutdown" -ArgumentList "/r /fw /t 1" -Verb RunAs
+})
+
+# Botón para ingresar al entorno de recuperación
+$Button_EntornoRecuperacion = New-Object System.Windows.Forms.Button
+$Button_EntornoRecuperacion.FlatStyle = 'Flat'
+$Button_EntornoRecuperacion.Text = "Ingresar al Entorno de Recuperación"
+$Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(500, 170)  # Ajusta la posición según sea necesario
+$Button_EntornoRecuperacion.Size = New-Object System.Drawing.Size(250, 30)
+$Button_EntornoRecuperacion.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
+
+$Button_EntornoRecuperacion.Add_Click({
+    # Ingresar al entorno de recuperación
+    shutdown /r /o /f /t 00
+})
+
+$TabPage4.Controls.Add($Button_EntornoRecuperacion)
 
 # Agregar el botón a la página
 $TabPage4.Controls.Add($Button_DeshabilitarTransparencia)
+
+$TabPage4.Controls.Add($Button_ApagarBIOS)
 # Agregar el botón a la página
 $TabPage4.Controls.Add($Button_AppearancePerformance)
-
-
 
 
 
