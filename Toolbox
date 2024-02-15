@@ -42,7 +42,7 @@ public class Shell32
 
 Add-Type -AssemblyName System.Windows.Forms
 
-
+[System.Windows.Forms.Application]::EnableVisualStyles()
 
 
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
@@ -65,7 +65,6 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 $form.Icon = $icon
 
 
-[System.Windows.Forms.Application]::EnableVisualStyles()
 
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
