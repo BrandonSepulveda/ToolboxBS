@@ -665,9 +665,9 @@ $Button_RepararRed.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeee
 $Button_RepararRed.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
 
 
-# Crear una etiqueta para el título "Limpieza y Optimización"
+# Crear una etiqueta para el título "Limpieza y Optimizacion"
 $Label_Title = New-Object System.Windows.Forms.Label
-$Label_Title.Text = "Limpieza y Optimización :"
+$Label_Title.Text = "Limpieza y Optimizacion :"
 $Label_Title.Location = New-Object System.Drawing.Point(490, 20)  # Ajusta la posición horizontal y vertical según sea necesario
 $Label_Title.Size = New-Object System.Drawing.Size(200, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
 $Label_Title.ForeColor = [System.Drawing.Color]::White  # Color del texto
@@ -1158,7 +1158,7 @@ $Button_ApagarBIOS.Add_Click({
 # Botón para ingresar al entorno de recuperación
 $Button_EntornoRecuperacion = New-Object System.Windows.Forms.Button
 $Button_EntornoRecuperacion.FlatStyle = 'Flat'
-$Button_EntornoRecuperacion.Text = "Ingresar al Entorno de Recuperación"
+$Button_EntornoRecuperacion.Text = "Ingresar al Entorno de Recuperacion"
 $Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(500, 170)  # Ajusta la posición según sea necesario
 $Button_EntornoRecuperacion.Size = New-Object System.Drawing.Size(250, 30)
 $Button_EntornoRecuperacion.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
