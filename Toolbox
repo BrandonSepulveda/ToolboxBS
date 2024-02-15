@@ -3,6 +3,29 @@
     Author         : Jhon Brandon Sepulevda Valdes @brandonsepulveda_66
     GitHub         : https://github.com/PapiBrandon66
     Version        : 1.1
+
+    MIT License
+
+Copyright (c) 2023 Jhon Brandon Sepulveda Valdes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
 #>
 
 # Importar la clase Shell32
@@ -20,11 +43,6 @@ public class Shell32
 Add-Type -AssemblyName System.Windows.Forms
 
 
-[System.Windows.Forms.Application]::EnableVisualStyles()
-
-
-
-
 
 
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
@@ -33,7 +51,7 @@ $poweredBy = "Powered by: Brandon Sepulveda"
 $version = "1.1"
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version $computerEmoji                                                                                          $poweredBy $batEmoji" 
+$Form.Text = "Toolbox Version $version $computerEmoji                                                                                                                        $poweredBy $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -63,6 +81,9 @@ $TabControl = New-Object System.Windows.Forms.TabControl
 $TabControl.Dock = [System.Windows.Forms.DockStyle]::Fill
 
 $Form.MaximizeBox = $false
+$Form.MinimizeBox = $false
+$Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+
 
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
