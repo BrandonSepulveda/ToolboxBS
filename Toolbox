@@ -65,7 +65,7 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 $form.Icon = $icon
 
 
-
+[System.Windows.Forms.Application]::EnableVisualStyles()
 
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
