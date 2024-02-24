@@ -1,5 +1,6 @@
 <#
 .NOTES
+
     Author         : Jhon Brandon Sepulevda Valdes @brandonsepulveda_66
     GitHub         : https://github.com/PapiBrandon66
     Version        : 1.1
@@ -27,6 +28,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 #>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
