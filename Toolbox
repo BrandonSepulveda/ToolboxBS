@@ -1037,58 +1037,6 @@ $TabPage4.Controls.Add($Button_Optimizer)
 
 
 
-
-# Botón para abrir menú desplegable de Windows
-$Button_Menu_Windows = New-Object System.Windows.Forms.Button
-$Button_Menu_Windows.FlatStyle = 'Flat'
-$Button_Menu_Windows.Text = "Windows"
-$Button_Menu_Windows.Location = New-Object System.Drawing.Point(50, 250)  # Ajusta la posición según sea necesario
-$Button_Menu_Windows.Size = New-Object System.Drawing.Size(150, 30)
-$Button_Menu_Windows.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-
-
-## Crear menú desplegable para Windows
-$ContextMenu_Windows = New-Object System.Windows.Forms.ContextMenuStrip
-
-$MenuItem_Windows10 = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_Windows10.Text = "Descargar Windows 10"
-$MenuItem_Windows10.Add_Click({
-    $scriptBlock = {
-        param($url, $outputPath)
-        Invoke-WebRequest -Uri $url -OutFile $outputPath
-    }
-    $url = "https://software.download.prss.microsoft.com/dbazure/Win10_22H2_Spanish_x64v1.iso?t=7f287f11-a3b2-480a-83e8-95289fc65fea&e=1707175743&h=0b73f9b84704b7797d33d2501a08d3f96430baa5326f771a4c43037a05089401"
-    $outputPath = "$env:USERPROFILE\Downloads\Win10_22H2_Spanish_x64v1.iso"
-    Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
-})
-
-$MenuItem_Windows11 = New-Object System.Windows.Forms.ToolStripMenuItem
-$MenuItem_Windows11.Text = "Descargar Windows 11"
-$MenuItem_Windows11.Add_Click({
-    $scriptBlock = {
-        param($url, $outputPath)
-        Invoke-WebRequest -Uri $url -OutFile $outputPath 
-    }
-    $url = "https://software.download.prss.microsoft.com/dbazure/Win11_23H2_Spanish_x64v2.iso?t=416df54f-5470-4c05-8869-055f84a837c2&e=1707175690&h=c372071690f9670d1ab84ed20933dcb116b0b0098e6b600c797581cae5cf63f4"
-    $outputPath = "$env:USERPROFILE\Downloads\Win11_23H2_Spanish_x64v2.iso"
-    Start-Job -ScriptBlock $scriptBlock -ArgumentList $url, $outputPath
-})
-
-$ContextMenu_Windows.Items.AddRange(@($MenuItem_Windows10, $MenuItem_Windows11))
-
-# Asignar menú desplegable al botón
-$Button_Menu_Windows.Add_Click({
-    $menuLocation = $Button_Menu_Windows.PointToScreen([System.Drawing.Point]::new(0, $Button_Menu_Windows.Height))
-    $menuLocation.X += ($Button_Menu_Windows.Width - $ContextMenu_Windows.Width) / 2
-    $ContextMenu_Windows.Show($menuLocation)
-})
-
-$TabPage4.Controls.Add($Button_Menu_Windows)
-
-$TabPage4.Controls.Add($Button_Download_Windows)
-
-
-
 Add-Type -AssemblyName System.Windows.Forms
 
 # Función para obtener información del sistema
@@ -1100,7 +1048,7 @@ function ObtenerInformacionEquipo {
 
 # Crear botón para buscar drivers
 $buttonBuscarDrivers = New-Object System.Windows.Forms.Button
-$buttonBuscarDrivers.Location = New-Object System.Drawing.Point(50, 290)  # Ajusta la posición según sea necesario
+$buttonBuscarDrivers.Location = New-Object System.Drawing.Point(50, 250)   # Ajusta la posición según sea necesario
 $buttonBuscarDrivers.Size = New-Object System.Drawing.Size(150, 30)
 $buttonBuscarDrivers.Text = "Buscar Drivers"
 $buttonBuscarDrivers.FlatStyle = 'Flat'
