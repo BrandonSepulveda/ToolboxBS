@@ -1,1 +1,2 @@
-
+# Brandon Sepulveda utilidad de windows TOOLBOX
+Esta utilidad en PowerShell crea una interfaz gráfica para mostrar información del sistema y permite al usuario seleccionar aplicaciones para descargar y ejecutar. También incluye funciones para crear puntos de restauración, optimizar, verificar y reparar archivos del sistema, y más.
