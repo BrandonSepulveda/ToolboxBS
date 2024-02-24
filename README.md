@@ -1,19 +1,20 @@
 ### Brandon Sepulveda utilidad de windows TOOLBOX
 
+![PB](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
+
 ✔️ Esta utilidad en PowerShell crea una interfaz gráfica para mostrar información del sistema y permite al usuario seleccionar aplicaciones para descargar y ejecutar. También incluye funciones para crear puntos de restauración, optimizar, verificar y reparar archivos del sistema, y más
 
 # como ejecutar :
 Ejecutar powershell como adminitrador  y ejecutar los siguientes codigos
-Code Blocks (Preformatted text):
+ :
 
      iwr -useb https://cutt.ly/Tool|iex 
 o
 
-	 irm https://cutt.ly/Tool | iex
+    irm https://cutt.ly/Tool | iex
 
+![Toolbox](https://github.com/PapiBrandon66/Toolbox/assets/88468929/3b96e147-d6c2-4fe1-b12b-492b73ec6821)
 
-
-![](https://i.pinimg.com/736x/32/52/11/325211a6846633a6f00ef2d2e6ce02bc.jpg)
 
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
 
