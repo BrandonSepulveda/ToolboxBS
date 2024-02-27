@@ -53,6 +53,48 @@ SOFTWARE.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
 using System;
