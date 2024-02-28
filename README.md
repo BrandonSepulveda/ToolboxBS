@@ -2,7 +2,7 @@
 
 ![PB](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
 
-✔️ Esta utilidad en PowerShell crea una interfaz gráfica para mostrar información del sistema y permite al usuario seleccionar aplicaciones para descargar y ejecutar. También incluye funciones para crear puntos de restauración, optimizar, verificar y reparar archivos del sistema, y más
+✔️ Esta utilidad en PowerShell te muestra información del sistema esencial y permite al usuario seleccionar aplicaciones para descargar e instalar de manera simualtanea . También incluye funciones para observar anomalias,  optimizar el sistema, verificar y reparar archivos del sistema, y más
 
 ## 
 
