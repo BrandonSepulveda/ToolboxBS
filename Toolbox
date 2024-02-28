@@ -95,6 +95,31 @@ SOFTWARE.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
 using System;
@@ -106,6 +131,8 @@ public class Shell32
     public static extern IntPtr ExtractIcon(IntPtr hInst, string lpszExeFileName, int nIconIndex);
 }
 "@
+
+
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -732,6 +759,17 @@ $Button_RepararRed.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeee
 $Button_RepararRed.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
 
 
+# Botón para generar informe de energía
+$Button_GenerarInformeEnergia = New-Object System.Windows.Forms.Button
+$Button_GenerarInformeEnergia.FlatStyle = 'Flat'
+$Button_GenerarInformeEnergia.Text = "Generar Informe de Energia"
+$Button_GenerarInformeEnergia.Location = New-Object System.Drawing.Point(50, 420)  # Ajusta la posición según sea necesario
+$Button_GenerarInformeEnergia.Size = New-Object System.Drawing.Size(150, 50)
+$Button_GenerarInformeEnergia.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_GenerarInformeEnergia.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
+
+
+
 # Crear una etiqueta para el título "Limpieza y Optimizacion"
 $Label_Title = New-Object System.Windows.Forms.Label
 $Label_Title.Text = "Limpieza y Optimizacion :"
@@ -943,6 +981,11 @@ $Button_RepararRed.Add_Click({
     # Mostrar un mensaje al usuario una vez que se hayan ejecutado los comandos
     [System.Windows.Forms.MessageBox]::Show("Proceso de reparación de red completado.", "Reparación de Red")
 })
+
+$Button_GenerarInformeEnergia.Add_Click({
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "powercfg /energy /output `"C:\energy_report.html`""
+})
+
 # Agregar botones a la pestaña
 $TabPage_Restauracion.Controls.Add($Button_CrearRestauracion)
 $TabPage_Restauracion.Controls.Add($Button_VerificarArchivos)
@@ -951,6 +994,7 @@ $TabPage_Restauracion.Controls.Add($Button_BatteryReport)
 $TabPage_Restauracion.Controls.Add($Button_InfoDrivers)
 $TabPage_Restauracion.Controls.Add($Button_Menu_Limpieza)
 $TabPage_Restauracion.Controls.Add($Button_RepararRed)
+$TabPage_Restauracion.Controls.Add($Button_GenerarInformeEnergia)
                             
 # Agregar la pestaña "Restauración y Verificación" al control TabControl
 $TabControl.TabPages.Add($TabPage_Restauracion)
