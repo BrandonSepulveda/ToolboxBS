@@ -146,7 +146,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     if (-not $env:Toolbox_RestartedAsAdmin) {
         $env:Toolbox_RestartedAsAdmin = 1
         Start-Process powershell.exe -Verb RunAs -ArgumentList ('-NoProfile -ExecutionPolicy Bypass -File "{0}"' -f $MyInvocation.MyCommand.Path)
-        exit
+
     }
 }
 
