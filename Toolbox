@@ -121,8 +121,6 @@ SOFTWARE.
 
 
 
-
-
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
 using System;
@@ -144,8 +142,7 @@ public class ConsoleTitle {
 # Cambiar el título de la ventana de PowerShell
 [ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite Toolbox")
 
-# Aquí va el resto de tu script
-# ...
+
 
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -165,10 +162,11 @@ $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murci�
 $poweredBy = "Powered by: Brandon Sepulveda"
 $version = "1.1"
 
-
+$Form.ControlBox = $true
+$Form.Text = "Windows System Utility Suite Toolbox"
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version                                                                                                                             $poweredBy $batEmoji" 
+$Form.Text = "Toolbox Version $version                                                                                                                                             $poweredBy $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -182,7 +180,7 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 # Asignar el icono de la computadora de este equipo al formulario
 $form.Icon = $icon
 
-
+$Form.ControlBox = $false
 
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
@@ -211,6 +209,41 @@ Write-Host "By: Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 
 
+
+$Button_About = New-Object System.Windows.Forms.Button
+$Button_About.Text = "About"
+$Button_About.Location = New-Object System.Drawing.Point(($Form.Width - 100), 0)
+$Button_About.Size = New-Object System.Drawing.Size(50, 20)
+$Button_About.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
+$Button_About.Add_Click({
+    # Lógica para mostrar información "About"
+    $authorInfo = @"
+Author   : Brandon Sepulveda
+GitHub   : https://github.com/PapiBrandon66/Toolbox
+Version  : $version
+"@
+    [System.Windows.Forms.MessageBox]::Show($authorInfo, "About", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+})
+
+
+# Agregar botón "X" para cerrar la ventana
+$Button_Close = New-Object System.Windows.Forms.Button
+$Button_Close.Text = "X"
+$Button_Close.Location = New-Object System.Drawing.Point(($Form.Width - 40), 0)
+$Button_Close.Size = New-Object System.Drawing.Size(20, 20)
+$Button_Close.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
+$Button_Close.Add_Click({
+    $Form.Close()  # Cerrar la ventana
+})
+
+
+
+$Form.Controls.Add($Button_About)
+$Form.Controls.Add($Button_Close)
+
+$Form.Controls.Add($Button_About)
+
+$Form.Controls.Add($Button_About) 
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
@@ -1273,17 +1306,9 @@ $Form.Controls.Add($TabControl)
 
 $Form.ShowDialog()
 
+
+
 Stop-Transcript
 
-# Para mostrar un cuadro de diálogo con fondo negro y letras blancas al final de Toolbox.ps1:
-$authorInfo = @"
-Author   : Brandon Sepulveda
-GitHub   : https://github.com/PapiBrandon66/Toolbox
-Version  : $version
 
-"@
-
-## To resolve the error, you can simply remove the assignment to 'dialogResult' if it's not needed for further processing.
-[System.Windows.Forms.MessageBox]::Show($authorInfo, "Windows System Utility Suite Toolbox Autor", "OK", [System.Windows.Forms.MessageBoxIcon]::Information, [System.Windows.Forms.MessageBoxDefaultButton]::Button1, [System.Windows.Forms.MessageBoxOptions]::DefaultDesktopOnly)
-
-Write-Host "Adios $rockEmoji" -ForegroundColor green
+Write-Host "Adios $rockEmoji" -ForegroundColor green $rockEmoji
