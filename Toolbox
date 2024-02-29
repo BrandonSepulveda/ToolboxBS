@@ -149,7 +149,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-# Para personalizar el nombre del archivo de transcripción con el nombre de tu utilidad (Brandon, etc.), puedes hacer lo siguiente:
+
 
 # Construir el nombre del archivo de transcripción con el nombre de tu utilidad
 $transcriptFileName = "C:\Users\Admin\AppData\Local\Temp\Toolbox.log"
@@ -163,11 +163,15 @@ $poweredBy = "Powered by: Brandon Sepulveda"
 $version = "1.1"
 
 
+
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version                                                                                                                                             $poweredBy $batEmoji" 
+$Form.Text = "Toolbox Version $version                                                                                                                               $poweredBy $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+
+
 
 
 
@@ -178,7 +182,7 @@ $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero,
 # Asignar el icono de la computadora de este equipo al formulario
 $form.Icon = $icon
 
-$Form.ControlBox = $false
+$Form.ControlBox = $true
 
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
@@ -210,7 +214,7 @@ Write-Host "By: Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 $Button_About = New-Object System.Windows.Forms.Button
 $Button_About.Text = "About"
-$Button_About.Location = New-Object System.Drawing.Point(($Form.Width - 100), 0)
+$Button_About.Location = New-Object System.Drawing.Point(($Form.Width - 70), 0)
 $Button_About.Size = New-Object System.Drawing.Size(50, 20)
 $Button_About.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
 $Button_About.Add_Click({
@@ -223,29 +227,15 @@ Version  : $version
     [System.Windows.Forms.MessageBox]::Show($authorInfo, "About", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
 })
 
-
-# Agregar botón "X" para cerrar la ventana
-$Button_Close = New-Object System.Windows.Forms.Button
-$Button_Close.Text = "X"
-$Button_Close.Location = New-Object System.Drawing.Point(($Form.Width - 40), 0)
-$Button_Close.Size = New-Object System.Drawing.Size(20, 20)
-$Button_Close.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
-$Button_Close.Add_Click({
-    $Form.Close()  # Cerrar la ventana
-})
-
-
-
-$Form.Controls.Add($Button_About)
-$Form.Controls.Add($Button_Close)
-
 $Form.Controls.Add($Button_About)
 
-$Form.Controls.Add($Button_About) 
+
+ 
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
 $TabPage_InfoSistema.BackColor =  [System.Drawing.Color]::Black  # Cambiar a negro
+
 
 
 $Label_InfoSistema = New-Object System.Windows.Forms.Label
