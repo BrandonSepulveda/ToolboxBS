@@ -140,6 +140,20 @@ SOFTWARE.
 
 
 
+# Verificar si se está ejecutando como administrador
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    # Reiniciar el proceso con privilegios de administrador si aún no lo hemos hecho
+    if (-not $env:Toolbox_RestartedAsAdmin) {
+        $env:Toolbox_RestartedAsAdmin = 1
+        Start-Process powershell.exe -Verb RunAs -ArgumentList ('-NoProfile -ExecutionPolicy Bypass -File "{0}"' -f $MyInvocation.MyCommand.Path)
+        exit
+    }
+}
+
+# Restaurar la variable de entorno para que no se ejecute duplicado la próxima vez
+$env:Toolbox_RestartedAsAdmin = 0
+
+
 
 # Importar la clase Shell32
 Add-Type -TypeDefinition @"
