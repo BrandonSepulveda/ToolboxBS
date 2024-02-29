@@ -162,8 +162,6 @@ $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # C√≥digo Unicode para un murci√
 $poweredBy = "Powered by: Brandon Sepulveda"
 $version = "1.1"
 
-$Form.ControlBox = $true
-$Form.Text = "Windows System Utility Suite Toolbox"
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Toolbox Version $version                                                                                                                                             $poweredBy $batEmoji" 
