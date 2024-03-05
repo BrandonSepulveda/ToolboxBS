@@ -937,22 +937,35 @@ $Button_BSOD_Info.Add_Click({
     }
 })
 
-# Agregar un controlador de eventos para el clic del botón
 $Button_BatteryReport.Add_Click({
     try {
+        # Descargar BatteryInfoView.zip desde el sitio web
+        $url = "https://www.nirsoft.net/utils/batteryinfoview.zip"
+        $outputPath = "C:\BatteryInfoView.zip"
+        (New-Object System.Net.WebClient).DownloadFile($url, $outputPath)
+
+        # Extraer el archivo descargado
+        $extractPath = "C:\BatteryInfoView"
+        Expand-Archive -Path $outputPath -DestinationPath $extractPath -Force
+
+        # Ejecutar BatteryInfoView.exe
+        $exePath = Join-Path $extractPath "BatteryInfoView.exe"
+        Start-Process -FilePath $exePath
+
         # Ejecutar el comando para generar el informe de la batería
         $batteryReportCommand = "powercfg /batteryreport /output `"C:\battery_report.html`""
         Invoke-Expression -Command $batteryReportCommand
 
         # Mostrar un mensaje emergente con la ubicación del informe
-        [System.Windows.Forms.MessageBox]::Show("El informe de la bateria se ha generado correctamente en C:\battery_report.html", "Informe Generado")
+        [System.Windows.Forms.MessageBox]::Show("El informe de la batería se ha generado correctamente en C:\battery_report.html", "Informe Generado")
 
     } catch {
         # Mostrar un mensaje de error si ocurre algún problema
-        [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
+        [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la batería:`n$error", "Error")
     }
 
 })
+
 
 
 $Button_InfoDrivers.Add_Click({
@@ -1327,5 +1340,3 @@ Write-Host "Adios $rockEmoji" -ForegroundColor green $rockEmoji
 
 
 # Agregar un mensaje de espera antes de cerrar PowerShell
-
-
