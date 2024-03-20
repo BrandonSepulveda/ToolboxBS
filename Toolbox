@@ -803,7 +803,7 @@ $Button_BSOD_Info.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeee
 # Crear un botón para generar el informe de la batería
 $Button_BatteryReport = New-Object System.Windows.Forms.Button
 $Button_BatteryReport.FlatStyle = 'Flat'
-$Button_BatteryReport.Text = "Generar Informe de Bateria"
+$Button_BatteryReport.Text = "Ver estado de Bateria"
 $Button_BatteryReport.Location = New-Object System.Drawing.Point(50, 240)  # Ajusta la posición vertical según sea necesario
 $Button_BatteryReport.Size = New-Object System.Drawing.Size(150, 50)
 $Button_BatteryReport.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
@@ -952,16 +952,16 @@ $Button_BatteryReport.Add_Click({
         $exePath = Join-Path $extractPath "BatteryInfoView.exe"
         Start-Process -FilePath $exePath
 
-        # Ejecutar el comando para generar el informe de la batería
+        # Ejecutar el comando para generar el informe de la bateria
         $batteryReportCommand = "powercfg /batteryreport /output `"C:\battery_report.html`""
         Invoke-Expression -Command $batteryReportCommand
 
         # Mostrar un mensaje emergente con la ubicación del informe
-        [System.Windows.Forms.MessageBox]::Show("El informe de la batería se ha generado correctamente en C:\battery_report.html", "Informe Generado")
+        [System.Windows.Forms.MessageBox]::Show("El informe de la bateria se ha generado correctamente en C:\battery_report.html", "Informe Generado")
 
     } catch {
         # Mostrar un mensaje de error si ocurre algún problema
-        [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la batería:`n$error", "Error")
+        [System.Windows.Forms.MessageBox]::Show("Error al generar el informe de la bateria:`n$error", "Error")
     }
 
 })
