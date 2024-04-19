@@ -164,7 +164,7 @@ public class ConsoleTitle {
 "@
 
 # Cambiar el título de la ventana de PowerShell
-[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite Toolbox")
+[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Toolbox")
 
 
 
