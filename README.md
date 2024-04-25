@@ -1,5 +1,8 @@
 ### Brandon Sepulveda Windows System Utility Suite  TOOLBOX
 
+[![made-with-powershell](https://img.shields.io/badge/PowerShell-1f425f?logo=Powershell)](https://microsoft.com/PowerShell)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ![PB](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
 
 Esta utilidad en PowerShell es un Conjunto de utilidades del sistema que te muestra información del sistema esencial y permite al usuario seleccionar aplicaciones para descargar e instalar de manera simualtanea . También incluye funciones para observar anomalias,  optimizar el sistema, verificar y reparar archivos del sistema, y más
@@ -7,7 +10,7 @@ Esta utilidad en PowerShell es un Conjunto de utilidades del sistema que te mues
 ## 
 
 # Como ejecutar :
-Ejecutar powershell como adminitrador  y ejecutar los siguientes codigos
+Ejecutar [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-5.1) como adminitrador  y ejecutar los siguientes codigos
  :
 #### 
      iwr -useb https://cutt.ly/Tool|iex 
