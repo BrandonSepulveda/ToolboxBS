@@ -230,7 +230,7 @@ $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
 $rockEmoji = [char]::ConvertFromUtf32(0x1F918)
 
-Write-Host "Toolbox $computerEmoji" -ForegroundColor green
+Write-Host "Utilidad para Windows Toolbox $computerEmoji" -ForegroundColor green
 Write-Host "By: Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 
