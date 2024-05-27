@@ -2,7 +2,7 @@
 .NOTES
 
     Author         : Jhon Brandon Sepulevda Valdes @brandonsepulveda_66
-    GitHub         : https://github.com/PapiBrandon66
+    GitHub         : https://github.com/BrandonSepulveda/Toolbox
     Version        : 1.1
 
     MIT License
@@ -242,8 +242,8 @@ $Button_About.ForeColor = [System.Drawing.Color]::White  # Establecer el color d
 $Button_About.Add_Click({
     # Lógica para mostrar información "About"
     $authorInfo = @"
-Author   : Brandon Sepulveda
-GitHub   : https://github.com/PapiBrandon66/Toolbox
+Author   : Jhon Brandon Sepulveda Valdes
+GitHub   : https://github.com/BrandonSepulveda/Toolbox
 Version  : $version
 "@
     [System.Windows.Forms.MessageBox]::Show($authorInfo, "About", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
