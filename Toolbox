@@ -27,8 +27,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-#>
-
 
 
 
@@ -189,7 +187,7 @@ $version = "1.1"
 
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version                                                                                                                               $poweredBy $batEmoji" 
+$Form.Text = "Toolbox Version $version                                                                                                                                  $poweredBy $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -253,6 +251,8 @@ Version  : $version
 
 $Form.Controls.Add($Button_About)
 
+$Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::None
+$Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedToolWindow
 
  
 # Sección "Informacion del Sistema"
