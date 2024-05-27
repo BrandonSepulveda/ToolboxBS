@@ -251,9 +251,6 @@ Version  : $version
 
 $Form.Controls.Add($Button_About)
 
-$Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::None
-$Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedToolWindow
-
  
 # Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
