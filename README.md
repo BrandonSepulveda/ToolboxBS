@@ -13,10 +13,10 @@ Esta utilidad en PowerShell es un Conjunto de utilidades del sistema que te mues
 Ejecutar [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-5.1) como adminitrador  y ejecutar los siguientes codigos
  :
 #### 
-     iwr -useb https://cutt.ly/Tool|iex 
+    iwr -useb https://cutt.ly/BrandonTool | iex
 o ejecutando :
 
-    irm https://cutt.ly/Tool | iex
+    irm https://cutt.ly/BrandonTool|iex
 
 ![Toolbox](https://github.com/PapiBrandon66/Toolbox/assets/88468929/3b96e147-d6c2-4fe1-b12b-492b73ec6821)
 
