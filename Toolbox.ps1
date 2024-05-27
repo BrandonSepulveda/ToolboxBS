@@ -187,7 +187,7 @@ $version = "1.1"
 
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version                                                                                                                                  $poweredBy $batEmoji" 
+$Form.Text = "Toolbox Version $version                                                                                                                                     $poweredBy $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
