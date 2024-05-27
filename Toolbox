@@ -1310,6 +1310,32 @@ $Button_EntornoRecuperacion.Add_Click({
 })
 
 
+# Create a new button update 
+$Button_UpdateApps = New-Object System.Windows.Forms.Button
+
+# Set the button's properties
+$Button_UpdateApps.FlatStyle = 'Flat'
+$Button_UpdateApps.Text = "Actualizar Apps"
+$Button_UpdateApps.Location = New-Object System.Drawing.Point(500, 210)
+$Button_UpdateApps.Size = New-Object System.Drawing.Size(250, 30)
+$Button_UpdateApps.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+$Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
+
+
+
+# Add a click event handler to the button
+$Button_UpdateApps.Add_Click({
+    # Run the winget update command
+    Start-Process -FilePath "powershell.exe" -ArgumentList "-NoExit", "-Command", "winget update --all" -NoNewWindow
+
+    
+})
+
+# Assuming this is part of a form or other control
+
+
+$TabPage4.Controls.Add($Button_UpdateApps)
+
 $TabPage4.Controls.Add($Button_EntornoRecuperacion)
 
 # Agregar el botón a la página
