@@ -1103,7 +1103,7 @@ $Button_EjecutarChristitus.Size = New-Object System.Drawing.Size(150, 30)
 $Button_EjecutarChristitus.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
 $Button_EjecutarChristitus.Add_Click({
-    Start-Process powershell -ArgumentList "-NoExit", "-Command", "iwr -useb https://christitus.com/win | iex" -Verb RunAs
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "irm christitus.com/win | iex" -Verb RunAs
 })
 
 $TabPage4.Controls.Add($Button_EjecutarChristitus)
