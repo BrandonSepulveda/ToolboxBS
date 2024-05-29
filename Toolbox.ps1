@@ -435,23 +435,26 @@ $TextBox_InfoSistema.Text = $systemInfo
 
 
 
-#sección Apps
-
+# Crear la pestaña "Apps"
 $TabPage_Apps = New-Object System.Windows.Forms.TabPage
 $TabPage_Apps.Text = "Apps"
-$TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Cambiar a negro
+$TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo negro
 
+# Crear el label "Aplicaciones"
 $Label_APPS = New-Object System.Windows.Forms.Label
 $Label_APPS.Text = "Aplicaciones:"
 $Label_APPS.Location = New-Object System.Drawing.Point(150, 20)
 $Label_APPS.Size = New-Object System.Drawing.Size(300, 20)
-$Label_APPS.ForeColor = [System.Drawing.Color]::White
-$TabPage_APPS.Controls.Add($Label_APPS)
+$Label_APPS.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
+$TabPage_Apps.Controls.Add($Label_APPS)
 $Label_APPS.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Bold)
 
+# Crear el CheckedListBox para las aplicaciones
 $ListBox_Apps = New-Object System.Windows.Forms.CheckedListBox
 $ListBox_Apps.Location = New-Object System.Drawing.Point(150, 40)
 $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
+$ListBox_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo negro
+$ListBox_Apps.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
 
 # Agrega las aplicaciones a la lista
 
