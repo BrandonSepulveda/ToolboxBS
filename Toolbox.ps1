@@ -161,16 +161,14 @@ public class ConsoleTitle {
 
 "@
 
+
 # Cambiar el título de la ventana de PowerShell
-[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Toolbox")
-
-
+[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite toolbox")
 
 
 Add-Type -AssemblyName System.Windows.Forms
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
-
 
 
 # Construir el nombre del archivo de transcripción con el nombre de tu utilidad
@@ -181,16 +179,20 @@ Start-Transcript -Path $transcriptFileName
 
 
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
-$poweredBy = "Powered by: Brandon Sepulveda"
+$poweredBy = "Brandon Sepulveda"
 $version = "1.1"
 
 
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Toolbox Version $version                                                                                                                                  $poweredBy $batEmoji" 
+$Form.Text = "$poweredBy Windows System Utility Suite Toolbox $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(800, 600)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+
+
+
 
 
 
@@ -479,6 +481,9 @@ $ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
 [void]$ListBox_Apps.Items.Add("PowerShell")
 [void]$ListBox_Apps.Items.Add("Microsoft PowerToys")
 [void]$ListBox_Apps.Items.Add("Windows Terminal")
+[void]$ListBox_Apps.Items.Add("HP Image Assistant (HPIA)")
+[void]$ListBox_Apps.Items.Add("CPU Z")
+[void]$ListBox_Apps.Items.Add("NZXT CAM")
 
 
 
@@ -729,6 +734,30 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("Windows Terminal instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Windows Terminal $_", "Error de Instalacion")
+                }
+            }
+
+             "HP Image Assistant (HPIA)" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://hpia.hpcloud.hp.com/downloads/hpia/hp-hpia-5.2.1.exe"
+                    Extension = ".exe"
+                }
+            }
+
+            "CPU Z" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://download.cpuid.com/cpu-z/cpu-z_2.09-en.exe"
+                    Extension = ".exe"
+                }
+            }
+
+             "NZXT CAM" {
+                $AppsToDownload += @{
+                    Name = $app
+                    URL = "https://nzxt-app.nzxt.com/NZXT-CAM-Setup.exe"
+                    Extension = ".exe"
                 }
             }
 
