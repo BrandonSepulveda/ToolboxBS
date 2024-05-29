@@ -276,8 +276,8 @@ $TextBox_InfoSistema.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
 $TextBox_InfoSistema.Location = New-Object System.Drawing.Point(50, 50)
 $TextBox_InfoSistema.Size = New-Object System.Drawing.Size(710, 420)
 $TextBox_InfoSistema.AutoSize = $true
-$TextBox_InfoSistema.ForeColor = [System.Drawing.Color]::Black
-$TextBox_InfoSistema.BackColor = [System.Drawing.Color]::White
+$TextBox_InfoSistema.ForeColor = [System.Drawing.Color]::white
+$TextBox_InfoSistema.BackColor = [System.Drawing.Color]::black
 $TextBox_InfoSistema.ReadOnly = $true
 $TabPage_InfoSistema.Controls.Add($TextBox_InfoSistema)
 
