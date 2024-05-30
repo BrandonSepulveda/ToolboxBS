@@ -18,7 +18,7 @@ o ejecutando :
 
     irm https://cutt.ly/BrandonTool|iex
 
-![Toolbox](https://github.com/PapiBrandon66/Toolbox/assets/88468929/3b96e147-d6c2-4fe1-b12b-492b73ec6821)
+
 
 
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
@@ -26,10 +26,13 @@ o ejecutando :
 - **Informacion del Sistema:** 
 Muestra detalles del sistema como la versión de Windows, procesador, RAM, capacidad del disco, estado del disco, información de la RAM, BIOS, temperatura de la CPU, información de la GPU, entre otros.
 
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/85a5c6de-b4a1-4fe8-9fe2-38fb89c8b7c9)
+
 - **Apps:** 
 Permite al usuario seleccionar aplicaciones de una lista predefinida para descargar y ejecutar de forma automatica.
 
-![image](https://github.com/PapiBrandon66/Toolbox/assets/88468929/7cf78ed0-f546-45cf-96cc-e3f37d16750f)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/15f51781-7fcf-4be4-87b2-9a0514e10236)
+
 
 - **Restauracion y Verificacion:** 
 Ofrece opciones para crear puntos de restauración, verificar y reparar archivos del sistema, obtener información de pantallazos azules, generar informes de batería, obtener información de drivers por archivo txt y reparar la red.
@@ -37,12 +40,14 @@ Ofrece opciones para crear puntos de restauración, verificar y reparar archivos
 - **Limpieza y Optimizacion:**
 Incluye una opción de limpieza del sistema, como funciones de optimizacion de memoria ram, cache, DNS, Cache de updates realizando tareas de mantenimiento en el sistema.
 
-![image](https://github.com/PapiBrandon66/Toolbox/assets/88468929/722bd12b-6ec0-4c04-abf3-fec00cd611f7)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/32c40993-c8e6-4f9f-b04b-d6fd8e8dba47)
+
 
 - **Tweaks:**
 Esta sección  incluye  ajustes personalizables para mejorar el rendimiento del sistema, como configuraciones avanzadas del sistema ,utilidades reconocidas en el mundo de informatica como chris titus, debloat y optimizer con el fin de mejorar el desempeñó de windows, se aplican automatizaciones para activar windows atraves de la licencia digital de bios, se buscan driver por medio del navegador segun tu equipo, automatizaciones como ingreso a la bios de forma automatica y el entorno recovery de windows, entre otros.
 
-![image](https://github.com/PapiBrandon66/Toolbox/assets/88468929/5a0c8375-86b6-4889-a4ac-4c273c9cd8b7)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/d0280ad3-137f-439b-b794-b0f1aad8cce4)
+
 
 ## Redes
 `Instagram` :https://www.instagram.com/brandonsepulveda_66
