@@ -160,7 +160,27 @@ public class ConsoleTitle {
 }
 
 "@
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
 
+public class User32 {
+    private const int GWL_STYLE = -16;
+    private const int WS_BORDER = 0x00800000;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+    [DllImport("user32.dll")]
+    public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+}
+"@ 
+
+# Suponiendo que tienes un handle de ventana para un control
+$handle = $TextBox_InfoSistema.Handle
+$currentStyle = [User32]::GetWindowLong($handle, -16)
+$newStyle = $currentStyle -band (-bnot [User32]::WS_BORDER)
+[User32]::SetWindowLong($handle, -16, $newStyle)
 
 # Cambiar el título de la ventana de PowerShell
 [ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite toolbox")
@@ -186,13 +206,9 @@ $version = "1.1"
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "$poweredBy Windows System Utility Suite Toolbox $batEmoji" 
-$Form.Size = New-Object System.Drawing.Size(800, 600)
+$Form.Size = New-Object System.Drawing.Size(1000, 800)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-
-
-
-
 
 
 
@@ -225,7 +241,6 @@ $Form.MaximizeBox = $false
 $Form.MinimizeBox = $false
 $Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
-
 $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
 $rockEmoji = [char]::ConvertFromUtf32(0x1F918)
@@ -254,31 +269,37 @@ Version  : $version
 $Form.Controls.Add($Button_About)
 
  
-# Sección "Informacion del Sistema"
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
-$TabPage_InfoSistema.BackColor =  [System.Drawing.Color]::Black  # Cambiar a negro
-
-
+$TabPage_InfoSistema.BackColor = [System.Drawing.Color]::Black
 
 $Label_InfoSistema = New-Object System.Windows.Forms.Label
 $Label_InfoSistema.Text = "Informacion del Sistema:"
 $Label_InfoSistema.Location = New-Object System.Drawing.Point(50, 20)
 $Label_InfoSistema.Size = New-Object System.Drawing.Size(300, 20)
 $Label_InfoSistema.ForeColor = [System.Drawing.Color]::White
+$Label_InfoSistema.Font = New-Object System.Drawing.Font("Arial", 15, [System.Drawing.FontStyle]::Bold)
 $TabPage_InfoSistema.Controls.Add($Label_InfoSistema)
-$Label_InfoSistema.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.FontStyle]::Bold)
-
 
 $TextBox_InfoSistema = New-Object System.Windows.Forms.TextBox
 $TextBox_InfoSistema.Multiline = $true
 $TextBox_InfoSistema.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
 $TextBox_InfoSistema.Location = New-Object System.Drawing.Point(50, 50)
 $TextBox_InfoSistema.Size = New-Object System.Drawing.Size(710, 420)
-$TextBox_InfoSistema.AutoSize = $true
 $TextBox_InfoSistema.ForeColor = [System.Drawing.Color]::white
 $TextBox_InfoSistema.BackColor = [System.Drawing.Color]::black
 $TextBox_InfoSistema.ReadOnly = $true
+
+# Establecer el estilo del borde a ninguno
+$TextBox_InfoSistema.BorderStyle = [System.Windows.Forms.BorderStyle]::None
+
+# Configurar el anclaje para que el TextBox se ajuste con el tamaño del TabPage
+$TextBox_InfoSistema.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
+
+# Configurar el anclaje para que el TextBox se ajuste con el tamaño del TabPage
+$TextBox_InfoSistema.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
+$Label_InfoSistema.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
+
 $TabPage_InfoSistema.Controls.Add($TextBox_InfoSistema)
 
 
@@ -435,7 +456,7 @@ $TextBox_InfoSistema.Text = $systemInfo
 
 
 
-# Crear la pestaña "Apps"
+ Crear la pestaña "Apps"
 $TabPage_Apps = New-Object System.Windows.Forms.TabPage
 $TabPage_Apps.Text = "Apps"
 $TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo negro
@@ -443,7 +464,7 @@ $TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo n
 # Crear el label "Aplicaciones"
 $Label_APPS = New-Object System.Windows.Forms.Label
 $Label_APPS.Text = "Aplicaciones:"
-$Label_APPS.Location = New-Object System.Drawing.Point(150, 20)
+$Label_APPS.Location = New-Object System.Drawing.Point(50, 20)
 $Label_APPS.Size = New-Object System.Drawing.Size(300, 20)
 $Label_APPS.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
 $TabPage_Apps.Controls.Add($Label_APPS)
@@ -451,12 +472,13 @@ $Label_APPS.Font = New-Object System.Drawing.Font("Arial", 12, [System.Drawing.F
 
 # Crear el CheckedListBox para las aplicaciones
 $ListBox_Apps = New-Object System.Windows.Forms.CheckedListBox
-$ListBox_Apps.Location = New-Object System.Drawing.Point(150, 40)
-$ListBox_Apps.Size = New-Object System.Drawing.Size(500, 400)
+$ListBox_Apps.Location = New-Object System.Drawing.Point(50, 50)
+$ListBox_Apps.Size = New-Object System.Drawing.Size(500, 600)
 $ListBox_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo negro
 $ListBox_Apps.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
 
-# Agrega las aplicaciones a la lista
+# Agrega las aplicaciones a la lista# Configurar el estilo del borde a ninguno
+$ListBox_Apps.BorderStyle = [System.Windows.Forms.BorderStyle]::None
 
 # Agregar elementos al ListBox sin mostrar la salida en el terminal
 [void]$ListBox_Apps.Items.Add("Lenovo System Update")
@@ -493,9 +515,10 @@ $ListBox_Apps.ForeColor = [System.Drawing.Color]::White  # Establecer el color d
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
 $Button_DownloadExecute.FlatStyle = 'Flat'
 $Button_DownloadExecute.Text = "Descargar y Ejecutar"
-$Button_DownloadExecute.Location = New-Object System.Drawing.Point(250, 450)
+$Button_DownloadExecute.Location = New-Object System.Drawing.Point(300, 680)
 $Button_DownloadExecute.Size = New-Object System.Drawing.Size(300, 40)
 $Button_DownloadExecute.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
 
 
 
@@ -870,7 +893,7 @@ $Button_GenerarInformeEnergia.Font = New-Object System.Drawing.Font("Arial",9 ) 
 # Crear una etiqueta para el título "Limpieza y Optimizacion"
 $Label_Title = New-Object System.Windows.Forms.Label
 $Label_Title.Text = "Limpieza y Optimizacion :"
-$Label_Title.Location = New-Object System.Drawing.Point(490, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_Title.Location = New-Object System.Drawing.Point(680, 20)  # Ajusta la posición horizontal y vertical según sea necesario
 $Label_Title.Size = New-Object System.Drawing.Size(200, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
 $Label_Title.ForeColor = [System.Drawing.Color]::White  # Color del texto
 $Label_Title.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
@@ -883,7 +906,7 @@ $TabPage_Restauracion.Controls.Add($Label_Title)
 $Button_Menu_Limpieza = New-Object System.Windows.Forms.Button
 $Button_Menu_Limpieza.FlatStyle = 'Flat'
 $Button_Menu_Limpieza.Text = "Limpieza"
-$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(500, 60)
+$Button_Menu_Limpieza.Location = New-Object System.Drawing.Point(680, 60)
 $Button_Menu_Limpieza.Size = New-Object System.Drawing.Size(200, 40)
 $Button_Menu_Limpieza.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
@@ -1270,7 +1293,7 @@ $TabPage4.Controls.Add($buttonBuscarDrivers)
 # Crear una etiqueta para el título "Atajo"
 $Label_Atajo = New-Object System.Windows.Forms.Label
 $Label_Atajo.Text = "Atajos :"
-$Label_Atajo.Location = New-Object System.Drawing.Point(405, 20)  # Ajusta la posición horizontal y vertical según sea necesario
+$Label_Atajo.Location = New-Object System.Drawing.Point(580, 20)  # Ajusta la posición horizontal y vertical según sea necesario
 $Label_Atajo.Size = New-Object System.Drawing.Size(250, 20)  # Ajusta el ancho y alto de la etiqueta según sea necesario
 $Label_Atajo.ForeColor = [System.Drawing.Color]::White  # Color del texto
 $Label_Atajo.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter  # Alineación del texto al centro
@@ -1282,7 +1305,7 @@ $TabPage4.Controls.Add($Label_Atajo)
 $Button_AppearancePerformance = New-Object System.Windows.Forms.Button
 $Button_AppearancePerformance.FlatStyle = 'Flat'
 $Button_AppearancePerformance.Text = "Propiedades del Sistema"
-$Button_AppearancePerformance.Location = New-Object System.Drawing.Point(500, 50)  # Ajusta la posición según sea necesario
+$Button_AppearancePerformance.Location = New-Object System.Drawing.Point(680, 50)  # Ajusta la posición según sea necesario
 $Button_AppearancePerformance.Size = New-Object System.Drawing.Size(250, 30)
 $Button_AppearancePerformance.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_AppearancePerformance.Font = New-Object System.Drawing.Font("Arial",9)  # Establecer el tamaño de la letra más pequeño
@@ -1297,7 +1320,7 @@ $Button_AppearancePerformance.Add_Click({
 $Button_DeshabilitarTransparencia = New-Object System.Windows.Forms.Button
 $Button_DeshabilitarTransparencia.FlatStyle = 'Flat'
 $Button_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
-$Button_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(500, 90)  # Ajusta la posición según sea necesario
+$Button_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(680, 90)  # Ajusta la posición según sea necesario
 $Button_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(250, 30)
 $Button_DeshabilitarTransparencia.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_DeshabilitarTransparencia.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
@@ -1314,7 +1337,7 @@ $Button_DeshabilitarTransparencia.Add_Click({
 $Button_ApagarBIOS = New-Object System.Windows.Forms.Button
 $Button_ApagarBIOS.FlatStyle = 'Flat'
 $Button_ApagarBIOS.Text = "Apagar y Entrar a BIOS"
-$Button_ApagarBIOS.Location = New-Object System.Drawing.Point(500, 130)  # Ajusta la posición según sea necesario
+$Button_ApagarBIOS.Location = New-Object System.Drawing.Point(680, 130)  # Ajusta la posición según sea necesario
 $Button_ApagarBIOS.Size = New-Object System.Drawing.Size(250, 30)
 $Button_ApagarBIOS.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_ApagarBIOS.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
@@ -1328,7 +1351,7 @@ $Button_ApagarBIOS.Add_Click({
 $Button_EntornoRecuperacion = New-Object System.Windows.Forms.Button
 $Button_EntornoRecuperacion.FlatStyle = 'Flat'
 $Button_EntornoRecuperacion.Text = "Ingresar al Entorno de Recuperacion"
-$Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(500, 170)  # Ajusta la posición según sea necesario
+$Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(680, 170)  # Ajusta la posición según sea necesario
 $Button_EntornoRecuperacion.Size = New-Object System.Drawing.Size(250, 30)
 $Button_EntornoRecuperacion.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
@@ -1345,7 +1368,7 @@ $Button_UpdateApps = New-Object System.Windows.Forms.Button
 # Set the button's properties
 $Button_UpdateApps.FlatStyle = 'Flat'
 $Button_UpdateApps.Text = "Actualizar Apps"
-$Button_UpdateApps.Location = New-Object System.Drawing.Point(500, 210)
+$Button_UpdateApps.Location = New-Object System.Drawing.Point(680, 210)
 $Button_UpdateApps.Size = New-Object System.Drawing.Size(250, 30)
 $Button_UpdateApps.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
