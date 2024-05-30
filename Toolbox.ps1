@@ -160,27 +160,9 @@ public class ConsoleTitle {
 }
 
 "@
-Add-Type -TypeDefinition @"
-using System;
-using System.Runtime.InteropServices;
 
-public class User32 {
-    private const int GWL_STYLE = -16;
-    private const int WS_BORDER = 0x00800000;
 
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
-    [DllImport("user32.dll")]
-    public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-}
-"@ 
-
-# Suponiendo que tienes un handle de ventana para un control
-$handle = $TextBox_InfoSistema.Handle
-$currentStyle = [User32]::GetWindowLong($handle, -16)
-$newStyle = $currentStyle -band (-bnot [User32]::WS_BORDER)
-[User32]::SetWindowLong($handle, -16, $newStyle)
 
 # Cambiar el título de la ventana de PowerShell
 [ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite toolbox")
@@ -456,7 +438,7 @@ $TextBox_InfoSistema.Text = $systemInfo
 
 
 
- Crear la pestaña "Apps"
+ #Crear la pestaña "Apps"
 $TabPage_Apps = New-Object System.Windows.Forms.TabPage
 $TabPage_Apps.Text = "Apps"
 $TabPage_Apps.BackColor = [System.Drawing.Color]::Black  # Establecer el fondo negro
