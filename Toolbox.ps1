@@ -465,6 +465,7 @@ $ListBox_Apps.BorderStyle = [System.Windows.Forms.BorderStyle]::None
 # Agregar elementos al ListBox sin mostrar la salida en el terminal
 [void]$ListBox_Apps.Items.Add("Lenovo System Update")
 [void]$ListBox_Apps.Items.Add("Hard Disk Sentinel Professional")
+[void]$ListBox_Apps.Items.Add("Crystal Diskinfo")
 [void]$ListBox_Apps.Items.Add("TeamViewer")
 [void]$ListBox_Apps.Items.Add("Herramienta de Soporte de Desinstalacion de Microsoft 365")
 [void]$ListBox_Apps.Items.Add("Intel Driver & Support Assistant (Intel DSA)")
@@ -524,6 +525,16 @@ $Button_DownloadExecute.Add_Click({
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Hard Disk Sentinel: $_", "Error de Instalacion")
                 }
             }
+
+            "Crystal Diskinfo" {
+                    try {
+                        Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XP8K4RGX25G3GM --accept-package-agreements`""
+                        [System.Windows.Forms.MessageBox]::Show("Crystal Diskinfo instalado correctamente.", "Instalacion Completada")
+                    } catch {
+                        [System.Windows.Forms.MessageBox]::Show("Error al instalar Crystal Diskinfo: $_", "Error de Instalacion")
+                    }
+                
+                }
             
             
             "TeamViewer" {
