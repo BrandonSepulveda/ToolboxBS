@@ -182,7 +182,7 @@ Start-Transcript -Path $transcriptFileName
 
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
 $poweredBy = "Brandon Sepulveda"
-$version = "1.1"
+$version = "1.2"
 
 
 
