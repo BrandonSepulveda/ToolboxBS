@@ -26,12 +26,15 @@ o ejecutando :
 - **Informacion del Sistema:** 
 Muestra detalles del sistema como la versión de Windows, procesador, RAM, capacidad del disco, estado del disco, información de la RAM, BIOS, temperatura de la CPU, información de la GPU, entre otros.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/85a5c6de-b4a1-4fe8-9fe2-38fb89c8b7c9)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/4faeacf4-e9f5-4557-9f99-2aa5b7e81da9)
+
+
 
 - **Apps:** 
 Permite al usuario seleccionar aplicaciones de una lista predefinida para descargar y ejecutar de forma automatica.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/15f51781-7fcf-4be4-87b2-9a0514e10236)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/bd9af57c-19b4-49c3-9ebd-00439bdfcf52)
+
 
 
 - **Restauracion y Verificacion:** 
@@ -40,13 +43,15 @@ Ofrece opciones para crear puntos de restauración, verificar y reparar archivos
 - **Limpieza y Optimizacion:**
 Incluye una opción de limpieza del sistema, como funciones de optimizacion de memoria ram, cache, DNS, Cache de updates realizando tareas de mantenimiento en el sistema.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/32c40993-c8e6-4f9f-b04b-d6fd8e8dba47)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/15296be3-ec1a-43f7-ad56-dd8400affc61)
+
 
 
 - **Tweaks:**
 Esta sección  incluye  ajustes personalizables para mejorar el rendimiento del sistema, como configuraciones avanzadas del sistema ,utilidades reconocidas en el mundo de informatica como chris titus, debloat y optimizer con el fin de mejorar el desempeñó de windows, se aplican automatizaciones para activar windows atraves de la licencia digital de bios, se buscan driver por medio del navegador segun tu equipo, automatizaciones como ingreso a la bios de forma automatica y el entorno recovery de windows, entre otros.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/d0280ad3-137f-439b-b794-b0f1aad8cce4)
+![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/774c09c4-bc01-4195-9df0-544dfe5bf582)
+
 
 
 ## Redes
