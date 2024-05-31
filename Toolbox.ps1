@@ -1353,7 +1353,7 @@ $TabPage4.Controls.Add($Label_Atajo)
 $Button_AppearancePerformance = New-Object System.Windows.Forms.Button
 $Button_AppearancePerformance.FlatStyle = 'Flat'
 $Button_AppearancePerformance.Text = "Propiedades del Sistema"
-$Button_AppearancePerformance.Location = New-Object System.Drawing.Point(500, 50)  # Ajusta la posición según sea necesario
+$Button_AppearancePerformance.Location = New-Object System.Drawing.Point(480, 50)  # Ajusta la posición según sea necesario
 $Button_AppearancePerformance.Size = New-Object System.Drawing.Size(250, 30)
 $Button_AppearancePerformance.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_AppearancePerformance.Font = New-Object System.Drawing.Font("Arial",9)  # Establecer el tamaño de la letra más pequeño
@@ -1368,7 +1368,7 @@ $Button_AppearancePerformance.Add_Click({
 $Button_DeshabilitarTransparencia = New-Object System.Windows.Forms.Button
 $Button_DeshabilitarTransparencia.FlatStyle = 'Flat'
 $Button_DeshabilitarTransparencia.Text = "Deshabilitar Transparencia"
-$Button_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(500, 90)  # Ajusta la posición según sea necesario
+$Button_DeshabilitarTransparencia.Location = New-Object System.Drawing.Point(480, 90)  # Ajusta la posición según sea necesario
 $Button_DeshabilitarTransparencia.Size = New-Object System.Drawing.Size(250, 30)
 $Button_DeshabilitarTransparencia.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_DeshabilitarTransparencia.Font = New-Object System.Drawing.Font("Arial",9 )  # Establecer el tamaño de la letra
@@ -1385,7 +1385,7 @@ $Button_DeshabilitarTransparencia.Add_Click({
 $Button_ApagarBIOS = New-Object System.Windows.Forms.Button
 $Button_ApagarBIOS.FlatStyle = 'Flat'
 $Button_ApagarBIOS.Text = "Apagar y Entrar a BIOS"
-$Button_ApagarBIOS.Location = New-Object System.Drawing.Point(500, 130)  # Ajusta la posición según sea necesario
+$Button_ApagarBIOS.Location = New-Object System.Drawing.Point(480, 130)  # Ajusta la posición según sea necesario
 $Button_ApagarBIOS.Size = New-Object System.Drawing.Size(250, 30)
 $Button_ApagarBIOS.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_ApagarBIOS.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
@@ -1399,7 +1399,7 @@ $Button_ApagarBIOS.Add_Click({
 $Button_EntornoRecuperacion = New-Object System.Windows.Forms.Button
 $Button_EntornoRecuperacion.FlatStyle = 'Flat'
 $Button_EntornoRecuperacion.Text = "Ingresar al Entorno de Recuperacion"
-$Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(500, 170)  # Ajusta la posición según sea necesario
+$Button_EntornoRecuperacion.Location = New-Object System.Drawing.Point(480, 170)  # Ajusta la posición según sea necesario
 $Button_EntornoRecuperacion.Size = New-Object System.Drawing.Size(250, 30)
 $Button_EntornoRecuperacion.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
@@ -1416,7 +1416,7 @@ $Button_UpdateApps = New-Object System.Windows.Forms.Button
 # Set the button's properties
 $Button_UpdateApps.FlatStyle = 'Flat'
 $Button_UpdateApps.Text = "Actualizar Apps"
-$Button_UpdateApps.Location = New-Object System.Drawing.Point(500, 210)
+$Button_UpdateApps.Location = New-Object System.Drawing.Point(480, 210)
 $Button_UpdateApps.Size = New-Object System.Drawing.Size(250, 30)
 $Button_UpdateApps.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
