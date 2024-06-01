@@ -2,8 +2,11 @@
 
 [![made-with-powershell](https://img.shields.io/badge/PowerShell-1f425f?logo=Powershell)](https://microsoft.com/PowerShell)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
 
 ![PB](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
+
+
 
 Esta utilidad en PowerShell es un Conjunto de utilidades del sistema que te muestra información del sistema esencial y permite al usuario seleccionar aplicaciones para descargar e instalar de manera simualtanea . También incluye funciones para observar anomalias,  optimizar el sistema, verificar y reparar archivos del sistema, y más
 
@@ -20,8 +23,6 @@ o ejecutando :
 
 
 
-
-![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
 
 - **Informacion del Sistema:** 
 Muestra detalles del sistema como la versión de Windows, procesador, RAM, capacidad del disco, estado del disco, información de la RAM, BIOS, temperatura de la CPU, información de la GPU, entre otros.
