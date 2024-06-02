@@ -13,7 +13,7 @@ Esta utilidad en PowerShell es un Conjunto de utilidades del sistema que te mues
 ## 
 
 # Como ejecutar :
-Ejecutar [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-5.1) como adminitrador  y ejecutar los siguientes codigos
+Ejecutar [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-5.1) como Administrador  y ejecutar los siguientes codigos
  :
 #### 
     iwr -useb https://cutt.ly/BrandonTool | iex
