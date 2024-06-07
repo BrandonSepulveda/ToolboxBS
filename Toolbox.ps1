@@ -195,11 +195,6 @@ $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
 
 
-
-
-
-
-
 # Obtener el icono de la computadora de este equipo
 $icon = [System.Drawing.Icon]::FromHandle([Shell32]::ExtractIcon([IntPtr]::Zero, "shell32.dll", 15))
 
@@ -233,6 +228,24 @@ $rockEmoji = [char]::ConvertFromUtf32(0x1F918)
 Write-Host "Utilidad para Windows Toolbox $computerEmoji" -ForegroundColor green
 Write-Host "By: Brandon Sepulveda $batEmoji" -ForegroundColor green
 
+# Verificar si Chocolatey está instalado
+if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+    Write-Host "Chocolatey no está instalado. Procediendo con la instalación..." -ForegroundColor Yellow
+    
+    # Descargar e instalar Chocolatey
+    Set-ExecutionPolicy Bypass -Scope Process -Force
+    Write-Host "Descargando e instalando Chocolatey..." -ForegroundColor Yellow
+    [System.Net.WebClient]::new().DownloadString('https://chocolatey.org/install.ps1') | Invoke-Expression
+
+    # Verificar si la instalación fue exitosa
+    if (Get-Command choco -ErrorAction SilentlyContinue) {
+        Write-Host "Chocolatey se ha instalado correctamente." -ForegroundColor Green
+    } else {
+        Write-Host "Hubo un problema al instalar Chocolatey." -ForegroundColor Red
+    }
+} else {
+    Write-Host "Chocolatey ya está instalado." -ForegroundColor Green
+}
 
 
 
@@ -547,7 +560,7 @@ $ListBox_Apps.BorderStyle = [System.Windows.Forms.BorderStyle]::None
 [void]$ListBox_Apps.Items.Add("HP Image Assistant (HPIA)")
 [void]$ListBox_Apps.Items.Add("CPU Z")
 [void]$ListBox_Apps.Items.Add("NZXT CAM")
-
+[void]$ListBox_Apps.Items.Add("HP SUPPORT ASSISTANT")
 
 
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
@@ -572,22 +585,21 @@ $Button_DownloadExecute.Add_Click({
                 }
             }
             "Hard Disk Sentinel Professional" {
-                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
-                try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XPDNXG5333CSVK --accept-package-agreements`""
-                    [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalacion Completada")
-                } catch {
-                    [System.Windows.Forms.MessageBox]::Show("Error al instalar Hard Disk Sentinel: $_", "Error de Instalacion")
-                }
-            }
+               try {
+    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install hdsentinel --yes`""
+    [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalacion Completada")
+} catch {
+    [System.Windows.Forms.MessageBox]::Show("Error al instalar Hard Disk Sentinel: $_", "Error de Instalacion")
+}
+}
 
             "Crystal Diskinfo" {
-                    try {
-                        Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XP8K4RGX25G3GM --accept-package-agreements`""
-                        [System.Windows.Forms.MessageBox]::Show("Crystal Diskinfo instalado correctamente.", "Instalacion Completada")
-                    } catch {
-                        [System.Windows.Forms.MessageBox]::Show("Error al instalar Crystal Diskinfo: $_", "Error de Instalacion")
-                    }
+               try {
+    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install crystaldiskinfo --yes`""
+    [System.Windows.Forms.MessageBox]::Show("Crystal Diskinfo instalado correctamente.", "Instalacion Completada")
+} catch {
+    [System.Windows.Forms.MessageBox]::Show("Error al instalar Crystal Diskinfo: $_", "Error de Instalacion")
+}
                 
                 }
             
@@ -616,19 +628,19 @@ $Button_DownloadExecute.Add_Click({
 
             "Anydesk" {
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
-                try {
-                    Start-Process -FilePath "winget" -ArgumentList "install AnyDeskSoftwareGmbH.AnyDesk --accept-package-agreements" -Wait -NoNewWindow
-                    [System.Windows.Forms.MessageBox]::Show("AnyDesk instalado correctamente.", "Instalacion Completada")
-                } catch {
-                    [System.Windows.Forms.MessageBox]::Show("Error al instalar AnyDesk: $_", "Error de Instalacion")
-                }
+                  try {
+    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install anydesk --yes`""
+    [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalacion Completada")
+} catch {
+    [System.Windows.Forms.MessageBox]::Show("Error al instalar Anydesk: $_", "Error de Instalacion")
+}
             }
 
             "AIDA64" {
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
                 try {
                     # Ejecutar winget para instalar AIDA64 Extreme Edition
-                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install FinalWire.AIDA64.Extreme --accept-package-agreements`""
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"choco install aida64 --yes`""
                     [System.Windows.Forms.MessageBox]::Show("AIDA64 Extreme Edition instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar AIDA64 Extreme Edition: $_", "Error de Instalacion")
@@ -650,7 +662,7 @@ $Button_DownloadExecute.Add_Click({
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
                 try {
                     # Ejecutar winget para instalar AIDA64 Extreme Edition
-                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9WZDNCRFJ4MV --accept-package-agreements`""
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"choco install lenovo-thinkvantage-system-update --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Lenovo Vantage instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Lenovo Vantage: $_", "Error de Instalación")
@@ -661,7 +673,7 @@ $Button_DownloadExecute.Add_Click({
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
                 try {
                     # Ejecutar winget para instalar AIDA64 Extreme Edition
-                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9P4PNDG7L782 --accept-package-agreements`""
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"choco install hpdiagnostics --yes`""
                     [System.Windows.Forms.MessageBox]::Show("HP PC Hardware Diagnostics Windows instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar HP PC Hardware Diagnostics Windows: $_", "Error de Instalacion")
@@ -693,7 +705,7 @@ $Button_DownloadExecute.Add_Click({
             "Rufus" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9PC3H3V7Q9CH --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install rufus --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Rufus correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Rufus: $_", "Error de Instalación")
@@ -703,7 +715,7 @@ $Button_DownloadExecute.Add_Click({
             "Ventoy" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Ventoy.Ventoy --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install ventoy  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Ventoy  correctamente.", "Instalación Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Ventoy: $_", "Error de Instalación")
@@ -713,7 +725,7 @@ $Button_DownloadExecute.Add_Click({
             "Google Chrome" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Google.Chrome --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"wchoco install GoogleChrome  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Google Chromel instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Google Chrome: $_", "Error de Instalacion")
@@ -723,7 +735,7 @@ $Button_DownloadExecute.Add_Click({
             "7-Zip" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 7zip.7zip --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install 7zip --yes`""
                     [System.Windows.Forms.MessageBox]::Show("7-Zip instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar 7-Zip: $_", "Error de Instalacion")
@@ -733,7 +745,7 @@ $Button_DownloadExecute.Add_Click({
             "WinRAR" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install RARLab.WinRAR --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install winrar --yes`""
                     [System.Windows.Forms.MessageBox]::Show("WinRAR instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar WinRAR: $_", "Error de Instalacion")
@@ -743,7 +755,7 @@ $Button_DownloadExecute.Add_Click({
             "Notepad++" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Notepad++.Notepad++ --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install Notepad++  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Notepad++ instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Notepad++ $_", "Error de Instalacion")
@@ -754,7 +766,7 @@ $Button_DownloadExecute.Add_Click({
             "Brave Browser" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install XP8C9QZMS2PC1T --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install Brave --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Brave Browser instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Brave Browser $_", "Error de Instalacion")
@@ -762,7 +774,7 @@ $Button_DownloadExecute.Add_Click({
             }
                 
             "WhatsApp" {
-                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
+                
                 try {
                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9NKSQGP7F2NH --accept-package-agreements`""
                     [System.Windows.Forms.MessageBox]::Show("WhatsApp instalado correctamente.", "Instalacion Completada")
@@ -774,7 +786,7 @@ $Button_DownloadExecute.Add_Click({
             "Discord" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Discord.Discord --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install discord --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Discord instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Discord $_", "Error de Instalacion")
@@ -794,7 +806,7 @@ $Button_DownloadExecute.Add_Click({
             "Microsoft PowerToys" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install  XP89DCGQ3K6VLD --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install powertoys  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Microsoft PowerToys instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Microsoft PowerToys $_", "Error de Instalacion")
@@ -832,6 +844,17 @@ $Button_DownloadExecute.Add_Click({
                     Name = $app
                     URL = "https://nzxt-app.nzxt.com/NZXT-CAM-Setup.exe"
                     Extension = ".exe"
+                }
+            }
+
+            "HP SUPPORT ASSISTANT" {
+                # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
+                try {
+                    # Ejecutar winget para instalar AIDA64 Extreme Edition
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"choco install hpsupportassistant --yes`""
+                    [System.Windows.Forms.MessageBox]::Show("HP Support instalado correctamente.", "Instalacion Completada")
+                } catch {
+                    [System.Windows.Forms.MessageBox]::Show("Error al instalar HP Support: $_", "Error de Instalacion")
                 }
             }
 
