@@ -548,7 +548,6 @@ $ListBox_Apps.BorderStyle = [System.Windows.Forms.BorderStyle]::None
 [void]$ListBox_Apps.Items.Add("Ventoy")
 [void]$ListBox_Apps.Items.Add("Google Chrome")
 [void]$ListBox_Apps.Items.Add("7-Zip")
-[void]$ListBox_Apps.Items.Add("WinRAR")
 [void]$ListBox_Apps.Items.Add("Notepad++")
 [void]$ListBox_Apps.Items.Add("Visual Studio Code")
 [void]$ListBox_Apps.Items.Add("Brave Browser")
@@ -742,15 +741,6 @@ $Button_DownloadExecute.Add_Click({
                 }
             }
 
-            "WinRAR" {
-                # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
-                try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install winrar --yes`""
-                    [System.Windows.Forms.MessageBox]::Show("WinRAR instalado correctamente.", "Instalacion Completada")
-                } catch {
-                    [System.Windows.Forms.MessageBox]::Show("Error al instalar WinRAR: $_", "Error de Instalacion")
-                }
-            }
 
             "Notepad++" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
