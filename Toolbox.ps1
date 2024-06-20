@@ -650,7 +650,7 @@ $Button_DownloadExecute.Add_Click({
                 # Ejecutar winget para instalar AnyDesk con aceptación automática de términos
                 try {
                     # Ejecutar winget para instalar AIDA64 Extreme Edition
-                     Start-Process powershell -ArgumentList "-NoExit -Command `"winget install Dell.CommandUpdate --accept-package-agreements`""
+                     Start-Process powershell -ArgumentList "-NoExit -Command `"choco install DellCommandUpdate  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Dell command Update instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Dell command Update: $_", "Error de Instalacion")
