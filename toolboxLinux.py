@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+
+import subprocess
+
+# Instalar Python 3 si no está instalado
+try:
+    # Verificar si Python 3 está instalado
+    subprocess.run(["python3", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+except subprocess.CalledProcessError:
+    # Si no está instalado, intenta instalarlo (ejemplo para Ubuntu / Debian)
+    print("Python 3 no está instalado. Instalando...")
+    subprocess.run(["sudo", "apt", "update"], check=True)
+    subprocess.run(["sudo", "apt", "install", "-y", "python3"], check=True)
+    
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
