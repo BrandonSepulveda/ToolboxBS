@@ -102,7 +102,7 @@ def instalar_aplicaciones():
 
 # Crear la ventana principal
 ventana_principal = tk.Tk()
-ventana_principal.title("Información del Sistema y Descarga de Aplicaciones")
+ventana_principal.title("Toolbox")
 
 # Marco para la información del sistema
 marco_info = tk.LabelFrame(ventana_principal, text="Información del Sistema")
