@@ -180,7 +180,7 @@ YJGS8P"Y888P"Y888P"Y888P"Y8888P |
                                 |
                                 |
                                 |
-                                |
+                                
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀      
 "@
 
@@ -193,12 +193,20 @@ $motherboard = Get-CimInstance Win32_BaseBoard
 $uptime = (Get-Date) - $os.LastBootUpTime
 $shell = $PSVersionTable.PSVersion
 
+# Obtener fabricante y modelo del equipo
+$computerSystem = Get-CimInstance CIM_ComputerSystem
+$manufacturer = $computerSystem.Manufacturer
+$model = $computerSystem.Model
+$hostInfo = "$manufacturer $model"
+
+
+
 # Definir la información del sistema
 $info = @"
-misoporte.mds4@17340302LETEC
+Brandon Sepulveda Toolbox
 ----------------------------
 OS: $($os.Caption) [$($os.OSArchitecture)-bit]
-Host: $($os.CSName)
+Host: $hostInfo
 Kernel: $($os.Version)
 Motherboard: $($motherboard.Manufacturer) $($motherboard.Product)
 Uptime: $($uptime.Days) days $($uptime.Hours) hours $($uptime.Minutes) minutes
@@ -215,7 +223,6 @@ foreach ($gpu in $gpu) {
 $memoryUsage = "{0} GiB / {1} GiB ({2}%)" -f [math]::round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / 1MB, 2), [math]::round($os.TotalVisibleMemorySize / 1MB, 2), [math]::round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100, 0)
 
 $info += "Memory: $memoryUsage`n"
-$info += "Disk (C:): $diskUsage"
 
 # Mostrar el logotipo y la información del sistema con colores personalizados
 $logoLines = $logo -split "`n"
@@ -230,7 +237,6 @@ for ($i = 0; $i -lt $maxLines; $i++) {
     Write-Host $left -ForegroundColor White -NoNewline
     Write-Host $right -ForegroundColor Cyan
 }
-
 
 
 # Cambiar el título de la ventana de PowerShell
