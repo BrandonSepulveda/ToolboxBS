@@ -164,6 +164,73 @@ public class ConsoleTitle {
 "@
 
 
+# Define el logotipo ASCII de Batman en blanco
+$logo = @"
+       _,    _   _    ,_        |
+  .o888P     Y8o8Y     Y888o.   |
+ d88888      88888      88888b  |
+d888888b_  _d88888b_  _d888888b |
+8888888888888888888888888888888 |
+8888888888888888888888888888888 |
+YJGS8P"Y888P"Y888P"Y888P"Y8888P |
+ Y888   '8'   Y8P   '8'   888Y  |
+  '8o          V          o8'   |
+                                |
+                                |
+                                |
+                                |
+                                |
+                                |
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀      
+"@
+
+# Obtener información del sistema
+$os = Get-CimInstance Win32_OperatingSystem
+$cpu = Get-CimInstance Win32_Processor
+$memory = Get-CimInstance Win32_PhysicalMemory
+$gpu = Get-CimInstance Win32_VideoController
+$motherboard = Get-CimInstance Win32_BaseBoard
+$uptime = (Get-Date) - $os.LastBootUpTime
+$shell = $PSVersionTable.PSVersion
+
+# Definir la información del sistema
+$info = @"
+misoporte.mds4@17340302LETEC
+----------------------------
+OS: $($os.Caption) [$($os.OSArchitecture)-bit]
+Host: $($os.CSName)
+Kernel: $($os.Version)
+Motherboard: $($motherboard.Manufacturer) $($motherboard.Product)
+Uptime: $($uptime.Days) days $($uptime.Hours) hours $($uptime.Minutes) minutes
+Packages: -1 (choco)
+Shell: PowerShell v$shell
+Terminal: Windows Terminal
+CPU: $($cpu.Name)
+"@
+
+foreach ($gpu in $gpu) {
+    $info += "GPU: $($gpu.Name)`n"
+}
+
+$memoryUsage = "{0} GiB / {1} GiB ({2}%)" -f [math]::round(($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / 1MB, 2), [math]::round($os.TotalVisibleMemorySize / 1MB, 2), [math]::round((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory) / $os.TotalVisibleMemorySize) * 100, 0)
+
+$info += "Memory: $memoryUsage`n"
+$info += "Disk (C:): $diskUsage"
+
+# Mostrar el logotipo y la información del sistema con colores personalizados
+$logoLines = $logo -split "`n"
+$maxLines = [Math]::Max($logoLines.Count, $info.Split("`n").Count)
+
+# Calcular el ancho máximo necesario para el lado derecho
+$maxRightWidth = ($info -split "`n" | Measure-Object -Property Length -Maximum).Maximum
+
+for ($i = 0; $i -lt $maxLines; $i++) {
+    $left = if ($i -lt $logoLines.Count) { $logoLines[$i] } else { "" }
+    $right = if ($i -lt $info.Split("`n").Count) { $info.Split("`n")[$i].PadRight($maxRightWidth) } else { "" }
+    Write-Host $left -ForegroundColor White -NoNewline
+    Write-Host $right -ForegroundColor Cyan
+}
+
 
 
 # Cambiar el título de la ventana de PowerShell
