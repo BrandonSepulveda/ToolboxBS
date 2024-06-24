@@ -22,22 +22,21 @@ def obtener_informacion_sistema():
     info_sistema = ""
 
     # Comandos para obtener la información del sistema
- comandos = [
-    "uname -a",                                     # Información del kernel y sistema operativo
-    "lsb_release -a",                               # Información de distribución y versión del sistema operativo
-    "sudo dmidecode -s system-manufacturer",        # Marca del equipo
-    "sudo dmidecode -s system-product-name",         # Modelo del equipo
-    "sudo dmidecode -s system-serial-number",       # Número de serie del equipo
-    "sudo dmidecode -s bios-version",               # Versión de BIOS
-    "sudo dmidecode --type memory | grep -i manufacturer || echo 'No disponible'",  # Marca de las memorias RAM
-    "sudo dmidecode --type memory | grep -i speed || echo 'No disponible'",         # Velocidad de las memorias RAM
-    "df -h",                                        # Espacio en disco disponible y ocupado
-    "sudo smartctl -a /dev/sda || echo 'No disponible'",                            # Información SMART del disco (reemplazar /dev/sda con tu disco)
-    "sudo lshw -C display | grep -i product || echo 'No disponible'",               # Información de la tarjeta de video
-    "ls -l /var/log/installer/syslog || echo 'No disponible'",                      # Verifica si el archivo syslog existe
-    "sudo zgrep 'installation' /var/log/installer/syslog* | head -n 1 || echo 'No disponible'",   # Fecha de instalación del sistema
-    "sensors"                                      # Información de la temperatura del equipo
-]
+    comandos = [
+        "uname -a",                                     # Información del kernel y sistema operativo
+        "lsb_release -a",                               # Información de distribución y versión del sistema operativo
+        "sudo dmidecode -s system-manufacturer",        # Marca del equipo
+        "sudo dmidecode -s system-product-name",         # Modelo del equipo
+        "sudo dmidecode -s system-serial-number",       # Número de serie del equipo
+        "sudo dmidecode -s bios-version",               # Versión de BIOS
+        "sudo dmidecode --type memory | grep -i manufacturer || echo 'No disponible'",  # Marca de las memorias RAM
+        "sudo dmidecode --type memory | grep -i speed || echo 'No disponible'",         # Velocidad de las memorias RAM
+        "df -h",                                        # Espacio en disco disponible y ocupado
+        "sudo smartctl -a /dev/sda || echo 'No disponible'",                            # Información SMART del disco (reemplazar /dev/sda con tu disco)
+        "sudo lshw -C display | grep -i product || echo 'No disponible'",               # Información de la tarjeta de video
+        "ls -l /var/log/installer/syslog | head -n 1 || echo 'No disponible'",           # Fecha de instalación del sistema
+        "sensors"                                 #informacion de temperatura
+    ]
 
     # Ejecutar cada comando y capturar la salida
     for comando in comandos:
