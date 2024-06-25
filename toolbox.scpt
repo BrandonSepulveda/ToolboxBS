@@ -55,3 +55,4 @@ tell application "Finder"
 	activate
 	display dialog systemInfoText buttons {"OK"} default button "OK" with icon note
 end tell
+--curl -sSL https://raw.githubusercontent.com/BrandonSepulveda/Toolbox/main/toolbox.scpt | osascript
