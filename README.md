@@ -4,7 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
 
+## 🔗 Links
+ - [Pagina web ](https://brandonsepulveda.github.io/)
+   
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://brandonsepulveda.github.io/)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jbrandonsepulveda/?originalSubdomain=co)
+
+
 ![Logo](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
+
 
 
 
