@@ -21,7 +21,7 @@ tell application "Terminal"
 	activate
 	do script "/usr/local/bin/neofetch"
 end tell
-
+--curl -sSL https://raw.githubusercontent.com/BrandonSepulveda/Toolbox/main/toolbox.scpt | osascript
 -- Esperar unos segundos para asegurar que neofetch termine de ejecutarse antes de continuar
 delay 5
 
