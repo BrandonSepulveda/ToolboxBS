@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
 
-![PB](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
+![Logo](https://github.com/PapiBrandon66/Toolbox/assets/88468929/302dc102-11ff-40fe-9ec4-ab0cc6e6bb28)
 
 
 
