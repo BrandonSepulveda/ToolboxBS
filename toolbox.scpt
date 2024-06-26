@@ -1,58 +1,58 @@
+-- Instalar Homebrew si no está instalado
+tell application "Terminal"
+	activate
+	do script "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+end tell
+
+-- Esperar unos segundos para asegurar que la instalación de Homebrew comience
+delay 10
+
+-- Instalar Neofetch con Homebrew
+tell application "Terminal"
+	activate
+	do script "/usr/local/bin/brew install neofetch"
+end tell
+
+-- Esperar unos segundos para asegurar que la instalación de Neofetch comience
+delay 10
+
 -- Abrir una nueva ventana de Terminal y ejecutar neofetch
 tell application "Terminal"
 	activate
-	do script "neofetch"
+	do script "/usr/local/bin/neofetch"
 end tell
 
+-- Esperar unos segundos para asegurar que neofetch termine de ejecutarse antes de continuar
+delay 5
 
--- Obtener información del sistema
-set osVersion to system attribute "sysv"
-set hostName to system attribute "HOSTNAME"
-set kernelVersion to do shell script "uname -r"
-set uptime to do shell script "uptime"
-set packages to do shell script "brew list | wc -l | tr -d '[:space:]'"
-set shellVersion to do shell script "echo $SHELL"
-set resolution to do shell script "system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2, $3}'"
-set desktopEnvironment to "Aqua" -- DE: Aqua para macOS
-set windowManager to do shell script "defaults read com.apple.windowserver | grep -w 'Quartz' | head -n 1 | awk '{print $NF}'"
-set wmTheme to "Blue (Dark)" -- Puedes ajustar este valor según tu preferencia
-set terminalApp to "Apple_Terminal"
-set terminalFont to do shell script "defaults read com.apple.Terminal 'Default Window Settings'"
-set cpuInfo to do shell script "sysctl -n machdep.cpu.brand_string"
-set gpuInfo to do shell script "system_profiler SPDisplaysDataType | grep -E 'Chipset Model:|VRAM'"
-set memoryInfo to do shell script "top -l 1 | awk '/PhysMem/ {print $2, $6}'"
-set totalMemory to do shell script "sysctl -n hw.memsize | awk '{print $0/1024/1024/1024\" GB\"}'"
-set currentMemory to do shell script "vm_stat | awk '/Pages active/ {print $3 * 4096 / 1024 / 1024 \" MB\"}'"
-set modelInfo to do shell script "sysctl -n hw.model"
-set serialNumber to do shell script "system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'"
+-- Menú de opciones
+set continuar to true
 
--- Logo de Apple Unicode
-set appleLogo to ""
-
--- Construir el mensaje con toda la información recolectada
-set systemInfoText to appleLogo & " BrandonSepulveda@Jhons-MacBook-Pro.local" & return & ¬
-	"----------------------------------------" & return & ¬
-	"OS: macOS " & osVersion & return & ¬
-	"Host: " & hostName & return & ¬
-	"Kernel: " & kernelVersion & return & ¬
-	"Uptime: " & uptime & return & ¬
-	"Packages: " & packages & return & ¬
-	"Shell: " & shellVersion & return & ¬
-	"Resolution: " & resolution & return & ¬
-	"DE: " & desktopEnvironment & return & ¬
-	"WM: " & windowManager & return & ¬
-	"WM Theme: " & wmTheme & return & ¬
-	"Terminal: " & terminalApp & return & ¬
-	"Terminal Font: " & terminalFont & return & ¬
-	"CPU: " & cpuInfo & return & ¬
-	"GPU: " & gpuInfo & return & ¬
-	"Memory: " & memoryInfo & " (" & currentMemory & " / " & totalMemory & ")" & return & ¬
-	"Model: " & modelInfo & return & ¬
-	"Serial: " & serialNumber
-
--- Mostrar la información en un cuadro de diálogo
-tell application "Finder"
-	activate
-	display dialog systemInfoText buttons {"OK"} default button "OK" with icon note
-end tell
---curl -sSL https://raw.githubusercontent.com/BrandonSepulveda/Toolbox/main/toolbox.scpt | osascript
+repeat while continuar
+	set respuesta to display dialog "Elige una opción:" buttons {"Información de Sistema", "Utilidades", "Salir"} default button 1
+	
+	if button returned of respuesta is "Información de Sistema" then
+		-- Abrir la aplicación "Información del Sistema"
+		try
+			tell application "System Information"
+				activate
+			end tell
+		on error errMsg
+			display dialog "Error: " & errMsg
+		end try
+		
+	else if button returned of respuesta is "Utilidades" then
+		-- Abrir la carpeta de Utilidades en Aplicaciones
+		try
+			tell application "Finder"
+				open folder "Utilities" of folder "Applications" of startup disk
+				activate
+			end tell
+		on error errMsg
+			display dialog "Error: " & errMsg
+		end try
+		
+	else if button returned of respuesta is "Salir" then
+		set continuar to false
+	end if
+end repeat
