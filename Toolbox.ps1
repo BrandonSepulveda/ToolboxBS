@@ -1422,6 +1422,39 @@ $buttonBuscarDrivers.Add_Click({
     Start-Process $url
 })
 
+# Crear botón para optimizar Explorer
+$buttonOptimizarExplorer = New-Object System.Windows.Forms.Button
+$buttonOptimizarExplorer.Location = New-Object System.Drawing.Point(50, 290)   # Ajusta la posición según sea necesario
+$buttonOptimizarExplorer.Size = New-Object System.Drawing.Size(150, 30)
+$buttonOptimizarExplorer.Text = "Optimizar Explorer"
+$buttonOptimizarExplorer.FlatStyle = 'Flat'
+$buttonOptimizarExplorer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+
+# Agregar evento al hacer clic en el botón
+$buttonOptimizarExplorer.Add_Click({
+    # Contenido del archivo .reg a aplicar
+    $regContent = @"
+    Windows Registry Editor Version 5.00
+
+    [HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell]
+    "FolderType"="NotSpecified"
+"@
+
+    # Ruta temporal para guardar el archivo .reg
+    $regFile = Join-Path -Path $env:TEMP -ChildPath "OptimizarExplorer.reg"
+
+    # Guardar el contenido en el archivo .reg
+    Set-Content -Path $regFile -Value $regContent -Force -Encoding ASCII
+
+    # Aplicar el archivo .reg al registro de Windows
+    Start-Process "regedit.exe" -ArgumentList "/s $regFile" -Wait
+
+    # Eliminar el archivo .reg después de aplicarlo
+    Remove-Item $regFile -Force
+    Write-Host "Explorer optimizado"
+})
+
+$TabPage4.Controls.Add($buttonOptimizarExplorer)
 
 $TabPage4.Controls.Add($buttonBuscarDrivers)
 # Crear una etiqueta para el título "Atajo"
