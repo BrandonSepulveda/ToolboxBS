@@ -342,7 +342,7 @@ $Form.Controls.Add($Button_About)
 
 # Crea un panel de navegación a la izquierda
 $navigationPanel = New-Object System.Windows.Forms.Panel
-$navigationPanel.Size = New-Object System.Drawing.Size(180,400)
+$navigationPanel.Size = New-Object System.Drawing.Size(180,800)
 $navigationPanel.BackColor = "Black"
 $form.Controls.Add($navigationPanel)
 
@@ -358,10 +358,10 @@ function Create-NavigationButton {
     $button.Text = $text
     $button.Size = New-Object System.Drawing.Size(170, 30)
     $button.Location = New-Object System.Drawing.Point(5, $top)
-    $button.ForeColor = "White"
-    $button.BackColor = "Black"
+    $button.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
+   # $button.BackColor = "Black"
     $button.FlatStyle = "Flat"
-    $button.FlatAppearance.BorderSize = 2
+    $button.FlatAppearance.BorderSize = 1
     $button.FlatAppearance.BorderColor = "White"
     $button.Add_Click($clickAction)
     return $button
@@ -1482,7 +1482,6 @@ $Button_AppearancePerformance.Add_Click({
     control.exe sysdm.cpl
 })
 
-
 # Botón para deshabilitar la transparencia en la configuración de Windows
 $Button_DeshabilitarTransparencia = New-Object System.Windows.Forms.Button
 $Button_DeshabilitarTransparencia.FlatStyle = 'Flat'
@@ -1540,8 +1539,6 @@ $Button_UpdateApps.Size = New-Object System.Drawing.Size(250, 30)
 $Button_UpdateApps.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 $Button_EntornoRecuperacion.Font = New-Object System.Drawing.Font("Arial", 9)  # Establecer el tamaño de la letra
 
-
-
 # Add a click event handler to the button
 $Button_UpdateApps.Add_Click({
     # Run the winget update command
@@ -1551,7 +1548,6 @@ $Button_UpdateApps.Add_Click({
 })
 
 # Assuming this is part of a form or other control
-
 
 $TabPage4.Controls.Add($Button_UpdateApps)
 
@@ -1564,24 +1560,17 @@ $TabPage4.Controls.Add($Button_ApagarBIOS)
 # Agregar el botón a la página
 $TabPage4.Controls.Add($Button_AppearancePerformance)
 
-
-
-
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
 
 $Form.Controls.Add($TabControl)
 
 
-
 $Form.ShowDialog()
-
 
 
 Stop-Transcript
 
-
 Write-Host "Adios $rockEmoji" -ForegroundColor green $rockEmoji
-
 
 # Agregar un mensaje de espera antes de cerrar PowerShell
