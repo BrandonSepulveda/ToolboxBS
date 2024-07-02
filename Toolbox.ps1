@@ -672,16 +672,16 @@ $Button_DownloadExecute.Add_Click({
 } catch {
     [System.Windows.Forms.MessageBox]::Show("Error al instalar Crystal Diskinfo: $_", "Error de Instalacion")
 }
-                
                 }
             
-            
-            "TeamViewer" {
-                $AppsToDownload += @{
-                    Name = $app
-                    URL = "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"
-                    Extension = ".exe"
-                }
+            "TeamViewer"  {
+               
+                  try {
+    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install teamviewer --yes`""
+    [System.Windows.Forms.MessageBox]::Show("Hard Disk Sentinel instalado correctamente.", "Instalacion Completada")
+} catch {
+    [System.Windows.Forms.MessageBox]::Show("Error al instalar Anydesk: $_", "Error de Instalacion")
+}
             }
             "Herramienta de Soporte de Desinstalacion de Microsoft 365" {
                 $AppsToDownload += @{
@@ -797,7 +797,7 @@ $Button_DownloadExecute.Add_Click({
             "Google Chrome" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"wchoco install GoogleChrome  --yes`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install GoogleChrome  --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Google Chromel instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Google Chrome: $_", "Error de Instalacion")
@@ -818,7 +818,7 @@ $Button_DownloadExecute.Add_Click({
             "Notepad++" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install Notepad++  --yes`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install notepadplusplus --yes`""
                     [System.Windows.Forms.MessageBox]::Show("Notepad++ instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Notepad++ $_", "Error de Instalacion")
@@ -859,7 +859,7 @@ $Button_DownloadExecute.Add_Click({
             "PowerShell" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install  Microsoft.PowerShell --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install powershell--yes`""
                     [System.Windows.Forms.MessageBox]::Show("PowerShell instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar PowerShell $_", "Error de Instalacion")
@@ -879,7 +879,7 @@ $Button_DownloadExecute.Add_Click({
             "Windows Terminal" {
                 # Ejecutar winget para instalar Hard Disk Sentinel con aceptación automática de términos
                 try {
-                    Start-Process powershell -ArgumentList "-NoExit -Command `"winget install 9N0DX20HK701 --accept-package-agreements`""
+                    Start-Process powershell -ArgumentList "-NoExit -Command `"choco install microsoft-windows-terminal`""
                     [System.Windows.Forms.MessageBox]::Show("Windows Terminal instalado correctamente.", "Instalacion Completada")
                 } catch {
                     [System.Windows.Forms.MessageBox]::Show("Error al instalar Windows Terminal $_", "Error de Instalacion")
@@ -943,11 +943,6 @@ $Button_DownloadExecute.Add_Click({
 $TabPage_Apps.Controls.Add($ListBox_Apps)
 $TabPage_Apps.Controls.Add($Button_DownloadExecute)
 $TabControl.Controls.Add($TabPage_Apps)
-
-
-
-
-
 
 # Crear una nueva pestaña para la sección de Restauración y Verificación
 $TabPage_Restauracion = New-Object System.Windows.Forms.TabPage
@@ -1562,13 +1557,8 @@ $TabPage4.Controls.Add($Button_AppearancePerformance)
 
 #$TabControl.TabPages.Add($TabPage3)
 $TabControl.TabPages.Add($TabPage4)
-
 $Form.Controls.Add($TabControl)
-
-
 $Form.ShowDialog()
-
-
 Stop-Transcript
 
 Write-Host "Adios $rockEmoji" -ForegroundColor green $rockEmoji
