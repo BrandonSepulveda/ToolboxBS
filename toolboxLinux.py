@@ -134,3 +134,4 @@ boton_descargar_instalar.pack(pady=20)
 # Iniciar el bucle principal de la ventana
 ventana_principal.mainloop()
 #wget -O - https://raw.githubusercontent.com/BrandonSepulveda/Toolbox/main/toolboxLinux.py | python3
+#curl -o- https://raw.githubusercontent.com/BrandonSepulveda/Toolbox/main/toolboxLinux.py | python3
