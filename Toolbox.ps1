@@ -204,7 +204,7 @@ $hostInfo = "$manufacturer $model"
 
 # Definir la información del sistema
 $info = @"
-Brandon Sepulveda Toolbox
+Brandon Sepulveda ToolboxBS
 ----------------------------
 OS: $($os.Caption) [$($os.OSArchitecture)-bit]
 Host: $hostInfo
@@ -241,7 +241,7 @@ for ($i = 0; $i -lt $maxLines; $i++) {
 
 
 # Cambiar el título de la ventana de PowerShell
-[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite toolbox")
+[ConsoleTitle]::SetConsoleTitle("Brandon Sepulveda Windows System Utility Suite toolboxBS")
 
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -263,7 +263,7 @@ $version = "1.2"
 
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "$poweredBy Windows System Utility Suite Toolbox $batEmoji" 
+$Form.Text = "$poweredBy Windows System Utility Suite ToolboxBS $batEmoji" 
 $Form.Size = New-Object System.Drawing.Size(950, 750)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
@@ -299,7 +299,7 @@ $computerEmoji = -join ([char]0xD83D, [char]0xDCBB)
 $batEmoji = -join ([char]0xD83E, [char]0xDD87)  # Código Unicode para un murciélago
 $rockEmoji = [char]::ConvertFromUtf32(0x1F918)
 
-Write-Host "Utilidad para Windows Toolbox $computerEmoji" -ForegroundColor green
+Write-Host "Utilidad para Windows ToolboxBS $computerEmoji" -ForegroundColor green
 Write-Host "By: Brandon Sepulveda $batEmoji" -ForegroundColor green
 
 # Verificar si Chocolatey está instalado
