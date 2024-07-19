@@ -8,5 +8,5 @@ if %errorlevel% neq 0 (
 )
 
 :: Run the PowerShell command with administrative privileges
-powershell -Command "irm https://cutt.ly/BrandonTool | iex"
+powershell -Command "irm  https://github.com/BrandonSepulveda/ToolboxBS/releases/download/V1.2/ToolboxBS.ps1| iex"
 pause
