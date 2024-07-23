@@ -1,13 +1,8 @@
 ### Brandon Sepulveda Windows System Utility Suite  ToolboxBS
 ![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones-1926-white?style=for-the-badge) [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23ffffff&label=Ultima%20Version&style=for-the-badge)](https://github.com/BrandonSepulveda/ToolboxBS/releases)
 #
-[![made-with-powershell](https://img.shields.io/badge/PowerShell-1f425f?logo=Powershell)](https://microsoft.com/PowerShell)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
-
-
-
-
+![GitHub top language](https://img.shields.io/github/languages/top/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23ffffff)
+![GitHub license](https://img.shields.io/github/license/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23ffffff)
 
 
 ## 🔗 Links
