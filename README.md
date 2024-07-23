@@ -3,6 +3,8 @@
 [![made-with-powershell](https://img.shields.io/badge/PowerShell-1f425f?logo=Powershell)](https://microsoft.com/PowerShell)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) 
+![GitHub All Releases](https://img.shields.io/github/downloads/BrandonSepulveda/ToolboxBS/total?label=Total%20Downloads&style=for-the-badge)
+
 
 ## 🔗 Links
  - [Pagina web ](https://brandonsepulveda.github.io/)
