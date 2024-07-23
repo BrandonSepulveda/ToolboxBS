@@ -1365,9 +1365,9 @@ $Button_Optimizer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#eeeee
 
 # Agrega un evento al hacer clic en el botón
 $Button_Optimizer.Add_Click({
-    $url = "https://github.com/hellzerg/optimizer/releases/download/16.4/Optimizer-16.4.exe"
+    $url = "https://github.com/hellzerg/optimizer/releases/download/16.6/Optimizer-16.6.exe"
     $outputFolder = "C:\Path\To\Download"
-    $outputPath = Join-Path $outputFolder "Optimizer-16.4.exe"
+    $outputPath = Join-Path $outputFolder "Optimizer-16.6.exe"
 
     # Verifica si la carpeta de destino existe, si no, la crea
     if (-not (Test-Path -Path $outputFolder -PathType Container)) {
