@@ -1,5 +1,5 @@
 ### Brandon Sepulveda Windows System Utility Suite  ToolboxBS
-![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones-1,981-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23000000&label=Ultima%20Version&style=for-the-badge&background=%23000000&border=white&labelColor=%23ffffff)](https://github.com/BrandonSepulveda/ToolboxBS/releases) ![Views](https://img.shields.io/badge/Views-1,495-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white)
+![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones-2,013-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23000000&label=Ultima%20Version&style=for-the-badge&background=%23000000&border=white&labelColor=%23ffffff)](https://github.com/BrandonSepulveda/ToolboxBS/releases) ![Views](https://img.shields.io/badge/Views-1,495-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white)
 
 #
 ![GitHub top language](https://img.shields.io/github/languages/top/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23000000&background=%23000000&border=white&labelColor=%23ffffff)
