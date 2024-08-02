@@ -266,7 +266,7 @@ $version = "1.2"
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "$poweredBy Windows System Utility Suite ToolboxBS $batEmoji" 
-$Form.Size = New-Object System.Drawing.Size(950, 750)
+$Form.Size = New-Object System.Drawing.Size(950, 700)
 $Form.MinimumSize = New-Object System.Drawing.Size(400, 300)
 $Form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
 
@@ -282,9 +282,6 @@ $Form.ControlBox = $true
 $Form.BackColor = [System.Drawing.Color]::black
 $Form.ForeColor = [System.Drawing.Color]::Black
 $Form.Font = New-Object System.Drawing.Font("Arial", 10)
-
-# Ajustar la opacidad del formulario
-$Form.Opacity = 1  # 
 
 
 $TabControl = New-Object System.Windows.Forms.TabControl
@@ -324,24 +321,67 @@ if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
 }
 
 
+# Crear el formulario "About"
+$Form_About = New-Object System.Windows.Forms.Form
+$Form_About.Text = "About"
+$Form_About.Size = New-Object System.Drawing.Size(550, 320)
+$Form_About.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+$Form_About.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+$Form_About.MaximizeBox = $false
+$Form_About.MinimizeBox = $false
+$Form_About.ControlBox = $true  # Asegúrate de que se muestre el botón de cerrar
 
+# Crear un control WebBrowser para mostrar HTML
+$WebBrowser_About = New-Object System.Windows.Forms.WebBrowser
+$WebBrowser_About.Dock = [System.Windows.Forms.DockStyle]::Fill
+$WebBrowser_About.ScriptErrorsSuppressed = $true
+
+# HTML con enlaces e imagen
+$htmlContent = @"
+<html>
+<head>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #000000; color: #FFFFFF; }
+    a { color: #00BFFF; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; margin: 0 auto; width: 100%; max-width: 500px; } /* Ajusta el ancho máximo según lo necesario */
+</style>
+</head>
+<body>
+    <p><img src="https://github.com/user-attachments/assets/04aa36dd-1caa-4608-9b4c-25feed6728fc" alt="About Image" /></p>
+    <p>Author   : <a href="https://github.com/BrandonSepulveda">Jhon Brandon Sepulveda Valdes</a></p>
+    <p>GitHub   : <a href="https://github.com/BrandonSepulveda/ToolboxBS">ToolboxBS</a></p>
+    <p>Version  : 1.2
+</body>
+</html>
+"@
+
+# Cargar el contenido HTML en el WebBrowser
+$WebBrowser_About.DocumentText = $htmlContent
+
+# Manejar el evento Navigating para abrir enlaces en el navegador
+$WebBrowser_About.add_Navigating({
+    param($sender, $e)
+    Start-Process $e.Url.AbsoluteUri
+    $e.Cancel = $true
+})
+
+# Agregar el WebBrowser al formulario
+$Form_About.Controls.Add($WebBrowser_About)
+
+
+# Configurar el botón "About"
 $Button_About = New-Object System.Windows.Forms.Button
 $Button_About.Text = "About"
 $Button_About.Location = New-Object System.Drawing.Point(($Form.Width - 70), 0)
-$Button_About.Size = New-Object System.Drawing.Size(50, 20)
-$Button_About.ForeColor = [System.Drawing.Color]::White  # Establecer el color del texto en blanco
+$Button_About.Size = New-Object System.Drawing.Size(60, 30)
+$Button_About.ForeColor = [System.Drawing.Color]::White
+$Button_About.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
 $Button_About.Add_Click({
-    # Lógica para mostrar información "About"
-    $authorInfo = @"
-Author   : Jhon Brandon Sepulveda Valdes
-GitHub   : https://github.com/BrandonSepulveda/ToolboxBS
-Version  : $version
-"@
-    [System.Windows.Forms.MessageBox]::Show($authorInfo, "About", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    $Form_About.ShowDialog()
 })
 
 $Form.Controls.Add($Button_About)
-
 
 # Crea un panel de navegación a la izquierda
 $navigationPanel = New-Object System.Windows.Forms.Panel
@@ -362,7 +402,6 @@ function Create-NavigationButton {
     $button.Size = New-Object System.Drawing.Size(170, 30)
     $button.Location = New-Object System.Drawing.Point(5, $top)
     $button.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
-   # $button.BackColor = "Black"
     $button.FlatStyle = "Flat"
     $button.FlatAppearance.BorderSize = 1
     $button.FlatAppearance.BorderColor = "White"
@@ -398,6 +437,7 @@ $navigationPanel.Controls.Add($button4)
 $TabPage_InfoSistema = New-Object System.Windows.Forms.TabPage
 $TabPage_InfoSistema.Text = "Informacion del Sistema" 
 $TabPage_InfoSistema.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)  # Color gris oscuro
+
 
 $Label_InfoSistema = New-Object System.Windows.Forms.Label
 $Label_InfoSistema.Text = "Informacion del Sistema:"
@@ -641,7 +681,7 @@ $ListBox_Apps.BorderStyle = [System.Windows.Forms.BorderStyle]::None
 $Button_DownloadExecute = New-Object System.Windows.Forms.Button
 $Button_DownloadExecute.FlatStyle = 'Flat'
 $Button_DownloadExecute.Text = "Descargar y Ejecutar"
-$Button_DownloadExecute.Location = New-Object System.Drawing.Point(250, 650)
+$Button_DownloadExecute.Location = New-Object System.Drawing.Point(240, 610)
 $Button_DownloadExecute.Size = New-Object System.Drawing.Size(300, 40)
 $Button_DownloadExecute.ForeColor =  [System.Drawing.ColorTranslator]::FromHtml("#eeeeee")
 
