@@ -334,7 +334,7 @@ $Button_About.Add_Click({
     # Lógica para mostrar información "About"
     $authorInfo = @"
 Author   : Jhon Brandon Sepulveda Valdes
-GitHub   : https://github.com/BrandonSepulveda/Toolbox
+GitHub   : https://github.com/BrandonSepulveda/ToolboxBS
 Version  : $version
 "@
     [System.Windows.Forms.MessageBox]::Show($authorInfo, "About", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
