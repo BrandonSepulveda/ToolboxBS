@@ -46,7 +46,8 @@ Capacidad del Disco Duro: Consulta el tamaño total del disco y el espacio libre
 Estado del Disco Duro: Analiza el uso actual del disco duro y su salud general.
 Información de la GPU: Obtén detalles sobre todas las tarjetas gráficas instaladas en tu sistema.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/4faeacf4-e9f5-4557-9f99-2aa5b7e81da9)
+![image](https://github.com/user-attachments/assets/c2582245-c5e0-47c6-b84e-1fcb0eb05804)
+
 
 #
 
@@ -55,7 +56,8 @@ Facilita la instalación de aplicaciones empresariales y de IT esenciales:
 
 Descarga de Aplicaciones de forma facil e instantanea: Instala herramientas importantes como HP Support Assistant, Lenovo Vantage, Hardisk Sentinel, TeamViewer, y Dell Command Update utilizando Chocolatey.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/bd9af57c-19b4-49c3-9ebd-00439bdfcf52)
+![image](https://github.com/user-attachments/assets/eb4668ff-e261-4b5f-a44d-150a18eb34d6)
+
 
 #
 
@@ -78,7 +80,8 @@ Limpiar Temporales: Elimina archivos temporales para liberar espacio.
 Cache de IPs: Limpia la caché de IP para mejorar la conexión de red.
 Optimizar la RAM: Utiliza la aplicación RAMMAP para liberar y optimizar la memoria RAM.
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/15296be3-ec1a-43f7-ad56-dd8400affc61)
+![image](https://github.com/user-attachments/assets/0e876008-6a82-4d18-b176-f3c113f6c0ca)
+
 
 #
 
@@ -102,7 +105,8 @@ Acceso al Entorno de Recuperación o Inicio Avanzado: Entra en las opciones de r
 Actualizar Apps con Winget: Actualiza tus aplicaciones con Winget para mantener tu software al día.
 
 
-![image](https://github.com/BrandonSepulveda/Toolbox/assets/88468929/774c09c4-bc01-4195-9df0-544dfe5bf582)
+![image](https://github.com/user-attachments/assets/4b9d0aac-d46d-4e54-94c8-a6104752cbe9)
+
 
 #
 - Con ToolboxBS, tienes una solución integral para mantener y optimizar tu sistema Windows. ¡Descarga y empieza a disfrutar de un rendimiento mejorado y una administración más eficiente de tu PC hoy mismo!
