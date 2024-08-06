@@ -18,8 +18,7 @@
 
 
 
-- ToolboxBS - La Solución Completa para la Optimización de Windows
-¡Descubre ToolboxBS, tu herramienta definitiva para la administración y optimización de Windows! Con ToolboxBS, puedes llevar tu sistema al siguiente nivel con una interfaz intuitiva y potentes funciones diseñadas para maximizar el rendimiento y la eficiencia de tu PC. Aquí está todo lo que ToolboxBS ofrece:
+- ToolboxBS -La Solución Completa para la Verificacion y Optimización de Windows ¡Descubre ToolboxBS, tu herramienta definitiva para la verificación y optimización de Windows! Con ToolboxBS, puedes llevar tu sistema al siguiente nivel con una interfaz intuitiva y potentes funciones diseñadas para maximizar el rendimiento y la eficiencia de tu PC. Aquí está todo lo que ToolboxBS ofrece:
 ## 
 
 # Como ejecutar :
