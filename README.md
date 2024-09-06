@@ -45,7 +45,8 @@ Capacidad del Disco Duro: Consulta el tamaño total del disco y el espacio libre
 Estado del Disco Duro: Analiza el uso actual del disco duro y su salud general.
 Información de la GPU: Obtén detalles sobre todas las tarjetas gráficas instaladas en tu sistema.
 
-![image](https://github.com/user-attachments/assets/c2582245-c5e0-47c6-b84e-1fcb0eb05804)
+![image](https://github.com/user-attachments/assets/9d589a94-5190-4b41-9981-357b5d631532)
+
 
 
 #
