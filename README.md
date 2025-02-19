@@ -1,7 +1,7 @@
 ### Brandon Sepulveda Windows System Utility Suite  ToolboxBS
-![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones-5K-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23000000&label=Ultima%20Version&style=for-the-badge&background=%23000000&border=white&labelColor=%23ffffff)](https://github.com/BrandonSepulveda/ToolboxBS/releases)![GitHub Downloads (specific asset, all releases)](https://img.shields.io/github/downloads/BrandonSepulveda/ToolboxBS/ToolboxBS.ps1?label=Descargas%20NewVersion&style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white)
-[![VersionWU](https://img.shields.io/github/v/release/ChrisTitusTech/winutil?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/ChrisTitusTech/winutil/releases/latest)
-![GitHub DownloadsWU (specific asset, all releases)](https://img.shields.io/github/downloads/ChrisTitusTech/winutil/winutil.ps1?label=Total%20Downloads&style=for-the-badge)
+![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones[Toolboxbs.ps1]-6K-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) 
+![Total Downloads WU](https://img.shields.io/badge/Total%20descargas-5.5M-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23000000&label=Ultima%20Version&style=for-the-badge&background=%23000000&border=white&labelColor=%23ffffff)](https://github.com/BrandonSepulveda/ToolboxBS/releases)![GitHub Downloads (specific asset, all releases)](https://img.shields.io/github/downloads/BrandonSepulveda/ToolboxBS/ToolboxBS.ps1?label=Descargas%20NewVersion&style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white)
+
 
 #
 ![GitHub top language](https://img.shields.io/github/languages/top/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23000000&background=%23000000&border=white&labelColor=%23ffffff)
