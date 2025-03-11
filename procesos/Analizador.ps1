@@ -320,15 +320,12 @@ function Optimizar-Sistema {
     Get-ChildItem -Path $temp -Force | Remove-Item -Force -Recurse
     Remove-Item -Path "$env:windir\Temp\*" -Force -Recurse
     
-    # 2. Limpieza de la Papelera de reciclaje
-    Mostrar-Progreso -Actividad "Vaciando papelera de reciclaje" -ProgresoPorcentaje 20
-    Clear-RecycleBin -Force
     
-    # 3. Limpieza de archivos de caché del sistema
+    # 2. Limpieza de archivos de caché del sistema
     Mostrar-Progreso -Actividad "Limpiando caché del sistema" -ProgresoPorcentaje 30
     Remove-Item -Path "$env:windir\Prefetch\*" -Force
     
-    # 4. Desfragmentación (solo para discos HDD)
+    # 3. Desfragmentación (solo para discos HDD)
     if ($InfoSistema.TipoDisco -like "*HDD*") {
         Mostrar-Progreso -Actividad "Desfragmentando disco (puede tomar tiempo)" -ProgresoPorcentaje 50
         Optimize-Volume -DriveLetter C -Defrag
@@ -337,29 +334,29 @@ function Optimizar-Sistema {
         Optimize-Volume -DriveLetter C -ReTrim
     }
     
-    # 5. Limpieza del caché de DNS
+    # 4. Limpieza del caché de DNS
     Mostrar-Progreso -Actividad "Limpiando caché de DNS" -ProgresoPorcentaje 60
     Clear-DnsClientCache
     
-    # 6. Optimizar servicios de inicio
+    # 5. Optimizar servicios de inicio
     Mostrar-Progreso -Actividad "Optimizando servicios de inicio" -ProgresoPorcentaje 70
     Get-Service | Where-Object {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped" -and $_.Name -notmatch "wuauserv|sppsvc|WSearch"} | ForEach-Object {
         Set-Service -Name $_.Name -StartupType Manual
     }
     
-    # 7. Limpieza del registro
+    # 6. Limpieza del registro
     Mostrar-Progreso -Actividad "Limpiando registro del sistema" -ProgresoPorcentaje 80
     # Simulación de limpieza de registro (no implementada por seguridad)
     Start-Sleep -Seconds 2
     
-    # 8. Optimización de rendimiento del sistema
+    # 7. Optimización de rendimiento del sistema
     Mostrar-Progreso -Actividad "Aplicando ajustes de rendimiento" -ProgresoPorcentaje 90
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "MenuShowDelay" -Value 100
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -Value 2000
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -Value 2000
     Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "WaitToKillServiceTimeout" -Value 2000
     
-    # 9. Limpiar historial de Windows Update
+    # 8. Limpiar historial de Windows Update
     Mostrar-Progreso -Actividad "Limpiando historial de actualizaciones" -ProgresoPorcentaje 95
     Stop-Service -Name wuauserv
     Remove-Item -Path "$env:windir\SoftwareDistribution\*" -Force -Recurse
