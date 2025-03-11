@@ -300,76 +300,98 @@ function Optimizar-Sistema {
     }
     
     # Preguntar al usuario si desea aplicar optimizaciones
-    Write-Host "`n  ¿Desea aplicar las optimizaciones recomendadas? [S/N]: " -NoNewline -ForegroundColor $colores.Subtitulo
-    $respuesta = Read-Host
-    
-    if ($respuesta -ne "S" -and $respuesta -ne "s") {
-        Write-Host "`n  ❌ " -NoNewline
-        Write-Host "Operación cancelada por el usuario." -ForegroundColor $colores.Advertencia
-        return
-    }
-    
-    # Aplicar optimizaciones
-    Write-Host "`n  🔄 " -NoNewline
-    Write-Host "APLICANDO OPTIMIZACIONES..." -ForegroundColor $colores.Subtitulo
-    Write-Host " ┌─────────────────────────────────────────────┐" -ForegroundColor $colores.Subtitulo
-    
-    # 1. Limpieza de archivos temporales
-    Mostrar-Progreso -Actividad "Limpiando archivos temporales" -ProgresoPorcentaje 10
-    $temp = [System.IO.Path]::GetTempPath()
-    Get-ChildItem -Path $temp -Force | Remove-Item -Force -Recurse
-    Remove-Item -Path "$env:windir\Temp\*" -Force -Recurse
-    
-    
-    # 2. Limpieza de archivos de caché del sistema
-    Mostrar-Progreso -Actividad "Limpiando caché del sistema" -ProgresoPorcentaje 30
-    Remove-Item -Path "$env:windir\Prefetch\*" -Force
-    
-    # 3. Desfragmentación (solo para discos HDD)
-    if ($InfoSistema.TipoDisco -like "*HDD*") {
-        Mostrar-Progreso -Actividad "Desfragmentando disco (puede tomar tiempo)" -ProgresoPorcentaje 50
-        Optimize-Volume -DriveLetter C -Defrag
-    } else {
-        Mostrar-Progreso -Actividad "Optimizando SSD (TRIM)" -ProgresoPorcentaje 50
-        Optimize-Volume -DriveLetter C -ReTrim
-    }
-    
-    # 4. Limpieza del caché de DNS
-    Mostrar-Progreso -Actividad "Limpiando caché de DNS" -ProgresoPorcentaje 60
-    Clear-DnsClientCache
-    
-    # 5. Optimizar servicios de inicio
-    Mostrar-Progreso -Actividad "Optimizando servicios de inicio" -ProgresoPorcentaje 70
-    Get-Service | Where-Object {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped" -and $_.Name -notmatch "wuauserv|sppsvc|WSearch"} | ForEach-Object {
-        Set-Service -Name $_.Name -StartupType Manual
-    }
-    
-    # 6. Limpieza del registro
-    Mostrar-Progreso -Actividad "Limpiando registro del sistema" -ProgresoPorcentaje 80
-    # Simulación de limpieza de registro (no implementada por seguridad)
-    Start-Sleep -Seconds 2
-    
-    # 7. Optimización de rendimiento del sistema
-    Mostrar-Progreso -Actividad "Aplicando ajustes de rendimiento" -ProgresoPorcentaje 90
-    Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "MenuShowDelay" -Value 100
-    Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -Value 2000
-    Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -Value 2000
-    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "WaitToKillServiceTimeout" -Value 2000
-    
-    # 8. Limpiar historial de Windows Update
-    Mostrar-Progreso -Actividad "Limpiando historial de actualizaciones" -ProgresoPorcentaje 95
-    Stop-Service -Name wuauserv
-    Remove-Item -Path "$env:windir\SoftwareDistribution\*" -Force -Recurse
-    Start-Service -Name wuauserv
-    
-    # Finalizar optimización
-    Mostrar-Progreso -Actividad "Finalizando optimización" -ProgresoPorcentaje 100
-    Write-Host " └─────────────────────────────────────────────┘" -ForegroundColor $colores.Subtitulo
-    
-    # Mostrar resumen
-    Write-Host "`n  ✅ " -NoNewline
-    Write-Host "OPTIMIZACIÓN COMPLETADA" -ForegroundColor $colores.Exito
-    Write-Host "  └─ Se recomienda reiniciar el sistema para aplicar todos los cambios." -ForegroundColor $colores.Advertencia
+Write-Host "`n  ¿Desea aplicar las optimizaciones recomendadas? [S/N]: " -NoNewline -ForegroundColor $colores.Subtitulo
+$respuesta = Read-Host
+
+if ($respuesta -ne "S" -and $respuesta -ne "s") {
+    Write-Host "`n  ❌ " -NoNewline
+    Write-Host "Operación cancelada por el usuario." -ForegroundColor $colores.Advertencia
+    return
+}
+
+# Crear punto de restauración antes de aplicar cambios
+Write-Host "`n  🔄 " -NoNewline
+Write-Host "CREANDO PUNTO DE RESTAURACIÓN..." -ForegroundColor $colores.Subtitulo
+$fecha = Get-Date -Format "dd-MM-yyyy_HH-mm"
+$descripcion = "Punto Restauracion ToolboxAnalyser $fecha"
+Checkpoint-Computer -Description $descripcion -RestorePointType "APPLICATION_INSTALL"
+Write-Host "  └─ Punto de restauración creado: $descripcion" -ForegroundColor $colores.Informacion
+
+# Aplicar optimizaciones
+Write-Host "`n  🔄 " -NoNewline
+Write-Host "APLICANDO OPTIMIZACIONES..." -ForegroundColor $colores.Subtitulo
+Write-Host " ┌─────────────────────────────────────────────┐" -ForegroundColor $colores.Subtitulo
+
+# 1. Limpieza de archivos temporales
+Mostrar-Progreso -Actividad "Limpiando archivos temporales" -ProgresoPorcentaje 10
+$temp = [System.IO.Path]::GetTempPath()
+Get-ChildItem -Path $temp -Force | Remove-Item -Force -Recurse
+Remove-Item -Path "$env:windir\Temp\*" -Force -Recurse
+
+
+# 2. Limpieza de archivos de caché del sistema
+Mostrar-Progreso -Actividad "Limpiando caché del sistema" -ProgresoPorcentaje 30
+Remove-Item -Path "$env:windir\Prefetch\*" -Force
+
+# 3. Desfragmentación (solo para discos HDD)
+if ($InfoSistema.TipoDisco -like "*HDD*") {
+    Mostrar-Progreso -Actividad "Desfragmentando disco (puede tomar tiempo)" -ProgresoPorcentaje 50
+    Optimize-Volume -DriveLetter C -Defrag
+} else {
+    Mostrar-Progreso -Actividad "Optimizando SSD (TRIM)" -ProgresoPorcentaje 50
+    Optimize-Volume -DriveLetter C -ReTrim
+}
+
+# 4. Limpieza del caché de DNS
+Mostrar-Progreso -Actividad "Limpiando caché de DNS" -ProgresoPorcentaje 60
+Clear-DnsClientCache
+
+# 5. Optimizar servicios de inicio
+Mostrar-Progreso -Actividad "Optimizando servicios de inicio" -ProgresoPorcentaje 70
+Get-Service | Where-Object {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped" -and $_.Name -notmatch "wuauserv|sppsvc|WSearch"} | ForEach-Object {
+    Set-Service -Name $_.Name -StartupType Manual
+}
+
+# 6. Limpieza del registro
+Mostrar-Progreso -Actividad "Limpiando registro del sistema" -ProgresoPorcentaje 80
+# Simulación de limpieza de registro (no implementada por seguridad)
+Start-Sleep -Seconds 2
+
+# 7. Optimización de rendimiento del sistema y corrección de parpadeo de pantalla
+Mostrar-Progreso -Actividad "Aplicando ajustes de rendimiento" -ProgresoPorcentaje 90
+# Ajustes originales de rendimiento
+Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "MenuShowDelay" -Value 100
+Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -Value 2000
+Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -Value 2000
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "WaitToKillServiceTimeout" -Value 2000
+
+# Nuevos ajustes para corregir el parpadeo de bordes de pantalla
+Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragFullWindows" -Value 1
+if (-not (Test-Path "HKCU:\Control Panel\Desktop\WindowMetrics")) {
+    New-Item -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Force
+}
+Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name "MinAnimate" -Value 1
+
+# Optimización de gráficos
+if (-not (Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects")) {
+    New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Force
+}
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Value 3
+
+# 8. Limpiar historial de Windows Update
+Mostrar-Progreso -Actividad "Limpiando historial de actualizaciones" -ProgresoPorcentaje 95
+Stop-Service -Name wuauserv
+Remove-Item -Path "$env:windir\SoftwareDistribution\*" -Force -Recurse
+Start-Service -Name wuauserv
+
+# Finalizar optimización
+Mostrar-Progreso -Actividad "Finalizando optimización" -ProgresoPorcentaje 100
+Write-Host " └─────────────────────────────────────────────┘" -ForegroundColor $colores.Subtitulo
+
+# Mostrar resumen
+Write-Host "`n  ✅ " -NoNewline
+Write-Host "OPTIMIZACIÓN COMPLETADA" -ForegroundColor $colores.Exito
+Write-Host "  └─ Se recomienda reiniciar el sistema para aplicar todos los cambios." -ForegroundColor $colores.Advertencia
     
     # Preguntar si desea reiniciar
     Write-Host "`n  ¿Desea reiniciar el sistema ahora? [S/N]: " -NoNewline -ForegroundColor $colores.Subtitulo
