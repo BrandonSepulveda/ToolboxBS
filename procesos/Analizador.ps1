@@ -161,7 +161,6 @@ Write-Host " (En uso: $ramUsada GB - $porcentajeRAM%)" -ForegroundColor $(if($po
 # Añadir información de la tarjeta gráfica
 $gpus = Get-CimInstance -ClassName Win32_VideoController
 Write-Host "  └─ Tarjeta(s) Gráfica(s): " -NoNewline -ForegroundColor $colores.Normal
-
 if ($gpus -ne $null) {
     $tieneGPUDedicada = $false
     $i = 0
@@ -173,8 +172,31 @@ if ($gpus -ne $null) {
     
     foreach ($gpu in $gpus) {
         if ($i -gt 0) { Write-Host "                        " -NoNewline }
+        
+        # Intentar obtener información más precisa sobre VRAM
+        $gpuRAM = 0
+        try {
+            # Intento 1: Usar AdapterRAM pero verificar si es razonable
+            if ($gpu.AdapterRAM -gt 0) {
+                $gpuRAM = [math]::Round($gpu.AdapterRAM / 1GB, 1)
+                # Si es exactamente 4GB y sospechamos que es incorrecto, intentar otra cosa
+                if ($gpuRAM -eq 4 -and $gpu.Name -match "NVIDIA|RTX|GTX|AMD|Radeon RX") {
+                    # Para GPUs modernas que probablemente tienen más de 4GB
+                    $dxdiag = & dxdiag /t dxdiag_output.txt
+                    Start-Sleep -Seconds 2
+                    $dxContent = Get-Content dxdiag_output.txt -Raw
+                    if ($dxContent -match "$($gpu.Name)[\s\S]*?Dedicated Memory:\s*(\d+)\s*MB") {
+                        $gpuRAM = [math]::Round([int]$matches[1] / 1024, 1)
+                    }
+                    Remove-Item dxdiag_output.txt -ErrorAction SilentlyContinue
+                }
+            }
+        } catch {
+            # Si falla, mantener el valor predeterminado
+            $gpuRAM = 0
+        }
+        
         # Determinar si es integrada o dedicada basado en el nombre y memoria
-        $gpuRAM = if ($gpu.AdapterRAM -gt 0) { [math]::Round($gpu.AdapterRAM / 1GB, 1) } else { 0 }
         $esIntegrada = $gpu.Name -match "Intel|UHD|HD Graphics|Integrated" -or $gpuRAM -lt 1
         $tipoGPU = if($esIntegrada) { "Integrada" } else { "Dedicada"; $tieneGPUDedicada = $true }
         
