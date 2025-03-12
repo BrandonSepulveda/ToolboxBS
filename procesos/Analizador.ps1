@@ -159,15 +159,22 @@ Write-Host "$ramGB GB" -NoNewline -ForegroundColor $colores.Destacado
 Write-Host " (En uso: $ramUsada GB - $porcentajeRAM%)" -ForegroundColor $(if($porcentajeRAM -gt 80){$colores.Error}elseif($porcentajeRAM -gt 60){$colores.Advertencia}else{$colores.Exito})
 
 # Añadir información de la tarjeta gráfica
-$gpus = Get-WmiObject Win32_VideoController
+$gpus = Get-CimInstance -ClassName Win32_VideoController
 Write-Host "  └─ Tarjeta(s) Gráfica(s): " -NoNewline -ForegroundColor $colores.Normal
-if ($gpus.Count -gt 0) {
+
+if ($gpus -ne $null) {
     $tieneGPUDedicada = $false
     $i = 0
+    
+    # Convertir a array si no lo es
+    if ($gpus -isnot [Array]) {
+        $gpus = @($gpus)
+    }
+    
     foreach ($gpu in $gpus) {
         if ($i -gt 0) { Write-Host "                        " -NoNewline }
         # Determinar si es integrada o dedicada basado en el nombre y memoria
-        $gpuRAM = [math]::Round($gpu.AdapterRAM / 1GB, 1)
+        $gpuRAM = if ($gpu.AdapterRAM -gt 0) { [math]::Round($gpu.AdapterRAM / 1GB, 1) } else { 0 }
         $esIntegrada = $gpu.Name -match "Intel|UHD|HD Graphics|Integrated" -or $gpuRAM -lt 1
         $tipoGPU = if($esIntegrada) { "Integrada" } else { "Dedicada"; $tieneGPUDedicada = $true }
         
@@ -184,7 +191,6 @@ if ($gpus.Count -gt 0) {
     Write-Host "No detectada" -ForegroundColor $colores.Error
     $tieneGPUDedicada = $false
 }
-
 # Almacenamiento
 Write-Host "`n  💾 " -NoNewline
 Write-Host "ALMACENAMIENTO" -ForegroundColor $colores.Subtitulo
