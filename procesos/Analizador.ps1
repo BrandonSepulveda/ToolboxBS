@@ -571,27 +571,6 @@ Mostrar-Progreso -Actividad "Limpiando registro del sistema" -ProgresoPorcentaje
 # Simulación de limpieza de registro (no implementada por seguridad)
 Start-Sleep -Seconds 2
 
-# 7. Optimización de rendimiento del sistema y corrección de parpadeo de pantalla
-Mostrar-Progreso -Actividad "Aplicando ajustes de rendimiento" -ProgresoPorcentaje 90
-# Ajustes originales de rendimiento
-Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "MenuShowDelay" -Value 100
-Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -Value 2000
-Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "HungAppTimeout" -Value 2000
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "WaitToKillServiceTimeout" -Value 2000
-
-# Nuevos ajustes para corregir el parpadeo de bordes de pantalla
-Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragFullWindows" -Value 1
-if (-not (Test-Path "HKCU:\Control Panel\Desktop\WindowMetrics")) {
-    New-Item -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Force
-}
-Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name "MinAnimate" -Value 1
-
-# Optimización de gráficos
-if (-not (Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects")) {
-    New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Force
-}
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Value 3
-
 # 8. Limpiar historial de Windows Update
 Mostrar-Progreso -Actividad "Limpiando historial de actualizaciones" -ProgresoPorcentaje 95
 Stop-Service -Name wuauserv
