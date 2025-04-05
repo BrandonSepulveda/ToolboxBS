@@ -32,7 +32,10 @@ Ejecutar [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/over
     irm "https://cutt.ly/ToolboxBS" | iex
 ##
 
-![image](https://github.com/user-attachments/assets/c9180792-e54a-48b7-97e0-a1273cd8eaff)
+![image](https://github.com/user-attachments/assets/2288413e-2566-41a1-a33b-43945ff0a2ce)
+
+![image](https://github.com/user-attachments/assets/279471c0-2aee-4510-a087-c4a7f0477092)
+![image](https://github.com/user-attachments/assets/cc1b359f-01a5-4e27-a8c4-a40e91403366)
 
 
 
@@ -50,7 +53,8 @@ Capacidad del Disco Duro: Consulta el tamaño total del disco y el espacio libre
 Estado del Disco Duro: Analiza el uso actual del disco duro y su salud general.
 Información de la GPU: Obtén detalles sobre todas las tarjetas gráficas instaladas en tu sistema.
 
-![image](https://github.com/user-attachments/assets/9d589a94-5190-4b41-9981-357b5d631532)
+![image](https://github.com/user-attachments/assets/d3706118-15b7-4665-9783-edba2228b003)
+
 
 
 
@@ -61,7 +65,8 @@ Facilita la instalación de aplicaciones empresariales y de IT esenciales:
 
 Descarga de Aplicaciones de forma facil e instantanea: Instala herramientas importantes como HP Support Assistant, Lenovo Vantage, Hardisk Sentinel, TeamViewer, y Dell Command Update utilizando Chocolatey.
 
-![image](https://github.com/user-attachments/assets/eb4668ff-e261-4b5f-a44d-150a18eb34d6)
+![image](https://github.com/user-attachments/assets/d6084aa9-2d34-4a88-b54f-d69efbc5f330)
+
 
 
 #
@@ -82,10 +87,10 @@ Generar Informes de Energía: Obtén informes sobre el consumo de energía del s
 Optimiza tu sistema limpiando archivos no deseados:
 
 Limpiar Temporales: Elimina archivos temporales para liberar espacio.
-Cache de IPs: Limpia la caché de IP para mejorar la conexión de red.
 Optimizar la RAM: Utiliza la aplicación RAMMAP para liberar y optimizar la memoria RAM.
 
-![image](https://github.com/user-attachments/assets/0e876008-6a82-4d18-b176-f3c113f6c0ca)
+![image](https://github.com/user-attachments/assets/294126ed-5dbd-479a-be68-9b607232e8f2)
+
 
 
 #
@@ -110,7 +115,16 @@ Acceso al Entorno de Recuperación o Inicio Avanzado: Entra en las opciones de r
 Actualizar Apps con Winget: Actualiza tus aplicaciones con Winget para mantener tu software al día.
 
 
-![image](https://github.com/user-attachments/assets/4b9d0aac-d46d-4e54-94c8-a6104752cbe9)
+![image](https://github.com/user-attachments/assets/037fb634-fa38-4904-9d08-0b15518d46f5)
+
+
+#
+- **otras herramientas:**
+Personaliza y mejora tu sistema con herramientas avanzadas:
+
+![image](https://github.com/user-attachments/assets/75373408-f39c-4a88-b100-ae7c6e3b7f57)
+#
+![image](https://github.com/user-attachments/assets/44744e70-f326-4c42-81ab-b89e3c4c40b9)
 
 
 #
