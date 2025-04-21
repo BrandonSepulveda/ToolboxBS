@@ -11,6 +11,8 @@ if %errorlevel% neq 0 (
 )
 :: Admin privileges confirmed, continue execution
 setlocal EnableExtensions DisableDelayedExpansion
+echo -- Creating a restore point:
+powershell -command "Enable-ComputerRestore -Drive $env:SystemDrive ; Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS""
 echo -- Disabling Taskbar Widgets
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d 0 /f
@@ -22,8 +24,8 @@ schtasks /change /TN "\Microsoft\Windows\Customer Experience Improvement Program
 schtasks /change /TN "\Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" /DISABLE > NUL 2>&1
 schtasks /change /TN "\Microsoft\Windows\Autochk\Proxy" /DISABLE > NUL 2>&1
 schtasks /change /TN "\Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /DISABLE > NUL 2>&1
-schtasks /change /TN "\Microsoft\Windows\Feedback\Siuf\DmClient" /DISABLE > NUL 2>&1
-schtasks /change /TN "\Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload" /DISABLE > NUL 2>&1
+schtasks /change /TN "\Microsoft\Windows\Feeosoft\Windows\Feedback\Siuf\DmCdback\Siuf\DmClient" /DISABLE > NUL 2>&1
+schtasks /change /TN "\MicrlientOnScenarioDownload" /DISABLE > NUL 2>&1
 schtasks /change /TN "\Microsoft\Windows\Windows Error Reporting\QueueReporting" /DISABLE > NUL 2>&1
 schtasks /change /TN "\Microsoft\Windows\Maps\MapsUpdateTask" /DISABLE > NUL 2>&1
 sc config diagnosticshub.standardcollector.service start=demand
