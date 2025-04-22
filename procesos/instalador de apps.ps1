@@ -2,10 +2,10 @@
 
 <#
 .SYNOPSIS
-Instalador/Desinstalador/Actualizador de aplicaciones con GUI usando Winget o Chocolatey.
+Instalador/Desinstalador/Actualizador de aplicaciones con GUI usando Winget o Chocolatey, con buscador.
 
 .DESCRIPTION
-Interfaz gráfica para seleccionar aplicaciones de una lista predefinida.
+Interfaz gráfica para seleccionar aplicaciones de una lista predefinida, con la capacidad de buscar.
 Permite Instalar, Desinstalar (las de la lista) o Actualizar Todo
 eligiendo entre Winget o Chocolatey (si ambos están instalados).
 Muestra logs detallados con colores en un cuadro de estado ubicado abajo.
@@ -18,6 +18,8 @@ Opcional: Chocolatey (choco.org).
 La interfaz puede congelarse durante operaciones largas de winget/choco.
 Desinstalar solo aplica a las apps de esta lista con el ID del gestor seleccionado.
 Debes verificar/completar los 'ChocolateyID' en la lista.
+El buscador filtra la lista visible, pero no mantiene el estado de selección de las apps ocultas.
+Corregido error "Cannot find an overload for Point/Size" usando el método ::new().
 #>
 
 #region Pre-requisitos y Configuración Inicial
@@ -79,7 +81,7 @@ $appList = @(
     @{ Nombre = "Dell Command | Update"; WingetID = "Dell.CommandUpdate"; ChocolateyID = "" } # Específico de Dell
     @{ Nombre = "Discord"; WingetID = "Discord.Discord"; ChocolateyID = "discord" }
     @{ Nombre = "Google Chrome"; WingetID = "Google.Chrome"; ChocolateyID = "googlechrome" }
-    @{ Nombre = "Hard Disk Sentinel"; WingetID = "JanosMathe.HardDiskSentinel"; ChocolateyID = "" } # Específico de HP
+    @{ Nombre = "Hard Disk Sentinel"; WingetID = "JanosMathe.HardDiskSentinel"; ChocolateyID = "" } # Específico de HP
     @{ Nombre = "HP PC Hardware Diagnostics Windows"; WingetID = "HP.PCHardwareDiagnosticsWindows"; ChocolateyID = "" } # Específico de HP
     @{ Nombre = "HP Image Assistant"; WingetID = "HP.ImageAssistant"; ChocolateyID = "" } # Específico de HP
     @{ Nombre = "HP Smart"; WingetID = "9WZDNCRFHWLH"; ChocolateyID = "" } # App Store (normalmente no en Choco)
@@ -93,7 +95,7 @@ $appList = @(
     @{ Nombre = "NZXT CAM"; WingetID = "NZXT.CAM"; ChocolateyID = "" } # Menos común en Choco
     @{ Nombre = "PowerShell (Latest)"; WingetID = "Microsoft.PowerShell"; ChocolateyID = "powershell" }
     @{ Nombre = "Rufus"; WingetID = "Rufus.Rufus"; ChocolateyID = "rufus" }
-    @{ Nombre = "UnigetUI"; WingetID = "MartiCliment.UniGetU"; ChocolateyID = "wingetui" }
+    @{ Nombre = "UnigetUI"; WingetID = "MartiCliment.UniGetU"; ChocolateyID = "wingetui" }
     @{ Nombre = "TeamViewer"; WingetID = "TeamViewer.TeamViewer"; ChocolateyID = "teamviewer" }
     @{ Nombre = "Ventoy"; WingetID = "Ventoy.Ventoy"; ChocolateyID = "ventoy" }
     @{ Nombre = "Visual Studio Code"; WingetID = "Microsoft.VisualStudioCode"; ChocolateyID = "vscode" }
@@ -104,53 +106,83 @@ $appList = @(
 
 #region Creación de la Interfaz Gráfica (GUI)
 
-$form = New-Object System.Windows.Forms.Form
+$form = [System.Windows.Forms.Form]::new()
 $form.Text = "ToolboxAPPS"
-$form.Size = New-Object System.Drawing.Size(620, 740) # Aumentar altura para el log fijo
+# Usando ::new() para Size
+$form.Size = [System.Drawing.Size]::new(620, 740)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = 'FixedDialog'
 $form.MaximizeBox = $false
 $form.BackColor = [System.Drawing.Color]::white
 
-# CORRECCIÓN: Suspender el layout durante la creación de controles
-$form.SuspendLayout() # Iniciar suspensión
+# Suspender el layout durante la creación de controles
+$form.SuspendLayout()
 
 # Posiciones Y Base
 $startY = 15
 $spacing = 10 # Espacio entre controles principales
+$controlHeight = 25 # Altura estándar para etiquetas y campos de texto
 
 # Label Selección de Apps
-$labelApps = New-Object System.Windows.Forms.Label
-$labelApps.Location = New-Object System.Drawing.Point(15, $startY)
-$labelApps.Size = New-Object System.Drawing.Size(580, 20)
+$labelApps = [System.Windows.Forms.Label]::new()
+# Usando ::new() para Point
+$labelApps.Location = [System.Drawing.Point]::new(15, $startY)
+# Usando ::new() para Size
+$labelApps.Size = [System.Drawing.Size]::new(580, $controlHeight)
 $labelApps.Text = "Selecciona las aplicaciones de la lista:"
-$labelApps.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$labelApps.Font = [System.Drawing.Font]::new("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelApps)
 
 $currentY = $labelApps.Bottom + $spacing
 
+# --- Buscador ---
+$labelSearch = [System.Windows.Forms.Label]::new()
+# Usando ::new() para Point (Línea corregida)
+$labelSearch.Location = [System.Drawing.Point]::new(15, $currentY + 5) # Ajuste vertical para alineación
+# Usando ::new() para Size
+$labelSearch.Size = [System.Drawing.Size]::new(60, $controlHeight)
+$labelSearch.Text = "Buscar:"
+$labelSearch.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Regular) # Fuente normal
+$form.Controls.Add($labelSearch)
+
+$searchTextBox = [System.Windows.Forms.TextBox]::new()
+# Usando ::new() para Point
+$searchTextBox.Location = [System.Drawing.Point]::new(80, $currentY)
+# Usando ::new() para Size
+$searchTextBox.Size = [System.Drawing.Size]::new(515, $controlHeight)
+$searchTextBox.Font = [System.Drawing.Font]::new("Segoe UI", 9)
+$form.Controls.Add($searchTextBox)
+
+$currentY = $searchTextBox.Bottom + $spacing
+
 # --- Selección del Gestor ---
-$labelManager = New-Object System.Windows.Forms.Label
-$labelManager.Location = New-Object System.Drawing.Point(15, $currentY)
-$labelManager.Size = New-Object System.Drawing.Size(180, 20)
+$labelManager = [System.Windows.Forms.Label]::new()
+# Usando ::new() para Point
+$labelManager.Location = [System.Drawing.Point]::new(15, $currentY)
+# Usando ::new() para Size
+$labelManager.Size = [System.Drawing.Size]::new(180, $controlHeight)
 $labelManager.Text = "Selecciona el gestor:"
-$labelManager.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$labelManager.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($labelManager)
 
-$wingetRadioButton = New-Object System.Windows.Forms.RadioButton
-$wingetRadioButton.Location = New-Object System.Drawing.Point(200, $currentY)
-$wingetRadioButton.Size = New-Object System.Drawing.Size(100, 20)
+$wingetRadioButton = [System.Windows.Forms.RadioButton]::new()
+# Usando ::new() para Point
+$wingetRadioButton.Location = [System.Drawing.Point]::new(200, $currentY)
+# Usando ::new() para Size
+$wingetRadioButton.Size = [System.Drawing.Size]::new(100, $controlHeight)
 $wingetRadioButton.Text = "Winget"
-$wingetRadioButton.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$wingetRadioButton.Font = [System.Drawing.Font]::new("Segoe UI", 9)
 $wingetRadioButton.Checked = $WingetFound # Seleccionar por defecto si está disponible
 $wingetRadioButton.Enabled = $WingetFound # Deshabilitar si no se encontró
 $form.Controls.Add($wingetRadioButton)
 
-$chocolateyRadioButton = New-Object System.Windows.Forms.RadioButton
-$chocolateyRadioButton.Location = New-Object System.Drawing.Point(300, $currentY)
-$chocolateyRadioButton.Size = New-Object System.Drawing.Size(120, 20)
+$chocolateyRadioButton = [System.Windows.Forms.RadioButton]::new()
+# Usando ::new() para Point
+$chocolateyRadioButton.Location = [System.Drawing.Point]::new(300, $currentY)
+# Usando ::new() para Size
+$chocolateyRadioButton.Size = [System.Drawing.Size]::new(120, $controlHeight)
 $chocolateyRadioButton.Text = "Chocolatey"
-$chocolateyRadioButton.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$chocolateyRadioButton.Font = [System.Drawing.Font]::new("Segoe UI", 9)
 $chocolateyRadioButton.Checked = (-not $WingetFound -and $ChocolateyFound) # Seleccionar si Winget no está y Choco sí
 $chocolateyRadioButton.Enabled = $ChocolateyFound # Deshabilitar si no se encontró
 $form.Controls.Add($chocolateyRadioButton)
@@ -162,13 +194,15 @@ $form.Controls.Add($chocolateyRadioButton)
 $currentY = $labelManager.Bottom + $spacing
 
 # --- Lista de Aplicaciones ---
-$checkedListBox = New-Object System.Windows.Forms.CheckedListBox
-$checkedListBox.Location = New-Object System.Drawing.Point(15, $currentY)
-$checkedListBox.Size = New-Object System.Drawing.Size(580, 260) # Altura
+$checkedListBox = [System.Windows.Forms.CheckedListBox]::new()
+# Usando ::new() para Point
+$checkedListBox.Location = [System.Drawing.Point]::new(15, $currentY)
+# Usando ::new() para Size
+$checkedListBox.Size = [System.Drawing.Size]::new(580, 220) # Altura ajustada
 $checkedListBox.CheckOnClick = $true
 $checkedListBox.BorderStyle = 'FixedSingle'
-$checkedListBox.Font = New-Object System.Drawing.Font("Segoe UI", 9)
-# Poblar la lista
+$checkedListBox.Font = [System.Drawing.Font]::new("Segoe UI", 9)
+# Poblar la lista inicial (antes del filtro)
 $appList.Nombre | ForEach-Object { $checkedListBox.Items.Add($_, $false) } | Out-Null
 $form.Controls.Add($checkedListBox)
 
@@ -181,33 +215,39 @@ $installButtonX = 15
 $uninstallButtonX = $installButtonX + $buttonWidth + $spacing
 $updateAllButtonX = $uninstallButtonX + $buttonWidth + $spacing
 
-$installButton = New-Object System.Windows.Forms.Button
-$installButton.Location = New-Object System.Drawing.Point($installButtonX, $currentY)
-$installButton.Size = New-Object System.Drawing.Size($buttonWidth, $buttonHeight)
+$installButton = [System.Windows.Forms.Button]::new()
+# Usando ::new() para Point
+$installButton.Location = [System.Drawing.Point]::new($installButtonX, $currentY)
+# Usando ::new() para Size
+$installButton.Size = [System.Drawing.Size]::new($buttonWidth, $buttonHeight)
 $installButton.Text = "Instalar Seleccionadas"
-$installButton.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$installButton.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $installButton.BackColor = $LogColorSuccess # Verde
 $installButton.ForeColor = [System.Drawing.Color]::White
 $installButton.FlatStyle = 'Flat' # Estilo más plano
 $installButton.FlatAppearance.BorderSize = 0
 $form.Controls.Add($installButton)
 
-$uninstallButton = New-Object System.Windows.Forms.Button
-$uninstallButton.Location = New-Object System.Drawing.Point($uninstallButtonX, $currentY)
-$uninstallButton.Size = New-Object System.Drawing.Size($buttonWidth, $buttonHeight)
+$uninstallButton = [System.Windows.Forms.Button]::new()
+# Usando ::new() para Point
+$uninstallButton.Location = [System.Drawing.Point]::new($uninstallButtonX, $currentY)
+# Usando ::new() para Size
+$uninstallButton.Size = [System.Drawing.Size]::new($buttonWidth, $buttonHeight)
 $uninstallButton.Text = "Desinstalar Seleccionadas"
-$uninstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$uninstallButton.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $uninstallButton.BackColor = $LogColorError # Rojo
-$uninstallButton.ForeColor = [System.Drawing.Color]::black
+$uninstallButton.ForeColor = [System.Drawing.Color]::black # Texto negro para contraste
 $uninstallButton.FlatStyle = 'Flat'
 $uninstallButton.FlatAppearance.BorderSize = 0
 $form.Controls.Add($uninstallButton)
 
-$updateAllButton = New-Object System.Windows.Forms.Button
-$updateAllButton.Location = New-Object System.Drawing.Point($updateAllButtonX, $currentY)
-$updateAllButton.Size = New-Object System.Drawing.Size($buttonWidth, $buttonHeight)
+$updateAllButton = [System.Windows.Forms.Button]::new()
+# Usando ::new() para Point
+$updateAllButton.Location = [System.Drawing.Point]::new($updateAllButtonX, $currentY)
+# Usando ::new() para Size
+$updateAllButton.Size = [System.Drawing.Size]::new($buttonWidth, $buttonHeight)
 $updateAllButton.Text = "Actualizar Todo" # Texto genérico
-$updateAllButton.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$updateAllButton.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $updateAllButton.BackColor = $LogColorInfo # Azul
 $updateAllButton.ForeColor = [System.Drawing.Color]::White
 $updateAllButton.FlatStyle = 'Flat'
@@ -217,29 +257,29 @@ $form.Controls.Add($updateAllButton)
 $currentY = $currentY + $buttonHeight + $spacing
 
 # --- Cuadro de Log Mejorado (ABAJO) ---
-$statusLabel = New-Object System.Windows.Forms.Label
-$statusLabel.Location = New-Object System.Drawing.Point(15, $currentY)
-$statusLabel.Size = New-Object System.Drawing.Size(150, 20)
+$statusLabel = [System.Windows.Forms.Label]::new()
+# Usando ::new() para Point
+$statusLabel.Location = [System.Drawing.Point]::new(15, $currentY)
+# Usando ::new() para Size
+$statusLabel.Size = [System.Drawing.Size]::new(150, $controlHeight)
 $statusLabel.Text = "Registro de actividad:"
-$statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$statusLabel.Font = [System.Drawing.Font]::new("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($statusLabel)
 
 $currentY = $statusLabel.Bottom + 5 # Pequeño espacio
 
-$statusBox = New-Object System.Windows.Forms.RichTextBox
-$statusBox.Location = New-Object System.Drawing.Point(15, $currentY)
-
-# CORRECCIÓN: Asignar un tamaño fijo en lugar de calcular dinámicamente
-# Esto elimina la línea que causaba el error op_Subtraction.
-$statusBox.Size = New-Object System.Drawing.Size(580, 200) # Altura fija de 200px
-
+$statusBox = [System.Windows.Forms.RichTextBox]::new()
+# Usando ::new() para Point
+$statusBox.Location = [System.Drawing.Point]::new(15, $currentY)
+# Usando ::new() para Size
+$statusBox.Size = [System.Drawing.Size]::new(580, 200) # Altura fija
 $statusBox.ReadOnly = $true
 $statusBox.BorderStyle = 'FixedSingle'
 $statusBox.ScrollBars = 'Vertical'
-$statusBox.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$statusBox.Font = [System.Drawing.Font]::new("Segoe UI", 9)
 $statusBox.BackColor = [System.Drawing.Color]::FromArgb(255, 250, 250, 250) # Fondo ligeramente diferente
 
-# CORRECCIÓN: Añadir Anchoring para que se fije a la parte inferior y los lados (mantiene posición)
+# Añadir Anchoring para que se fije a la parte inferior y los lados (mantiene posición si se redimensiona, aunque el formulario es FixedDialog)
 $statusBox.Anchor = [System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
 
 $form.Controls.Add($statusBox)
@@ -283,7 +323,7 @@ function Add-Log {
     [System.Windows.Forms.Application]::DoEvents()
 }
 
-# Función para habilitar/deshabilitar botones y radios
+# Función para habilitar/deshabilitar controles
 function Set-ControlsEnabled {
     param([bool]$Enabled)
     $installButton.Enabled = $Enabled
@@ -292,18 +332,54 @@ function Set-ControlsEnabled {
     $wingetRadioButton.Enabled = $Enabled -and $WingetFound
     $chocolateyRadioButton.Enabled = $Enabled -and $ChocolateyFound
     $checkedListBox.Enabled = $Enabled
+    $searchTextBox.Enabled = $Enabled # También deshabilita el buscador durante operaciones
+}
+
+# Función para filtrar la lista de aplicaciones en el CheckedListBox
+function Filter-AppList {
+    $searchText = $searchTextBox.Text.Trim().ToLower() # Obtener texto del buscador, limpiar y convertir a minúsculas
+
+    # Limpiar la lista actual
+    $checkedListBox.Items.Clear()
+
+    # Filtrar la lista original ($appList)
+    $filteredList = $appList | Where-Object {
+        # Si el buscador está vacío, mostrar todos
+        if ($searchText -eq "") {
+            $true
+        }
+        # Si no, verificar si el Nombre (en minúsculas) contiene el texto del buscador
+        else {
+            "$($_.Nombre.ToLower())" -like "*$searchText*"
+        }
+    }
+
+    # Rellenar el CheckedListBox con los elementos filtrados (siempre desmarcados inicialmente)
+    $filteredList | ForEach-Object {
+        $checkedListBox.Items.Add($_.Nombre, $false) | Out-Null
+    }
+
+    # Procesar eventos para actualizar la UI
+    [System.Windows.Forms.Application]::DoEvents()
 }
 
 #endregion
 
-#region Lógica de los Botones
+#region Lógica de los Botones y Eventos
+
+# Conectar el evento TextChanged del buscador a la función de filtro
+$searchTextBox.Add_TextChanged({
+    Filter-AppList # Llama a la función de filtrado cada vez que cambia el texto
+})
 
 # --- INSTALAR ---
 $installButton.Add_Click({
     Set-ControlsEnabled $false
     Add-Log "Iniciando proceso de INSTALACIÓN..." -Color $LogColorInfo -AddSeparatorBefore $true
 
-    $selectedItems = $checkedListBox.CheckedItems
+    # Obtener solo los elementos marcados *actualmente visibles*
+    $selectedItems = $checkedListBox.CheckedItems | ForEach-Object { $_ } # Convertir a array simple de strings
+
     if ($selectedItems.Count -eq 0) {
         Add-Log "No hay aplicaciones seleccionadas para instalar." -Color $LogColorWarning
         Add-Log "Instalación cancelada." -Color $LogColorInfo -AddSeparatorAfter $true
@@ -317,6 +393,7 @@ $installButton.Add_Click({
     Add-Log "Usando gestor: $packageManager"
 
     foreach ($appName in $selectedItems) {
+        # Buscar la info completa de la app en la lista original usando el Nombre
         $appInfo = $appList | Where-Object { $_.Nombre -eq $appName }
         if ($appInfo) {
             $appID = if ($useWinget) {$appInfo.WingetID} elseif ($useChocolatey) {$appInfo.ChocolateyID} else {$null}
@@ -329,7 +406,7 @@ $installButton.Add_Click({
             Add-Log "Instalando $($appInfo.Nombre) (ID: $($appID)) usando $packageManager... Espera." -Color $LogColorDefault
 
             $command = if ($useWinget) {"winget"} elseif ($useChocolatey) {"choco"} else {$null}
-            $arguments = if ($useWinget) {"install --id $($appID) -e --silent --accept-package-agreements --accept-source-agreements"} elseif ($useChocolatey) {"install $($appID) -y --no-progress --confirm"} else {$null} # -y for yes, --no-progress to simplify output
+            $arguments = if ($useWinget) {"install --id $($appID) -e --silent --accept-package-agreements --accept-source-agreements"} elseif ($useChocolatey) {"install $($appID) -y --no-progress --confirm"} else {$null}
 
             if ($command -and $arguments) {
                 try {
@@ -354,12 +431,15 @@ $installButton.Add_Click({
                 }
             }
         } else {
-            Add-Log "ADVERTENCIA: No se encontró info para '$appName' en la lista." -Color $LogColorWarning
+            Add-Log "ADVERTENCIA: No se encontró info para '$appName' en la lista original (esto no debería pasar si se seleccionó de la lista)." -Color $LogColorWarning
         }
     }
 
     Add-Log "Proceso de INSTALACIÓN finalizado." -Color $LogColorInfo -AddSeparatorAfter $true
     Set-ControlsEnabled $true
+    # Opcional: Limpiar buscador y restaurar lista completa al finalizar una operación
+    # $searchTextBox.Text = ""
+    # Filter-AppList
 })
 
 # --- DESINSTALAR ---
@@ -367,7 +447,9 @@ $uninstallButton.Add_Click({
     Set-ControlsEnabled $false
     Add-Log "Iniciando proceso de DESINSTALACIÓN..." -Color $LogColorInfo -AddSeparatorBefore $true
 
-    $selectedItems = $checkedListBox.CheckedItems
+    # Obtener solo los elementos marcados *actualmente visibles*
+    $selectedItems = $checkedListBox.CheckedItems | ForEach-Object { $_ } # Convertir a array simple de strings
+
     if ($selectedItems.Count -eq 0) {
         Add-Log "No hay aplicaciones seleccionadas para desinstalar." -Color $LogColorWarning
         Add-Log "Desinstalación cancelada." -Color $LogColorInfo -AddSeparatorAfter $true
@@ -381,6 +463,7 @@ $uninstallButton.Add_Click({
     Add-Log "Usando gestor: $packageManager"
 
     foreach ($appName in $selectedItems) {
+        # Buscar la info completa de la app en la lista original usando el Nombre
         $appInfo = $appList | Where-Object { $_.Nombre -eq $appName }
         if ($appInfo) {
             $appID = if ($useWinget) {$appInfo.WingetID} elseif ($useChocolatey) {$appInfo.ChocolateyID} else {$null}
@@ -418,12 +501,15 @@ $uninstallButton.Add_Click({
                 }
             }
         } else {
-            Add-Log "ADVERTENCIA: No se encontró info para '$appName' en la lista." -Color $LogColorWarning
+            Add-Log "ADVERTENCIA: No se encontró info para '$appName' en la lista original (esto no debería pasar si se seleccionó de la lista)." -Color $LogColorWarning
         }
     }
 
     Add-Log "Proceso de DESINSTALACIÓN finalizado." -Color $LogColorInfo -AddSeparatorAfter $true
     Set-ControlsEnabled $true
+    # Opcional: Limpiar buscador y restaurar lista completa al finalizar una operación
+    # $searchTextBox.Text = ""
+    # Filter-AppList
 })
 
 # --- ACTUALIZAR TODO ---
@@ -482,6 +568,9 @@ $updateAllButton.Add_Click({
 
     Add-Log "Proceso de ACTUALIZACIÓN finalizado." -Color $LogColorInfo -AddSeparatorAfter $true
     Set-ControlsEnabled $true
+    # Opcional: Limpiar buscador y restaurar lista completa al finalizar una operación
+    # $searchTextBox.Text = ""
+    # Filter-AppList
 })
 
 #endregion
@@ -489,7 +578,9 @@ $updateAllButton.Add_Click({
 #region Mostrar la Ventana
 $form.Add_Shown({ $form.Activate() })
 Add-Log "ToolboxAPPS listo. Selecciona apps, elige el gestor y usa los botones." -Color $LogColorDefault
-# Limpiar selección inicial
+# Limpiar selección inicial (después de poblar, antes de mostrar)
+# Asegurarse de que la lista esté poblada antes de intentar limpiar la selección
+# La lista ya se popula durante la creación del CheckedListBox
 for ($i = 0; $i -lt $checkedListBox.Items.Count; $i++) { $checkedListBox.SetItemChecked($i, $false) }
 [void]$form.ShowDialog() # Muestra la ventana y espera a que se cierre
 #endregion
