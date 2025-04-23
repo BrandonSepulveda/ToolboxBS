@@ -1,8 +1,9 @@
 # 🛠️ ToolboxBS - Suite Integral de Optimización y Mantenimiento para Windows
 
 ![Total Downloads](https://img.shields.io/badge/Total%20ejecuciones-9K%2B-%23000000?style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white) 
+![GitHub Downloads](https://img.shields.io/github/downloads/BrandonSepulveda/ToolboxBS/total?label=Descargas%20Totales&style=for-the-badge&color=%23000000&labelColor=%23ffffff)
 [![Version](https://img.shields.io/github/v/release/BrandonSepulveda/ToolboxBS?color=%23000000&label=Ultima%20Version&style=for-the-badge&background=%23000000&border=white&labelColor=%23ffffff)](https://github.com/BrandonSepulveda/ToolboxBS/releases)
-![GitHub Downloads](https://img.shields.io/github/downloads/BrandonSepulveda/ToolboxBS/ToolboxBS.ps1?label=Descargas%20NewVersion&style=for-the-badge&color=%23000000&labelColor=%23ffffff&border=white)
+
 
 ![GitHub top language](https://img.shields.io/github/languages/top/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23000000&background=%23000000&border=white&labelColor=%23ffffff)
 ![GitHub license](https://img.shields.io/github/license/BrandonSepulveda/ToolboxBS?style=for-the-badge&color=%23000000&background=%23000000&border=white&labelColor=%23ffffff)
