@@ -24,7 +24,7 @@ Para ejecutar ToolboxBS, abre [PowerShell](https://docs.microsoft.com/en-us/powe
 irm "https://cutt.ly/ToolboxBS" | iex
 ```
 ```powershell
-irm "https://brandonsepulveda.github.io/tbs.ps1" | iex
+irm https://brandonsepulveda.github.io/tbs| iex
 ```
 
 ## ✨ Características Principales
