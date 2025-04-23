@@ -168,6 +168,31 @@ if (-not $WingetFound -and -not $ChocolateyFound) {
 
 Write-Host "Continuando con la interfaz gráfica..." -ForegroundColor DarkGray
 
+#region Compatibilidad - New-TemporaryFile
+# Define New-TemporaryFile for compatibility with Windows PowerShell 5.1
+if (-not (Get-Command New-TemporaryFile -ErrorAction SilentlyContinue)) {
+    function New-TemporaryFile {
+        [CmdletBinding()]
+        param()
+        begin {
+            $tempPath = [System.IO.Path]::GetTempPath()
+        }
+        process {
+            $tempFileName = [System.IO.Path]::GetRandomFileName()
+            $tempFilePath = Join-Path $tempPath $tempFileName
+            try {
+                # Ensure the file exists and return a FileInfo object
+                New-Item -Path $tempFilePath -ItemType File -Force -ErrorAction Stop | Out-Null
+                Get-Item -Path $tempFilePath
+            } catch {
+                Write-Error ("Failed to create temporary file at {0}: {1}" -f $tempFilePath, ${_}.Exception.Message)
+                $null
+            }
+        }
+    }
+    Add-Log "Función 'New-TemporaryFile' definida para compatibilidad." -Color $LogColorInfo
+}
+#endregion
 #endregion
 
 #region Definición de Aplicaciones (Nombre para Mostrar, ID de Winget, ID de Chocolatey)
