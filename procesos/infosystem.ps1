@@ -68,6 +68,64 @@ function Convert-Size {
     else { return "{0:N2} TB" -f ($SizeInBytes / 1TB) }
 }
 
+# Obtener información detallada de instalación
+function Get-WindowsInstallDetails {
+    try {
+        # Obtener fecha precisa usando el registro (método más confiable)
+        $installTime = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").InstallTime
+        $installDate = [DateTime]::FromFileTime([Int64]::Parse($installTime))
+        
+        # Intentar obtener información adicional desde el registro
+        $detailedInstallInfo = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -ErrorAction SilentlyContinue
+        
+        # Devolver objeto con información detallada
+        [PSCustomObject]@{
+            InstallDate = $installDate
+            InstallTime = $installDate.ToString("HH:mm:ss")
+            DaysSinceInstall = [math]::Round(((Get-Date) - $installDate).TotalDays, 0)
+            ReleaseId = $detailedInstallInfo.ReleaseId
+            ProductName = $detailedInstallInfo.ProductName
+            EditionID = $detailedInstallInfo.EditionID
+            BuildBranch = $detailedInstallInfo.BuildBranch
+            CurrentBuild = $detailedInstallInfo.CurrentBuild
+        }
+    }
+    catch {
+        # Si falla, intentar el método alternativo con WMI
+        try {
+            $OS = Get-CimInstance Win32_OperatingSystem
+            $installDate = [System.Management.ManagementDateTimeConverter]::ToDateTime($OS.InstallDate)
+            
+            # Devolver objeto con información básica
+            [PSCustomObject]@{
+                InstallDate = $installDate
+                InstallTime = $installDate.ToString("HH:mm:ss")
+                DaysSinceInstall = [math]::Round(((Get-Date) - $installDate).TotalDays, 0)
+                ReleaseId = "Desconocido"
+                ProductName = $OS.Caption
+                EditionID = "Desconocido"
+                BuildBranch = "Desconocido"
+                CurrentBuild = $OS.BuildNumber
+            }
+        }
+        catch {
+            # Si todo falla, usar la fecha actual como fallback
+            $installDate = Get-Date
+            [PSCustomObject]@{
+                InstallDate = $installDate
+                InstallTime = $installDate.ToString("HH:mm:ss")
+                DaysSinceInstall = 0
+                ReleaseId = "Desconocido"
+                ProductName = "Desconocido"
+                EditionID = "Desconocido"
+                BuildBranch = "Desconocido"
+                CurrentBuild = "Desconocido"
+            }
+        }
+    }
+}
+$installInfo = Get-WindowsInstallDetails
+
 # Animación de carga inicial
 Write-Host "`n`n" -NoNewline
 $progressChars = @("/", "-", "\", "|")
@@ -90,7 +148,7 @@ $title = @"
 /\__/ /| |_| \__,_|  __/ | | | | | || | | || || (_) || |_\ \ | |_| \__ \
 \____/  \__, |\__,_|\___|_| |_| |_\___|_| |_||_| \___/  \____/_|\__,_|___/
          __/ |                                                           
-        |___/                                    Diagnóstico Avanzado v2.0
+        |___/                Diagnóstico Avanzado v2.0 Complemento ToolboxBS by: Brandon Sepulveda
 ================================================================================
 "@
 
@@ -116,8 +174,22 @@ Write-InfoLine "Build" $OS.BuildNumber "White"
 Write-InfoLine "Arquitectura" "$($OS.OSArchitecture)" "White"
 
 # Información de instalación y actividad
-$installDate = [System.Management.ManagementDateTimeConverter]::ToDateTime($OS.InstallDate)
-Write-InfoLine "Fecha de instalación" $installDate.ToString("dd/MM/yyyy HH:mm:ss") "White"
+Write-InfoLine "Fecha de instalación" $installInfo.InstallDate.ToString("dd/MM/yyyy HH:mm:ss") "Magenta"
+Write-InfoLine "Días desde instalación" "$($installInfo.DaysSinceInstall) días" "Magenta"
+
+# Intentar obtener información adicional del registro
+try {
+    $detailedInstallInfo = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -ErrorAction SilentlyContinue
+    if ($detailedInstallInfo.ReleaseId) {
+        Write-InfoLine "ID de versión" $detailedInstallInfo.ReleaseId "White"
+    }
+    if ($detailedInstallInfo.BuildBranch) {
+        Write-InfoLine "Rama de compilación" $detailedInstallInfo.BuildBranch "White"
+    }
+} catch {
+    # No hacer nada si falla
+}
+
 Write-InfoLine "Último arranque" $OS.LastBootUpTime.ToString("dd/MM/yyyy HH:mm:ss") "White"
 $upTime = (Get-Date) - $OS.LastBootUpTime
 Write-InfoLine "Tiempo activo" "$($upTime.Days) días, $($upTime.Hours) horas, $($upTime.Minutes) minutos" "Green"
@@ -383,33 +455,7 @@ foreach ($update in $updates) {
     Write-InfoLine "$($update.HotFixID)" "$($update.Description) - $($update.InstalledOn.ToString('dd/MM/yyyy'))" "White"
 }
 
-#========================================
-# PROGRAMAS INSTALADOS
-#========================================
-Write-ColorHeader "PROGRAMAS INSTALADOS RECIENTEMENTE"
 
-$installedPrograms = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | 
-    Where-Object { $_.DisplayName -ne $null } | 
-    Select-Object DisplayName, DisplayVersion, Publisher, InstallDate |
-    Sort-Object -Property InstallDate -Descending |
-    Select-Object -First 10
-
-foreach ($program in $installedPrograms) {
-    # Intentar convertir la fecha de instalación si está disponible
-    $installDate = ""
-    if ($program.InstallDate) {
-        try {
-            if ($program.InstallDate -match "^\d{8}$") {
-                $year = $program.InstallDate.Substring(0, 4)
-                $month = $program.InstallDate.Substring(4, 2)
-                $day = $program.InstallDate.Substring(6, 2)
-                $installDate = " - $day/$month/$year"
-            }
-        } catch {}
-    }
-    
-    Write-InfoLine "$($program.DisplayName)" "$($program.DisplayVersion)$installDate" "White"
-}
 
 #========================================
 # RESUMEN Y SALUD DEL SISTEMA
@@ -483,8 +529,15 @@ try {
     Write-InfoLine "Estado de actualizaciones" "$updateHealth% (estimado)" "Yellow"
 }
 
+# Mostrar barra de salud general del sistema
 Write-Host "`n SALUD GENERAL DEL SISTEMA" -ForegroundColor "White"
 Write-ProgressBar -Percentage $overallHealth -BarColor $healthColor -BarSize 50
+
+# Mostrar reporte de rendimiento
+Write-Host "`n INDICADORES DE RENDIMIENTO" -ForegroundColor "Cyan"
+Write-InfoLine "Rendimiento del procesador" "$(100 - $cpuLoad)%" $(if ((100 - $cpuLoad) -gt 75) { "Green" } elseif ((100 - $cpuLoad) -gt 50) { "Yellow" } else { "Red" })
+Write-InfoLine "Eficiencia de memoria" "$(100 - $ramUsagePercentage)%" $(if ((100 - $ramUsagePercentage) -gt 75) { "Green" } elseif ((100 - $ramUsagePercentage) -gt 50) { "Yellow" } else { "Red" })
+Write-InfoLine "Estado general" "$overallHealth%" $healthColor
 
 # Recomendaciones
 Write-Host "`n RECOMENDACIONES" -ForegroundColor "Cyan"
@@ -509,16 +562,445 @@ if ($overallHealth -lt 50) {
     Write-Host " • Se recomienda una revisión más detallada del sistema" -ForegroundColor "Red"
 }
 
-# Exportar resultados a archivo
-$exportFolder = "$env:USERPROFILE\Documents"
-$exportFile = "$exportFolder\SystemInfoPlus_$(Get-Date -Format 'yyyyMMdd_HHmmss').html"
+#========================================
+# OPCIÓN PARA GENERAR INFORME
+#========================================
 
 Write-ColorHeader "EXPORTAR RESULTADOS"
-Write-Host " Generando informe HTML completo..." -ForegroundColor "Yellow"
+$generateReport = Read-Host " ¿Desea generar un informe HTML? (S/N)"
 
-# Código para exportar resultados a HTML (aquí iría el código, simplificado para este ejemplo)
-Write-Host " Informe guardado en:" -ForegroundColor "DarkGray"
-Write-Host " $exportFile" -ForegroundColor "White"
+if ($generateReport -eq "S" -or $generateReport -eq "s") {
+    Write-Host " Generando informe HTML completo..." -ForegroundColor "Yellow"
+    
+    $exportFolder = "$env:USERPROFILE\Documents"
+    $exportFile = "$exportFolder\SystemInfoPlus_$(Get-Date -Format 'yyyyMMdd_HHmmss').html"
+
+    # [Aquí va el código existente para generar el HTML]
+    # Crear reporte HTML
+    $htmlReport = @"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Informe SystemInfoPlus - $(Get-Date -Format 'dd/MM/yyyy')</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .green { background-color: #2ecc71; }
+        .yellow { background-color: #f39c12; }
+        .red { background-color: #e74c3c; }
+        .progress-bar {
+            background-color: #ecf0f1;
+            border-radius: 13px;
+            height: 20px;
+            width: 100%;
+            position: relative;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 13px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.5s ease-in-out;
+        }
+        .progress-bar-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 20px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Informe de Sistema - SystemInfoPlus</h1>
+        <p>Generado el $(Get-Date -Format 'dd/MM/yyyy') a las $(Get-Date -Format 'HH:mm:ss')</p>
+        
+        <div class="section">
+            <h2>Información del Sistema</h2>
+            <table>
+                <tr>
+                    <td>Nombre del equipo</td>
+                    <td><strong>$env:COMPUTERNAME</strong></td>
+                </tr>
+                <tr>
+                    <td>Usuario</td>
+                    <td>$env:USERDOMAIN\$env:USERNAME</td>
+                </tr>
+                <tr>
+                    <td>Sistema Operativo</td>
+                    <td>$($OS.Caption)</td>
+                </tr>
+                <tr>
+                    <td>Versión</td>
+                    <td>$($OS.Version) (Build $($OS.BuildNumber))</td>
+                </tr>
+                <tr>
+                    <td>Arquitectura</td>
+                    <td>$($OS.OSArchitecture)</td>
+                </tr>
+                <tr>
+                    <td>Último arranque</td>
+                    <td>$($OS.LastBootUpTime.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                </tr>
+                <tr>
+                    <td>Tiempo activo</td>
+                    <td>$($upTime.Days) días, $($upTime.Hours) horas, $($upTime.Minutes) minutos</td>
+                </tr>
+                <tr>
+                    <td>Fabricante</td>
+                    <td>$($computerSystem.Manufacturer)</td>
+                </tr>
+                <tr>
+                    <td>Modelo</td>
+                    <td>$($computerSystem.Model)</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Información de Instalación del Sistema</h2>
+            <table>
+                <tr>
+                    <td>Fecha de instalación</td>
+                    <td><strong>$($installInfo.InstallDate.ToString("dd/MM/yyyy HH:mm:ss"))</strong></td>
+                </tr>
+                <tr>
+                    <td>Hora exacta de instalación</td>
+                    <td><strong>$($installInfo.InstallTime)</strong></td>
+                </tr>
+                <tr>
+                    <td>Antigüedad del sistema</td>
+                    <td><strong>$($installInfo.DaysSinceInstall) días</strong></td>
+                </tr>
+                <tr>
+                    <td>Versión del sistema</td>
+                    <td>$($installInfo.ProductName)</td>
+                </tr>
+                <tr>
+                    <td>ID de versión</td>
+                    <td>$($installInfo.ReleaseId)</td>
+                </tr>
+                <tr>
+                    <td>Edición</td>
+                    <td>$($installInfo.EditionID)</td>
+                </tr>
+                <tr>
+                    <td>Build</td>
+                    <td>$($installInfo.CurrentBuild)</td>
+                </tr>
+                <tr>
+                    <td>Rama de compilación</td>
+                    <td>$($installInfo.BuildBranch)</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Procesador</h2>
+            <table>
+                <tr>
+                    <td>Nombre</td>
+                    <td>$($processor.Name)</td>
+                </tr>
+                <tr>
+                    <td>Núcleos físicos</td>
+                    <td>$($processor.NumberOfCores)</td>
+                </tr>
+                <tr>
+                    <td>Núcleos lógicos</td>
+                    <td>$($processor.NumberOfLogicalProcessors)</td>
+                </tr>
+                <tr>
+                    <td>Velocidad actual</td>
+                    <td>$($processor.CurrentClockSpeed) MHz</td>
+                </tr>
+                <tr>
+                    <td>Velocidad máxima</td>
+                    <td>$($processor.MaxClockSpeed) MHz</td>
+                </tr>
+                <tr>
+                    <td>Uso de CPU</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($cpuLoad)%; background-color: $(if($cpuLoad -lt 50){"#2ecc71"}elseif($cpuLoad -lt 80){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($cpuLoad)%</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Memoria RAM</h2>
+            <table>
+                <tr>
+                    <td>Memoria total</td>
+                    <td>$($totalRAM) GB</td>
+                </tr>
+                <tr>
+                    <td>Memoria en uso</td>
+                    <td>$($usedRAM) GB</td>
+                </tr>
+                <tr>
+                    <td>Memoria disponible</td>
+                    <td>$($availableRAM) GB</td>
+                </tr>
+                <tr>
+                    <td>Uso de memoria</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($ramUsagePercentage)%; background-color: $(if($ramUsagePercentage -lt 70){"#2ecc71"}elseif($ramUsagePercentage -lt 90){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($ramUsagePercentage)%</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Almacenamiento</h2>
+            <table>
+                <tr>
+                    <th>Unidad</th>
+                    <th>Tamaño</th>
+                    <th>Espacio libre</th>
+                    <th>% Libre</th>
+                    <th>Sistema de archivos</th>
+                </tr>
+                $(
+                    $drives = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3"
+                    $driveRows = foreach ($drive in $drives) {
+                        $freeSpace = [math]::Round($drive.FreeSpace / 1GB, 2)
+                        $totalSize = [math]::Round($drive.Size / 1GB, 2)
+                        $percentFree = [math]::Round(($drive.FreeSpace / $drive.Size) * 100, 0)
+                        $percentUsed = 100 - $percentFree
+                        $color = if ($percentFree -gt 25) { "#2ecc71" } elseif ($percentFree -gt 10) { "#f39c12" } else { "#e74c3c" }
+                        
+                        "<tr>
+                            <td>$($drive.DeviceID)</td>
+                            <td>$totalSize GB</td>
+                            <td>$freeSpace GB</td>
+                            <td>
+                                <div class='progress-bar'>
+                                    <div class='progress-bar-fill' style='width: $percentUsed%; background-color: $color;'></div>
+                                    <div class='progress-bar-text'>$percentFree%</div>
+                                </div>
+                            </td>
+                            <td>$($drive.FileSystem)</td>
+                        </tr>"
+                    }
+                    $driveRows -join ""
+                )
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Tarjeta Gráfica</h2>
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Memoria</th>
+                    <th>Resolución</th>
+                    <th>Controlador</th>
+                </tr>
+                $(
+                    $gpuRows = foreach ($gpu in $videoControllers) {
+                        "<tr>
+                            <td>$($gpu.Name)</td>
+                            <td>$(Convert-Size $gpu.AdapterRAM)</td>
+                            <td>$($gpu.CurrentHorizontalResolution) x $($gpu.CurrentVerticalResolution) ($($gpu.CurrentRefreshRate) Hz)</td>
+                            <td>$($gpu.DriverVersion)</td>
+                        </tr>"
+                    }
+                    $gpuRows -join ""
+                )
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Red</h2>
+            <table>
+                <tr>
+                    <th>Adaptador</th>
+                    <th>IPv4</th>
+                    <th>MAC</th>
+                    <th>Velocidad</th>
+                    <th>Estado</th>
+                </tr>
+                $(
+                    $netRows = foreach ($adapter in ($networkAdapters | Where-Object { $_.PhysicalAdapter -eq $true })) {
+                        $config = $adapter | Get-CimAssociatedInstance -ResultClassName Win32_NetworkAdapterConfiguration
+                        $ipAddress = if ($config.IPAddress) { ($config.IPAddress | Where-Object { $_ -like "*.*" })[0] } else { "N/A" }
+                        $speed = if ($adapter.Speed) { "$([math]::Round($adapter.Speed / 1000000, 0)) Mbps" } else { "N/A" }
+                        $status = if ($adapter.NetEnabled) { "Conectado" } else { "Desconectado" }
+                        $statusClass = if ($adapter.NetEnabled) { "green" } else { "red" }
+                        
+                        "<tr>
+                            <td>$($adapter.Name)</td>
+                            <td>$ipAddress</td>
+                            <td>$($adapter.MACAddress)</td>
+                            <td>$speed</td>
+                            <td><span class='indicator $statusClass'></span>$status</td>
+                        </tr>"
+                    }
+                    $netRows -join ""
+                )
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Salud del Sistema</h2>
+            <table>
+                <tr>
+                    <td>Salud del procesador</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($cpuHealth)%; background-color: $(if($cpuHealth -gt 75){"#2ecc71"}elseif($cpuHealth -gt 50){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($cpuHealth)%</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Salud de la memoria</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($ramHealth)%; background-color: $(if($ramHealth -gt 75){"#2ecc71"}elseif($ramHealth -gt 50){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($ramHealth)%</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Salud del almacenamiento</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($diskHealth)%; background-color: $(if($diskHealth -gt 75){"#2ecc71"}elseif($diskHealth -gt 50){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($diskHealth)%</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Estado de actualizaciones</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($updateHealth)%; background-color: $(if($updateHealth -gt 75){"#2ecc71"}elseif($updateHealth -gt 50){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($updateHealth)%</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>SALUD GENERAL</strong></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: $($overallHealth)%; background-color: $(if($overallHealth -gt 75){"#2ecc71"}elseif($overallHealth -gt 50){"#f39c12"}else{"#e74c3c"});"></div>
+                            <div class="progress-bar-text">$($overallHealth)%</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Generado por SystemInfoPlus v2.0 | $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')</p>
+        </div>
+    </div>
+</body>
+</html>
+"@
+
+    # Guardar el reporte HTML
+    try {
+        # Asegurarse que la carpeta existe
+        if (-not (Test-Path $exportFolder)) {
+            New-Item -ItemType Directory -Path $exportFolder -Force | Out-Null
+        }
+        
+        # Guardar el reporte
+        $htmlReport | Out-File -FilePath $exportFile -Encoding UTF8 -Force
+        
+        Write-Host " Informe HTML guardado exitosamente en:" -ForegroundColor "Green"
+        Write-Host " $exportFile" -ForegroundColor "White"
+        
+        # Abrir el reporte automáticamente
+        Write-Host " Abriendo informe..." -ForegroundColor "DarkGray"
+        Start-Process $exportFile
+    } catch {
+        Write-Host " Error al guardar el informe HTML: $_" -ForegroundColor "Red"
+        Write-Host " Intentando guardar en carpeta alternativa..." -ForegroundColor "Yellow"
+        
+        # Intentar guardar en escritorio si falló la primera opción
+        $alternateFolder = "$env:USERPROFILE\Desktop"
+        $alternateFile = "$alternateFolder\SystemInfoPlus_$(Get-Date -Format 'yyyyMMdd_HHmmss').html"
+        
+        try {
+            $htmlReport | Out-File -FilePath $alternateFile -Encoding UTF8 -Force
+            Write-Host " Informe HTML guardado en ubicación alternativa:" -ForegroundColor "Green"
+            Write-Host " $alternateFile" -ForegroundColor "White"
+            Start-Process $alternateFile
+        } catch {
+            Write-Host " Error al guardar el informe. Por favor verifique los permisos de escritura." -ForegroundColor "Red"
+        }
+    }
+} else {
+    Write-Host " No se generará el informe HTML." -ForegroundColor "Yellow"
+}
 
 Write-Host "`n Gracias por utilizar SystemInfoPlus!" -ForegroundColor "Cyan"
 Write-Host " Presiona cualquier tecla para salir..." -ForegroundColor "DarkGray"
