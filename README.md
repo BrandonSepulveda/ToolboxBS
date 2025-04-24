@@ -119,6 +119,15 @@ Acceso rápido a configuraciones y herramientas clave:
 - Procedimientos de mantenimiento consistentes
 - Gestión eficiente de controladores y software
 
+### 🔧Contributing
+- Contributions are welcome! Fork the repository and create a pull request with your changes.
+- Fork the repository
+- Create your feature branch
+- Commit your changes
+- Push to the branch
+- Create a new Pull Request
+- License
+
 ## 📄 Licencia
 
 ToolboxBS se distribuye bajo la Licencia MIT, permitiendo tanto el uso personal como comercial, modificación y distribución.
