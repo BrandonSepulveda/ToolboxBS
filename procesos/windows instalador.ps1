@@ -247,7 +247,7 @@ function Test-ApiConnection {
         <!-- Pie de página -->
         <Border Grid.Row="2" Background="#F0F0F0" Padding="20,10">
             <DockPanel>
-                <TextBlock Text="© 2025 | Basado en MSDL (Microsoft Software Download Listing)" Foreground="#555555"/>
+                <TextBlock Text="© 2025 | Basado en MSDL (Microsoft Software Download Listing) https://github.com/gravesoft/msdl" Foreground="#555555"/>
                 <TextBlock x:Name="txtStatus" Text="Listo para comenzar" Foreground="#555555" HorizontalAlignment="Right"/>
             </DockPanel>
         </Border>
