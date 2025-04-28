@@ -209,6 +209,7 @@ $appCategories = @(
         Category = "Utilidades Esenciales";
         Apps = @(
             @{ Nombre = "7-Zip"; WingetID = "7zip.7zip"; ChocolateyID = "7zip"; Description = "Compresor/descompresor de archivos"; Icon = "🗜️" }
+            @{ Nombre = "NanaZip"; WingetID = "M2Team.NanaZip"; ChocolateyID = "nanazip"; Description = "Compresor/descompresor moderno para Windows"; Icon = "📦" }
             @{ Nombre = "Notepad++"; WingetID = "Notepad++.Notepad++"; ChocolateyID = "notepadplusplus"; Description = "Editor de texto avanzado"; Icon = "📝" }
             @{ Nombre = "Windows Terminal"; WingetID = "Microsoft.WindowsTerminal"; ChocolateyID = "windowsterminal"; Description = "Terminal moderna para Windows"; Icon = "💻" }
             @{ Nombre = "PowerShell (Latest)"; WingetID = "Microsoft.PowerShell"; ChocolateyID = "powershell"; Description = "Shell y lenguaje de scripting"; Icon = "🔧" }
