@@ -1,3 +1,5 @@
+
+Add-Type -AssemblyName System.Windows.Forms
 # Función para crear la interfaz gráfica
 function Show-BSODInfoGUI {
     param (
