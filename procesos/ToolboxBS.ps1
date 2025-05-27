@@ -67,32 +67,32 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 Clear-Host
 # Mostrar logo ASCII al inicio
-Write-Host "                                                                                                    " -ForegroundColor Cyan
-Write-Host "                                                                                                    " -ForegroundColor Cyan
-Write-Host "      ####                                                                                 ###      " -ForegroundColor Cyan
-Write-Host "        #######                                                                      #######        " -ForegroundColor Cyan
-Write-Host "          #########                                                              #########          " -ForegroundColor Cyan
-Write-Host "            ############                                                     ###########            " -ForegroundColor Cyan
-Write-Host "              ##############                                             #############              " -ForegroundColor Cyan
-Write-Host "               #################                                    #################               " -ForegroundColor Cyan
-Write-Host "                 #################                                #################                 " -ForegroundColor Cyan
-Write-Host "                  ################                                ################                  " -ForegroundColor Cyan
-Write-Host "                   ####### ########          #        #          ######## #######                   " -ForegroundColor Cyan
-Write-Host "                    ####### ########         ##      ##         ######## #######                    " -ForegroundColor Cyan
-Write-Host "                     #######  #######        ####  ####        #######  #######                     " -ForegroundColor Cyan
-Write-Host "                      ######   #########     ####  ####     #########   ######                      " -ForegroundColor Cyan
-Write-Host "                       ######    ################  ################    ######                       " -ForegroundColor Cyan
-Write-Host "                        ######    ###############  ###############    ######                        " -ForegroundColor Cyan
-Write-Host "                         #####      #############  #############      #####                         " -ForegroundColor Cyan
-Write-Host "                         ##########   ###########  ###########   ##########                         " -ForegroundColor Cyan
-Write-Host "                           ############ #########  ######### ############                           " -ForegroundColor Cyan
-Write-Host "                                   ####### ######  ###### #######                                   " -ForegroundColor Cyan
-Write-Host "                                       #####  ###  ###  #####                                       " -ForegroundColor Cyan
-Write-Host "                                          ###          ###                                          " -ForegroundColor Cyan
-Write-Host "                                            ###      ###                                            " -ForegroundColor Cyan
-Write-Host "                                              ##    ##                                              " -ForegroundColor Cyan
-Write-Host "                                                                                                    " -ForegroundColor Cyan
-Start-Sleep -Seconds 1
+Write-Host "                                                                                                    " -ForegroundColor White
+Write-Host "                                                                                                    " -ForegroundColor White
+Write-Host "      ####                                                                                 ###      " -ForegroundColor White
+Write-Host "        #######                                                                      #######        " -ForegroundColor White
+Write-Host "          #########                                                              #########          " -ForegroundColor White
+Write-Host "            ############                                                     ###########            " -ForegroundColor White
+Write-Host "              ##############                                             #############              " -ForegroundColor White
+Write-Host "               #################                                    #################               " -ForegroundColor White
+Write-Host "                 #################                                #################                 " -ForegroundColor White
+Write-Host "                  ################                                ################                  " -ForegroundColor White
+Write-Host "                   ####### ########          #        #          ######## #######                   " -ForegroundColor White
+Write-Host "                    ####### ########         ##      ##         ######## #######                    " -ForegroundColor White
+Write-Host "                     #######  #######        ####  ####        #######  #######                     " -ForegroundColor White
+Write-Host "                      ######   #########     ####  ####     #########   ######                      " -ForegroundColor White
+Write-Host "                       ######    ################  ################    ######                       " -ForegroundColor White
+Write-Host "                        ######    ###############  ###############    ######                        " -ForegroundColor White
+Write-Host "                         #####      #############  #############      #####                         " -ForegroundColor White
+Write-Host "                         ##########   ###########  ###########   ##########                         " -ForegroundColor White
+Write-Host "                           ############ #########  ######### ############                           " -ForegroundColor White
+Write-Host "                                   ####### ######  ###### #######                                   " -ForegroundColor White
+Write-Host "                                       #####  ###  ###  #####                                       " -ForegroundColor White
+Write-Host "                                          ###          ###                                          " -ForegroundColor White
+Write-Host "                                            ###      ###                                            " -ForegroundColor White
+Write-Host "                                              ##    ##                                              " -ForegroundColor White
+Write-Host "                                                                                                    " -ForegroundColor White
+
 
 
 # =======================================================================
@@ -268,12 +268,14 @@ Write-Host "Registro de sesión activo en: $transcriptFileName" -ForegroundColor
 
                     <!-- Logo y título -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
-                        <Border CornerRadius="5" Background="#2196F3" Width="45" Height="45">
+                        <!-- CAMBIADO: Fondo del logo de azul a gris oscuro -->
+                        <Border CornerRadius="5" Background="#000000" Width="45" Height="45">
                             <Image Name="LogoImage" Width="40" Height="40" Margin="0" RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Border>
                         <StackPanel Orientation="Vertical" Margin="15,0,0,0" VerticalAlignment="Center">
+                            <!-- CAMBIADO: Título de azul a blanco -->
                             <TextBlock Text="TOOLBOXBS" 
-                                      Foreground="#2196F3"
+                                      Foreground="White"
                                       FontSize="20"
                                       FontWeight="Bold"/>
                             <TextBlock Text="By: Brandon Sepulveda" 
@@ -289,7 +291,8 @@ Write-Host "Registro de sesión activo en: $transcriptFileName" -ForegroundColor
                         <Button Name="ToolsBtn" Content="Herramientas" Style="{StaticResource NavButtonStyle}"/>
                         <Button Name="AboutBtn" Content="Sobre" Style="{StaticResource NavButtonStyle}"/>
                         <Button Name="DocumentationBtn" Content="Documentación" Style="{StaticResource NavButtonStyle}"/>
-                        <Button Name="ConfigBtn" Content="Configuración" Style="{StaticResource NavButtonStyle}"/>
+                        <!-- CAMBIADO: Añadido tooltip y simplificado el botón de configuración -->
+                        <Button Name="ConfigBtn" Content="Modo Oscuro/Claro" Style="{StaticResource NavButtonStyle}"/>
                     </StackPanel>
                     
                     <!-- Botones de control de ventana -->
@@ -320,28 +323,32 @@ Write-Host "Registro de sesión activo en: $transcriptFileName" -ForegroundColor
                 <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Name="Btn1" Width="130" Height="110" Margin="10" Background="#2d2d2d" BorderBrush="#3a3a3a">
                         <StackPanel>
-                            <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="#2196F3" HorizontalAlignment="Center" Margin="0,10,0,5"/>
+                            <!-- CAMBIADO: Iconos de azul a blanco -->
+                            <TextBlock Text="&#xE950;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,5"/>
                             <TextBlock Text="Info. Sistema" Foreground="White" HorizontalAlignment="Center" Margin="0,5"/>
                             <TextBlock Text="Datos del hardware y software" Foreground="#999999" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="5"/>
                         </StackPanel>
                     </Button>
                     <Button Name="Btn2" Width="130" Height="110" Margin="10" Background="#2d2d2d" BorderBrush="#3a3a3a">
                         <StackPanel>
-                            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="#2196F3" HorizontalAlignment="Center" Margin="0,10,0,5"/>
+                            <!-- CAMBIADO: Iconos de azul a blanco -->
+                            <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,5"/>
                             <TextBlock Text="Descargas Apps" Foreground="White" HorizontalAlignment="Center" Margin="0,5"/>
                             <TextBlock Text="Instaladores de aplicaciones populares" Foreground="#999999" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="5"/>
                         </StackPanel>
                     </Button>
                     <Button Name="Btn3" Width="130" Height="110" Margin="10" Background="#2d2d2d" BorderBrush="#3a3a3a">
                         <StackPanel>
-                            <TextBlock Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="#2196F3" HorizontalAlignment="Center" Margin="0,10,0,5"/>
+                            <!-- CAMBIADO: Iconos de azul a blanco -->
+                            <TextBlock Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,5"/>
                             <TextBlock Text="Reparacion" Foreground="White" HorizontalAlignment="Center" Margin="0,5"/>
                             <TextBlock Text="Reparacion y verificacion del sistema" Foreground="#999999" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="5"/>
                         </StackPanel>
                     </Button>
                     <Button Name="Btn4" Width="130" Height="110" Margin="10" Background="#2d2d2d" BorderBrush="#3a3a3a">
                         <StackPanel>
-                            <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="#2196F3" HorizontalAlignment="Center" Margin="0,10,0,5"/>
+                            <!-- CAMBIADO: Iconos de azul a blanco -->
+                            <TextBlock Text="&#xE74C;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,5"/>
                             <TextBlock Text="Tweaks" Foreground="White" HorizontalAlignment="Center" Margin="0,5"/>
                             <TextBlock Text="Tweaks y utilidades para optimizacion" Foreground="#999999" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="5"/>
                         </StackPanel>
@@ -545,7 +552,7 @@ $AboutBtn.Add_Click({
     $authorPanel.Children.Add($versionLabel)
     
     $versionLink = New-Object System.Windows.Controls.TextBlock
-    $versionLink.Text = "2.0"
+    $versionLink.Text = "2.2"
     $versionLink.Foreground = "White"
     $versionLink.Cursor = "Hand"
     $versionLink.Add_MouseLeftButtonDown({
@@ -595,7 +602,60 @@ $AboutBtn.Add_Click({
      $aboutWindow.ShowDialog()
     })
 
+# Función para crear tooltips con estilo consistente
+function New-StyledTooltip {
+    param([string]$Text)
+    
+    $tooltip = New-Object System.Windows.Controls.ToolTip
+    $tooltip.Background = [System.Windows.Media.Brushes]::Black
+    $tooltip.Foreground = [System.Windows.Media.Brushes]::White
+    $tooltip.BorderBrush = [System.Windows.Media.Brushes]::Gray
+    $tooltip.BorderThickness = New-Object System.Windows.Thickness(1)
+    $tooltip.Padding = New-Object System.Windows.Thickness(8, 4, 8, 4)
+    $tooltip.Content = $Text
+    $tooltip.FontSize = 12
+    
+    return $tooltip
+}
 
+# Definir tooltips centralizados
+$script:ButtonTooltips = @{
+    # Botones principales
+    "Btn1" = "Muestra información detallada del hardware, software, drivers y estado general del sistema"
+    "Btn2" = "Accede a un catálogo de aplicaciones populares para descargar e instalar en tu sistema"
+    "Btn3" = "Ejecuta herramientas de diagnóstico y reparación para solucionar problemas del sistema Windows"
+    "Btn4" = "Optimizaciones avanzadas y modificaciones del sistema para mejorar el rendimiento y personalización"
+    
+    # Botones de navegación
+    "HomeBtn" = "Muestra el menú principal con accesos rápidos y herramientas esenciales"
+    "ToolsBtn" = "Accede a todas las herramientas de optimización y reparación disponibles"
+    "AboutBtn" = "Información sobre ToolboxBS, autor y versión"
+    "DocumentationBtn" = "Abre la documentación oficial en el navegador"
+    "ConfigBtn" = "Cambia entre modo oscuro y claro"
+    
+    # Botones de control de ventana
+    "CloseButton" = "Cerrar la aplicación"
+    "MinimizeButton" = "Minimizar ventana"
+    "MaxRestoreButton" = "Maximizar o restaurar ventana"
+}
+
+# Función para aplicar tooltips a los botones principales y navegación
+function Set-ButtonTooltips {
+    param($window)
+    
+    foreach ($buttonName in $script:ButtonTooltips.Keys) {
+        $button = $window.FindName($buttonName)
+        if ($button -ne $null) {
+            $button.ToolTip = New-StyledTooltip -Text $script:ButtonTooltips[$buttonName]
+            
+            # Agregar efectos visuales solo para botones principales
+            if ($buttonName -like "Btn*") {
+                $button.Add_MouseEnter({ $this.Background = "#3a3a3a" })
+                $button.Add_MouseLeave({ $this.Background = "#2d2d2d" })
+            }
+        }
+    }
+}
 
 # Cargar el XAML
 $reader = New-Object System.Xml.XmlNodeReader $xaml
@@ -619,7 +679,12 @@ try {
     } catch {
         Write-Host "Error al establecer el ícono: $_" -ForegroundColor Yellow
     }
+    
+Set-ButtonTooltips -window $window
+
+
     # Obtener referencias a los botones de navegación
+
 $homeBtn = $window.FindName("HomeBtn")
 $toolsBtn = $window.FindName("ToolsBtn")
 $configBtn = $window.FindName("ConfigBtn")
@@ -1037,7 +1102,29 @@ $homeBtn.Add_Click({
         
         $menuPanel.Children.Add($menuBtn)
     }
-    
+       
+    foreach ($child in $menuPanel.Children) {
+        if ($child -is [System.Windows.Controls.Button]) {
+            $buttonContent = $child.Content
+            if ($buttonContent -is [System.Windows.Controls.StackPanel]) {
+                $textBlock = $buttonContent.Children | Where-Object { 
+                    $_ -is [System.Windows.Controls.TextBlock] -and $_.FontSize -ge 14 
+                } | Select-Object -First 1
+                
+                if ($textBlock -ne $null) {
+                    switch ($textBlock.Text) {
+                        "Panel de Control" { $child.ToolTip = New-StyledTooltip -Text "Abre el panel de control clásico de Windows" }
+                        "Diagnostico Rapido" { $child.ToolTip = New-StyledTooltip -Text "Realiza una verificación rápida del sistema buscando problemas comunes" }
+                        "Ajustes de Windows" { $child.ToolTip = New-StyledTooltip -Text "Accede a la configuración moderna de Windows 10/11" }
+                        "Explorador de Archivos" { $child.ToolTip = New-StyledTooltip -Text "Abre el explorador de archivos para navegar por tu sistema" }
+                        "PowerShell" { $child.ToolTip = New-StyledTooltip -Text "Abre una terminal PowerShell para comandos avanzados" }
+                        "Informacion del Sistema" { $child.ToolTip = New-StyledTooltip -Text "Muestra información detallada del hardware y software" }
+                        "Instalar PowerShell 7" { $child.ToolTip = New-StyledTooltip -Text "Descarga e instala la última versión de PowerShell" }
+                    }
+                }
+            }
+        }
+    }
     # Asegurarse de que se cierre cuando pierde el foco
     $homeMenuWindow.Add_Deactivated({
         $this.Close()
@@ -1434,6 +1521,35 @@ pause;
         $menuPanel.Children.Add($menuBtn)
     }
     
+    foreach ($child in $menuPanel.Children) {
+    if ($child -is [System.Windows.Controls.Button]) {
+        $buttonContent = $child.Content
+        if ($buttonContent -is [System.Windows.Controls.StackPanel]) {
+            $textBlock = $buttonContent.Children | Where-Object { 
+                $_ -is [System.Windows.Controls.TextBlock] -and $_.FontSize -ge 14 
+            } | Select-Object -First 1
+            
+            if ($textBlock -ne $null) {
+                switch ($textBlock.Text) {
+                    "Ejecutar ToolboxBS" { $child.ToolTip = New-StyledTooltip -Text "Lanza la versión completa de ToolboxBS en PowerShell" }
+                    "Descargar Windows" { $child.ToolTip = New-StyledTooltip -Text "Herramienta para descargar imágenes oficiales de Windows" }
+                    "Ejecutar WinScript " { $child.ToolTip = New-StyledTooltip -Text "Interfaz de línea de comandos para scripts de Windows" }
+                    "Instalar Sentinel" { $child.ToolTip = New-StyledTooltip -Text "Instala Hard Disk Sentinel para monitoreo del disco duro" }
+                    "Optimizar y mejorar el sistema" { $child.ToolTip = New-StyledTooltip -Text "Ejecuta rutinas de optimización automática del sistema" }
+                    "Instalar Intel Driver Support" { $child.ToolTip = New-StyledTooltip -Text "Descarga e instala la herramienta de actualización de drivers Intel" }
+                    "Reparacion de Windows" { $child.ToolTip = New-StyledTooltip -Text "Ejecuta SFC y DISM para reparar archivos corruptos" }
+                    "Administrador de Tareas" { $child.ToolTip = New-StyledTooltip -Text "Abre el administrador de tareas para gestionar procesos" }
+                    "Administrador de Dispositivos" { $child.ToolTip = New-StyledTooltip -Text "Gestiona drivers y hardware del sistema" }
+                    "Servicios" { $child.ToolTip = New-StyledTooltip -Text "Administra y configura servicios de Windows" }
+                    "Limpieza de Disco" { $child.ToolTip = New-StyledTooltip -Text "Elimina archivos innecesarios para liberar espacio" }
+                    "Editor del Registro" { $child.ToolTip = New-StyledTooltip -Text "Edita el registro de Windows (para usuarios avanzados)" }
+                    "WinGet" { $child.ToolTip = New-StyledTooltip -Text "Abre el gestor de paquetes WinGet en PowerShell" }
+                    "Verificar Actualizaciones" { $child.ToolTip = New-StyledTooltip -Text "Abre Windows Update para buscar actualizaciones" }
+                }
+            }
+        }
+    }
+}
     # Asegurarse de que se cierre cuando pierde el foco
     $toolsMenuWindow.Add_Deactivated({
         $this.Close()
@@ -1805,7 +1921,7 @@ $aboutBtn.Add_Click({
     $authorPanel.Children.Add($versionLabel)
     
     $versionLink = New-Object System.Windows.Controls.TextBlock
-    $versionLink.Text = "2.0"
+    $versionLink.Text = "2.2"
     $versionLink.Foreground = "White"
     $versionLink.Cursor = "Hand"
     $versionLink.Add_MouseLeftButtonDown({
@@ -1911,6 +2027,111 @@ function Set-Logo {
 
 # Asignar logo
 Set-Logo -ImageUrl "https://github.com/BrandonSepulveda/BrandonSepulveda.github.io/blob/main/logo/Logo-30.png?raw=true"
+# Definir tooltips centralizados
+$script:ButtonTooltips = @{
+    # Botones principales
+    "Btn1" = "Muestra información detallada del hardware, software, drivers y estado general del sistema"
+    "Btn2" = "Accede a un catálogo de aplicaciones populares para descargar e instalar en tu sistema"
+    "Btn3" = "Ejecuta herramientas de diagnóstico y reparación para solucionar problemas del sistema Windows"
+    "Btn4" = "Optimizaciones avanzadas y modificaciones del sistema para mejorar el rendimiento y personalización"
+    
+    # Botones de navegación
+    "HomeBtn" = "Muestra el menú principal con accesos rápidos y herramientas esenciales"
+    "ToolsBtn" = "Accede a todas las herramientas de optimización y reparación disponibles"
+    "AboutBtn" = "Información sobre ToolboxBS, autor y versión"
+    "DocumentationBtn" = "Abre la documentación oficial en el navegador"
+    "ConfigBtn" = "Cambia entre modo oscuro y claro"
+    
+    # Botones de control de ventana
+    "CloseButton" = "Cerrar la aplicación"
+    "MinimizeButton" = "Minimizar ventana"
+    "MaxRestoreButton" = "Maximizar o restaurar ventana"
+}
+
+# Función mejorada para aplicar tooltips y efectos
+function Set-ButtonTooltips {
+    param($window)
+    
+    foreach ($buttonName in $script:ButtonTooltips.Keys) {
+        $button = $window.FindName($buttonName)
+        if ($button -ne $null) {
+            # Crear un tooltip personalizado con estilo
+            $tooltip = New-Object System.Windows.Controls.ToolTip
+            $tooltip.Background = [System.Windows.Media.Brushes]::Black
+            $tooltip.Foreground = [System.Windows.Media.Brushes]::White
+            $tooltip.BorderBrush = [System.Windows.Media.Brushes]::Gray
+            $tooltip.BorderThickness = New-Object System.Windows.Thickness(1)
+            $tooltip.Padding = New-Object System.Windows.Thickness(8, 4, 8, 4)
+            $tooltip.Content = $script:ButtonTooltips[$buttonName]
+            $tooltip.FontSize = 12
+            
+            # Asignar el tooltip personalizado
+            $button.ToolTip = $tooltip
+            
+            # Agregar efectos visuales (solo para botones principales y navegación)
+            if ($buttonName -like "Btn*" -or $buttonName -like "*Btn") {
+                $button.Add_MouseEnter({ 
+                    if ($this.Name -like "Btn*") {
+                        $this.Background = "#3a3a3a"
+                    }
+                })
+                
+                $button.Add_MouseLeave({ 
+                    if ($this.Name -like "Btn*") {
+                        $this.Background = "#2d2d2d"
+                    }
+                })
+            }
+        }
+    }
+}
+
+# Aplicar tooltips
+Set-ButtonTooltips -window $window
+
+# También puedes crear una función para los menús emergentes
+function Set-MenuItemTooltips {
+    param($menuPanel)
+    
+    $menuTooltips = @{
+        "Panel de Control" = "Abre el panel de control clásico de Windows"
+        "Diagnóstico Rápido" = "Realiza una verificación rápida del sistema buscando problemas comunes"
+        "Ajustes de Windows" = "Accede a la configuración moderna de Windows 10/11"
+        "Explorador de Archivos" = "Abre el explorador de archivos para navegar por tu sistema"
+        "PowerShell" = "Abre una terminal PowerShell para comandos avanzados"
+        "Información del Sistema" = "Muestra información detallada del hardware y software"
+        "Instalar PowerShell 7" = "Descarga e instala la última versión de PowerShell"
+        
+        # Y así sucesivamente para todos los elementos del menú...
+    }
+    
+    foreach ($child in $menuPanel.Children) {
+        if ($child -is [System.Windows.Controls.Button]) {
+            $buttonContent = $child.Content
+            if ($buttonContent -is [System.Windows.Controls.StackPanel]) {
+                $textBlock = $buttonContent.Children | Where-Object { $_ -is [System.Windows.Controls.TextBlock] -and $_.FontSize -ge 14 } | Select-Object -First 1
+                if ($textBlock -ne $null -and $menuTooltips.ContainsKey($textBlock.Text)) {
+                    $tooltip = New-Object System.Windows.Controls.ToolTip
+                    $tooltip.Background = [System.Windows.Media.Brushes]::Black
+                    $tooltip.Foreground = [System.Windows.Media.Brushes]::White
+                    $tooltip.BorderBrush = [System.Windows.Media.Brushes]::Gray
+                    $tooltip.BorderThickness = New-Object System.Windows.Thickness(1)
+                    $tooltip.Padding = New-Object System.Windows.Thickness(8, 4, 8, 4)
+                    $tooltip.Content = $menuTooltips[$textBlock.Text]
+                    $tooltip.FontSize = 12
+                    
+                    $child.ToolTip = $tooltip
+                }
+            }
+        }
+    }
+}
+
+
+
+# Aplicar tooltips
+Set-ButtonTooltips -window $window
+
 
 # Asignar funciones a botones principales
 $window.FindName("Btn1").Add_Click({
@@ -2040,6 +2261,8 @@ $window.FindName("Btn3").Add_Click({
     $restoreBtn.HorizontalAlignment = "Stretch"
     $restoreBtn.HorizontalContentAlignment = "Left"
     $restoreBtn.FontSize = 14
+    $restoreBtn.ToolTip = New-StyledTooltip -Text "Crea un punto de restauración del sistema actual"
+
         $restoreBtn.Add_Click({
             try {
                 # Crear un punto de restauración
@@ -2070,7 +2293,9 @@ $window.FindName("Btn3").Add_Click({
     $maintenanceBtn.HorizontalAlignment = "Stretch"
     $maintenanceBtn.HorizontalContentAlignment = "Left"
     $maintenanceBtn.FontSize = 14
-    
+
+    $maintenanceBtn.ToolTip = New-StyledTooltip -Text "Ejecuta rutinas de mantenimiento: SFC, DISM y optimizaciones"
+
 # Lógica para el botón "2. Mantenimiento del S.O."
 $maintenanceBtn.Add_Click({
     try {
@@ -2148,6 +2373,8 @@ pause;
     $bsodBtn.HorizontalAlignment = "Stretch"
     $bsodBtn.HorizontalContentAlignment = "Left"
     $bsodBtn.FontSize = 14
+    $bsodBtn.ToolTip = New-StyledTooltip -Text "Analiza y muestra detalles de errores BSOD anteriores"
+
     # 3. INFORMACIÓN DE PANTALLAZOS AZULES
 $bsodBtn.Add_Click({
     # Crear ventana de información de pantallazos azules
@@ -2342,6 +2569,8 @@ Herramientas disponibles:
     $batteryBtn.HorizontalAlignment = "Stretch"
     $batteryBtn.HorizontalContentAlignment = "Left"
     $batteryBtn.FontSize = 14
+    $batteryBtn.ToolTip = New-StyledTooltip -Text "Muestra información detallada sobre la batería del dispositivo"
+
     # 4. VER ESTADO DE LA BATERÍA
 $batteryBtn.Add_Click({
     # Crear ventana de información de batería
@@ -2426,6 +2655,7 @@ $batteryBtn.Add_Click({
     $batteryInfoViewBtn.Height = 30
     $batteryInfoViewBtn.Width = 120
     $batteryInfoViewBtn.Add_Click({
+    
         try {
             # Descargar BatteryInfoView.zip desde el sitio web
             $url = "https://www.nirsoft.net/utils/batteryinfoview.zip"
@@ -2539,6 +2769,8 @@ Consejos para el cuidado de la batería:
     $driversBtn.HorizontalAlignment = "Stretch"
     $driversBtn.HorizontalContentAlignment = "Left"
     $driversBtn.FontSize = 14
+    $driversBtn.ToolTip = New-StyledTooltip -Text "Lista y gestiona todos los controladores instalados"
+
     # 5. INFORMACIÓN DE DRIVERS
 $driversBtn.Add_Click({
     # Crear ventana de información de drivers
@@ -2727,6 +2959,8 @@ Consejos para el manejo de controladores:
     $networkBtn.HorizontalAlignment = "Stretch"
     $networkBtn.HorizontalContentAlignment = "Left"
     $networkBtn.FontSize = 14
+    $networkBtn.ToolTip = New-StyledTooltip -Text "Soluciona problemas comunes de conectividad de red"
+
     # 6. REPARAR RED
 $networkBtn.Add_Click({
     # Crear ventana de reparación de red
@@ -2934,6 +3168,8 @@ Consejos adicionales:
     $cleanupBtn.FontSize = 14
     $cleanupBtn.Tag = "collapsed" # Estado inicial
     $cleanupPanel.Children.Add($cleanupBtn)
+    $cleanupBtn.ToolTip = New-StyledTooltip -Text "Elimina archivos temporales y optimiza la memoria RAM"
+
     
     # Panel para las opciones de limpieza (inicialmente oculto)
     $cleanupOptions = New-Object System.Windows.Controls.StackPanel
@@ -3118,6 +3354,7 @@ $ramBtn.Add_Click({
     
     # Mostrar ventana
     $repairWindow.ShowDialog()
+    
 })
 $window.FindName("Btn4").Add_Click({ 
     # Crear ventana de Mejoras y Utilidades
@@ -3215,7 +3452,7 @@ $window.FindName("Btn4").Add_Click({
     
     # Crear botones
     foreach ($text in $buttonTexts) {
-        $btn = New-Object System.Windows.Controls.Button
+    $btn = New-Object System.Windows.Controls.Button
         $btn.Content = $text
         $btn.Margin = New-Object System.Windows.Thickness(0, 0, 0, 10)
         $btn.Padding = New-Object System.Windows.Thickness(15, 10, 15, 10)
@@ -3225,7 +3462,22 @@ $window.FindName("Btn4").Add_Click({
         $btn.HorizontalAlignment = "Stretch"
         $btn.HorizontalContentAlignment = "Left"
         $btn.FontSize = 14
-        
+
+        # tooltip según el texto del botón
+         switch ($text) {
+        "Ejecutar WinUtil" { $btn.ToolTip = New-StyledTooltip -Text "Herramienta de Chris Titus Tech para optimización de Windows" }
+        "Instalar Winget" { $btn.ToolTip = New-StyledTooltip -Text "Instala el gestor de paquetes oficial de Microsoft" }
+        "Activar Windows" { $btn.ToolTip = New-StyledTooltip -Text "Activa Windows usando la clave digital almacenada" }
+        "Ejecutar Optimizer" { $btn.ToolTip = New-StyledTooltip -Text "Herramienta de optimización avanzada del sistema" }
+        "Buscar Drivers" { $btn.ToolTip = New-StyledTooltip -Text "Busca drivers específicos para tu modelo de PC" }
+        "Actualizar Windows" { $btn.ToolTip = New-StyledTooltip -Text "Fuerza la búsqueda de actualizaciones pendientes" }
+        "Analizar y Optimizar S.O." { $btn.ToolTip = New-StyledTooltip -Text "Realiza un análisis completo y optimiza el sistema" }
+        "Propiedades del Sistema" { $btn.ToolTip = New-StyledTooltip -Text "Accede a la configuración avanzada del sistema" }
+        "Deshabilitar Transparencia" { $btn.ToolTip = New-StyledTooltip -Text "Desactiva efectos de transparencia para mejor rendimiento" }
+        "Apagar y Entrar a BIOS" { $btn.ToolTip = New-StyledTooltip -Text "Reinicia el PC y accede directamente a la BIOS/UEFI" }
+        "Ingresar al Entorno de Recuperación" { $btn.ToolTip = New-StyledTooltip -Text "Accede a las opciones avanzadas de Windows" }
+        "Actualizar Apps" { $btn.ToolTip = New-StyledTooltip -Text "Actualiza todas las aplicaciones instaladas con WinGet" }
+    }
         # Efecto hover
         $btn.Add_MouseEnter({ $this.Background = "#3a3a3a" })
         $btn.Add_MouseLeave({ $this.Background = "#2d2d2d" })
@@ -3378,7 +3630,7 @@ $window.Add_StateChanged({
 
 # Mostrar ventana
 $window.ShowDialog() | Out-Null
-Start-Process "https://brandonsepulveda.github.io"
+
 # SIG # Begin signature block
 # MIIb2gYJKoZIhvcNAQcCoIIbyzCCG8cCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
