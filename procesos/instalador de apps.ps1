@@ -230,7 +230,7 @@ $appCategories = @(
             @{ Nombre = "CPU-Z"; WingetID = "CPUID.CPU-Z"; ChocolateyID = "cpu-z"; Description = "Información detallada del CPU"; Icon = "🔍" }
             @{ Nombre = "CrystalDiskInfo"; WingetID = "CrystalDewWorld.CrystalDiskInfo"; ChocolateyID = "crystaldiskinfo"; Description = "Monitor de salud de discos"; Icon = "💾" }
             @{ Nombre = "AIDA64 Extreme (Trial)"; WingetID = "FinalWire.AIDA64.Extreme"; ChocolateyID = ""; Description = "Diagnóstico del sistema"; Icon = "📊" }
-            @{ Nombre = "Hard Disk Sentinel"; WingetID = "JanosMathe.HardDiskSentinel"; ChocolateyID = ""; Description = "Monitor de salud de discos"; Icon = "🔋" }
+            @{ Nombre = "Hard Disk Sentinel"; WingetID = "JanosMathe.HardDiskSentinel.Professional"; ChocolateyID = ""; Description = "Monitor de salud de discos"; Icon = "🔋" }
         )
     },
     @{
