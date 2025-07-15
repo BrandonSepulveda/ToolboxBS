@@ -660,29 +660,5 @@ if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
 
-ToolboxBS -Jhon Brandon Sepúlveda Valdes
-
-Copyright (C) 2024  Jhon Brandon Sepúlveda Valdes <jhonvaldessepulveda@gmail.com>
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
-
----
-
-⚠️ **COMMERCIAL USE RESTRICTION NOTICE** ⚠️  
-Although this project is licensed under the AGPL v3.0, **any commercial use—including but not limited to licensing, reselling, bundling, or using in proprietary or enterprise software—** is **strictly prohibited** without **explicit, written permission from the author**.
-
-This restriction includes (but is not limited to):
-- Government contracts or tenders.
-- Corporate suites or paid toolkits.
-- Distribution with any financial gain.
-- Integration into commercial services or platforms.
-
-Contact the author at **jhonvaldessepulveda@gmail.com** to request commercial usage rights.
-
----
 
 
