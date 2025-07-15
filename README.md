@@ -40,11 +40,11 @@ El uso de este software en un contexto comercial sin una licencia válida está 
 Para ejecutar ToolboxBS, abre **PowerShell como Administrador** y ejecuta el siguiente comando:
 
 ```powershell
-irm "[https://cutt.ly/ToolboxBS](https://cutt.ly/ToolboxBS)" | iex
+irm "https://cutt.ly/ToolboxBS" | iex
 ```
 *Comando alternativo:*
 ```powershell
-irm "[https://brandonsepulveda.github.io/Tool](https://brandonsepulveda.github.io/Tool)" | iex
+irm "https://brandonsepulveda.github.io/Tool" | iex
 ```
 
 ---
