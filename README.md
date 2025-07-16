@@ -56,7 +56,8 @@ irm "https://brandonsepulveda.github.io/Tool" | iex
 - Navegación intuitiva con herramientas categorizadas.
 - Estética moderna y limpia con esquinas redondeadas.
 
-![Interfaz moderna](https://github.com/user-attachments/assets/279471c0-2aee-4510-a087-c4a7f0477092)
+<img width="1160" height="723" alt="image" src="https://github.com/user-attachments/assets/20dff9b7-a20d-4bee-bbc7-aa3fa940897e" />
+
 
 ### 📊 Información del Sistema
 Obtén un informe detallado de tu sistema con solo un clic:
@@ -68,7 +69,8 @@ Obtén un informe detallado de tu sistema con solo un clic:
 - **Capacidad del Disco**: Consulta el tamaño total y espacio libre disponible.
 - **Información de la GPU**: Detalles sobre todas las tarjetas gráficas instaladas.
 
-![Info del Sistema](https://github.com/user-attachments/assets/d3706118-15b7-4665-9783-edba2228b003)
+<img width="1152" height="710" alt="image" src="https://github.com/user-attachments/assets/c1d651c4-b39c-4d4c-a054-966aa3e2b292" />
+
 
 ### 📥 Gestor de Aplicaciones
 Facilita la instalación de aplicaciones empresariales y de TI esenciales:
@@ -77,7 +79,8 @@ Facilita la instalación de aplicaciones empresariales y de TI esenciales:
 - Utiliza Chocolatey para gestionar la instalación de forma eficiente.
 - Actualiza fácilmente aplicaciones existentes.
 
-![Instalador de Apps](https://github.com/user-attachments/assets/d6084aa9-2d34-4a88-b54f-d69efbc5f330)
+<img width="976" height="757" alt="image" src="https://github.com/user-attachments/assets/a2d10b54-9af8-4eb2-a5ca-3e8b3b660a87" />
+
 
 ### 🔧 Verificación y Reparación del Sistema
 Mantén tu sistema funcionando sin problemas:
@@ -94,8 +97,8 @@ Optimiza tu sistema eliminando archivos innecesarios y mejorando el rendimiento:
 
 - **Limpieza de Temporales**: Elimina archivos temporales para liberar espacio en disco.
 - **Optimización de RAM**: Utiliza herramientas avanzadas para gestionar eficientemente la memoria.
+<img width="1150" height="717" alt="image" src="https://github.com/user-attachments/assets/b9d7f542-1d54-4768-8967-f22de798ab36" />
 
-![Opciones de Limpieza](https://github.com/user-attachments/assets/294126ed-5dbd-479a-be68-9b607232e8f2)
 
 ---
 
