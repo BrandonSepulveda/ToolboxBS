@@ -102,6 +102,42 @@ Optimiza tu sistema eliminando archivos innecesarios y mejorando el rendimiento:
 
 ---
 
+## 👨‍💻 Desarrollo y Contribuciones
+
+### Para Desarrolladores
+
+Si deseas contribuir al proyecto o modificar el código:
+
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/BrandonSepulveda/ToolboxBS.git
+   cd ToolboxBS
+   ```
+
+2. **Ejecuta la validación local:**
+   ```powershell
+   .\validate.ps1 -Verbose
+   ```
+
+3. **Lee la guía de desarrollo:** [DEVELOPMENT.md](DEVELOPMENT.md)
+
+### Estructura del Proyecto
+- `procesos/` - Scripts de PowerShell para funcionalidades específicas
+- `index.html` - Página de presentación del proyecto
+- `ToolboxBSweb.html` - Interfaz web interactiva
+- `ToolboxBS.ps1` - Lanzador principal
+- `validate.ps1` - Script de validación para desarrollo
+
+### Calidad del Código
+El proyecto incluye:
+- ✅ Validación automática de sintaxis PowerShell
+- ✅ Análisis de calidad de código con PSScriptAnalyzer
+- ✅ Validación HTML
+- ✅ Verificaciones de seguridad
+- ✅ Pipeline CI/CD con GitHub Actions
+
+---
+
 ## 🚀 Casos de Uso
 
 | Para Usuarios Domésticos | Para Profesionales de TI | Para Entornos Empresariales |

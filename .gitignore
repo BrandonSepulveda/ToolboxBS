@@ -1,0 +1,79 @@
+# ToolboxBS .gitignore
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Build artifacts
+build/
+dist/
+output/
+
+# PowerShell temporary files
+*.ps1.bak
+*.ps1~
+
+# Windows system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Windows executable files (if any are generated)
+*.exe
+*.msi
+
+# Log files
+*.log
+logs/
+
+# Downloaded files cache
+downloads/
+cache/
+
+# IDE and editor files
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+
+# Node.js (if any Node.js tools are added later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if any Python tools are added later)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test artifacts
+test-results/
+coverage/
+
+# Certificates and keys
+*.pfx
+*.p12
+*.key
+*.pem
+*.crt
+*.cer
+
+# User-specific files
+.user
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
