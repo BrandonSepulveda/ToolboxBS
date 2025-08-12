@@ -1,0 +1,241 @@
+name: 🔍 Code Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-powershell:
+    name: 🔧 Validate PowerShell Scripts
+    runs-on: windows-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: 🔍 Install PSScriptAnalyzer
+      shell: powershell
+      run: |
+        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+        
+    - name: 🧪 Test PowerShell Syntax
+      shell: powershell
+      run: |
+        $errors = @()
+        
+        # Get all PowerShell files
+        $psFiles = Get-ChildItem -Path . -Include "*.ps1" -Recurse
+        
+        Write-Host "Found $($psFiles.Count) PowerShell files to validate"
+        
+        foreach ($file in $psFiles) {
+            Write-Host "Validating: $($file.Name)"
+            
+            # Test syntax
+            try {
+                $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $file.FullName -Raw), [ref]$null)
+                Write-Host "✅ Syntax OK: $($file.Name)" -ForegroundColor Green
+            }
+            catch {
+                $errors += "❌ Syntax Error in $($file.Name): $($_.Exception.Message)"
+                Write-Host "❌ Syntax Error in $($file.Name): $($_.Exception.Message)" -ForegroundColor Red
+            }
+            
+            # Run PSScriptAnalyzer
+            try {
+                $analysisResults = Invoke-ScriptAnalyzer -Path $file.FullName -Severity Error
+                if ($analysisResults.Count -gt 0) {
+                    foreach ($result in $analysisResults) {
+                        $errors += "⚠️ PSScriptAnalyzer Error in $($file.Name): $($result.Message) (Line $($result.Line))"
+                        Write-Host "⚠️ PSScriptAnalyzer Error in $($file.Name): $($result.Message) (Line $($result.Line))" -ForegroundColor Yellow
+                    }
+                }
+                else {
+                    Write-Host "✅ PSScriptAnalyzer OK: $($file.Name)" -ForegroundColor Green
+                }
+            }
+            catch {
+                Write-Host "⚠️ Could not run PSScriptAnalyzer on $($file.Name): $($_.Exception.Message)" -ForegroundColor Yellow
+            }
+        }
+        
+        if ($errors.Count -gt 0) {
+            Write-Host "`n❌ Validation failed with $($errors.Count) errors:" -ForegroundColor Red
+            $errors | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+            exit 1
+        }
+        else {
+            Write-Host "`n✅ All PowerShell files passed validation!" -ForegroundColor Green
+        }
+
+  validate-html:
+    name: 🌐 Validate HTML/CSS
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🔍 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: 📦 Install HTML Validator
+      run: |
+        npm install -g html-validate
+        
+    - name: 🧪 Validate HTML Files
+      run: |
+        echo "🔍 Validating HTML files..."
+        
+        # Find all HTML files
+        html_files=$(find . -name "*.html" -not -path "./node_modules/*")
+        
+        if [ -z "$html_files" ]; then
+          echo "ℹ️ No HTML files found to validate"
+          exit 0
+        fi
+        
+        echo "Found HTML files:"
+        echo "$html_files"
+        
+        # Create basic HTML validation config
+        cat > .htmlvalidate.json << 'EOF'
+        {
+          "extends": ["html-validate:recommended"],
+          "rules": {
+            "no-missing-references": "off",
+            "require-sri": "off",
+            "no-inline-style": "off"
+          }
+        }
+        EOF
+        
+        # Validate each HTML file
+        exit_code=0
+        for file in $html_files; do
+          echo "🔍 Validating: $file"
+          if html-validate "$file"; then
+            echo "✅ Valid: $file"
+          else
+            echo "❌ Invalid: $file"
+            exit_code=1
+          fi
+        done
+        
+        if [ $exit_code -eq 0 ]; then
+          echo "✅ All HTML files are valid!"
+        else
+          echo "❌ Some HTML files have validation errors"
+        fi
+        
+        exit $exit_code
+
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🔒 Run Security Scan
+      run: |
+        echo "🔍 Running basic security checks..."
+        
+        # Check for potentially dangerous patterns in PowerShell files
+        dangerous_patterns=(
+          "Invoke-Expression.*\\\$"
+          "iex.*\\\$"
+          "DownloadString.*\\\$"
+          "New-Object.*WebClient.*\\\$"
+        )
+        
+        exit_code=0
+        
+        for pattern in "${dangerous_patterns[@]}"; do
+          echo "🔍 Checking for pattern: $pattern"
+          if grep -r -n -E "$pattern" --include="*.ps1" .; then
+            echo "⚠️ Found potentially dangerous pattern: $pattern"
+            echo "Please review these matches for security implications"
+            # Don't fail the build for these warnings, just alert
+          fi
+        done
+        
+        # Check for hardcoded credentials patterns
+        credential_patterns=(
+          "password\s*=\s*['\"][^'\"]{3,}['\"]"
+          "apikey\s*=\s*['\"][^'\"]{10,}['\"]"
+          "token\s*=\s*['\"][^'\"]{10,}['\"]"
+        )
+        
+        for pattern in "${credential_patterns[@]}"; do
+          echo "🔍 Checking for credential pattern: $pattern"
+          if grep -r -i -n -E "$pattern" --include="*.ps1" --include="*.html" --include="*.js" .; then
+            echo "❌ Found potential hardcoded credentials!"
+            exit_code=1
+          fi
+        done
+        
+        if [ $exit_code -eq 0 ]; then
+          echo "✅ No obvious security issues found"
+        else
+          echo "❌ Security issues detected"
+        fi
+        
+        exit $exit_code
+
+  check-links:
+    name: 🔗 Check Links
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🔗 Check External Links
+      run: |
+        echo "🔍 Checking external links in repository..."
+        
+        # Extract URLs from various file types
+        urls=$(grep -r -h -o 'https\?://[^[:space:])"'"'"']*' --include="*.md" --include="*.html" --include="*.ps1" . | sort | uniq)
+        
+        if [ -z "$urls" ]; then
+          echo "ℹ️ No URLs found to check"
+          exit 0
+        fi
+        
+        echo "Found URLs to check:"
+        echo "$urls"
+        
+        failed_urls=""
+        
+        for url in $urls; do
+          # Skip certain URLs that are expected to be dynamic or require auth
+          if [[ "$url" =~ (localhost|127\.0\.0\.1|example\.com|\$\{|\$\() ]]; then
+            echo "⏭️ Skipping dynamic URL: $url"
+            continue
+          fi
+          
+          echo "🔍 Checking: $url"
+          
+          # Use curl with reasonable timeout and follow redirects
+          if curl -s -f -L --max-time 30 --max-redirs 5 "$url" > /dev/null 2>&1; then
+            echo "✅ OK: $url"
+          else
+            echo "❌ FAILED: $url"
+            failed_urls="$failed_urls\n$url"
+          fi
+        done
+        
+        if [ -n "$failed_urls" ]; then
+          echo -e "\n❌ The following URLs are not accessible:$failed_urls"
+          echo -e "\nNote: This might be temporary. Please verify manually."
+          # Don't fail the build for broken links as they might be temporary
+          exit 0
+        else
+          echo -e "\n✅ All URLs are accessible!"
+        fi

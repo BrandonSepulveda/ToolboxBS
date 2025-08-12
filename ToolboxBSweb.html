@@ -2054,8 +2054,176 @@ start "" /b cmd /c "%TEMP%\\cleanup_toolbox.bat"
         }
 
 
-        // Inicializar todo al cargar la página
-        document.addEventListener('DOMContentLoaded', () => {
+        // Error handling and user feedback improvements
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e.error);
+            showMessageBox(`<h3 style='color: var(--accent-color);'>Error Detectado</h3><p>Se ha producido un error inesperado. Por favor, recarga la página e intenta de nuevo.</p><p style='font-size: 0.9rem; color: var(--text-secondary);'>Error: ${e.message}</p>`);
+        });
+
+        // Add loading states for better UX
+        function showLoading(message = "Procesando...") {
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'loadingOverlay';
+            loadingOverlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+                display: flex; align-items: center; justify-content: center;
+                z-index: 2000; color: var(--text-light); font-size: 1.2rem;
+            `;
+            loadingOverlay.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="border: 3px solid transparent; border-top: 3px solid var(--accent-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+            document.body.appendChild(loadingOverlay);
+            
+            // Add spin animation
+            if (!document.getElementById('spin-style')) {
+                const style = document.createElement('style');
+                style.id = 'spin-style';
+                style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+                document.head.appendChild(style);
+            }
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+
+        // Enhanced script generation with loading state
+        const originalShowGeneratedCode = showGeneratedCode;
+        showGeneratedCode = function() {
+            showLoading("Generando script personalizado...");
+            setTimeout(() => {
+                try {
+                    originalShowGeneratedCode();
+                    hideLoading();
+                } catch (error) {
+                    hideLoading();
+                    console.error('Error generating code:', error);
+                    showMessageBox(`<h3 style='color: var(--accent-color);'>Error al Generar Script</h3><p>No se pudo generar el script. Por favor, verifica tus selecciones e intenta de nuevo.</p>`);
+                }
+            }, 500); // Small delay to show loading state
+        };
+
+        // Enhanced ZIP download with progress feedback
+        const originalDownloadZip = downloadZipFromDisplay;
+        downloadZipFromDisplay = async function() {
+            showLoading("Generando archivo ZIP...");
+            try {
+                await originalDownloadZip();
+            } catch (error) {
+                hideLoading();
+                console.error('Error downloading ZIP:', error);
+                showMessageBox(`<h3 style='color: var(--accent-color);'>Error en Descarga</h3><p>No se pudo generar el archivo ZIP. Por favor, intenta de nuevo.</p>`);
+            }
+        };
+
+        // Accessibility improvements
+        function enhanceAccessibility() {
+            // Add keyboard navigation support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    // Close any open modals
+                    const openModals = document.querySelectorAll('.modal[style*="flex"]');
+                    openModals.forEach(modal => {
+                        if (modal.id !== 'messageBox' && modal.id !== 'codeDisplayBox') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                    
+                    // Close message boxes
+                    hideMessageBox();
+                    closeModal('codeDisplayBox');
+                }
+            });
+
+            // Add focus management for modals
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Improve button accessibility
+            const buttons = document.querySelectorAll('button, .btn, .tool-card, .tool-item');
+            buttons.forEach(button => {
+                if (!button.getAttribute('tabindex')) {
+                    button.setAttribute('tabindex', '0');
+                }
+                
+                button.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        button.click();
+                    }
+                });
+            });
+        }
+
+        // Performance monitoring
+        function monitorPerformance() {
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    setTimeout(() => {
+                        const perfData = performance.getEntriesByType('navigation')[0];
+                        if (perfData) {
+                            const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
+                            console.log(`Page load time: ${loadTime}ms`);
+                            
+                            // Log slow performance
+                            if (loadTime > 3000) {
+                                console.warn('Slow page load detected. Consider optimizing resources.');
+                            }
+                        }
+                    }, 0);
+                });
+            }
+        }
+
+        // Validation improvements
+        function validateSelection() {
+            let totalSelected = 0;
+            for (const category in selectedTools) {
+                totalSelected += selectedTools[category].length;
+            }
+            
+            if (totalSelected === 0) {
+                showMessageBox(`<h3 style='color: var(--accent-color);'>Selección Requerida</h3><p>Por favor, selecciona al menos una herramienta antes de generar el script.</p><p style='color: var(--text-secondary); font-size: 0.9rem;'>Puedes explorar las diferentes categorías en el menú para encontrar las herramientas que necesitas.</p>`);
+                return false;
+            }
+            
+            if (totalSelected > 20) {
+                const proceed = confirm(`Has seleccionado ${totalSelected} herramientas. Esto podría resultar en un script muy grande. ¿Deseas continuar?`);
+                if (!proceed) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Enhanced FAB button with validation
+        const originalFabButton = document.getElementById('fabButton');
+        if (originalFabButton) {
+            originalFabButton.onclick = function() {
+                if (validateSelection()) {
+                    showGeneratedCode();
+                }
+            };
+        }
+
+        // Initialize all improvements
+        document.addEventListener('DOMContentLoaded', function() {
+            enhanceAccessibility();
+            monitorPerformance();
             updateGlobalFloatingButton();
             setupColorPicker();
         });

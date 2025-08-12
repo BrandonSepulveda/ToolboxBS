@@ -1,22 +1,108 @@
-:: WinScript 
+::=============================================================================
+:: ToolboxBS Performance Optimization Script
+:: Author: Brandon Sepulveda
+:: Version: 2.0
+:: Description: Comprehensive Windows performance optimization script with
+::              service configuration, registry tweaks, and privacy settings
+:: Requirements: Administrator privileges, Windows 10/11
+:: Last Updated: 2024-12-23
+::=============================================================================
+
 @echo off
+setlocal EnableExtensions DisableDelayedExpansion
+
+:: Configuration
+set "SCRIPT_NAME=ToolboxBS Performance Optimizer"
+set "SCRIPT_VERSION=2.0"
+set "LOG_FILE=%TEMP%\ToolboxBS_Performance.log"
+
+:: Color codes for output
+set "COLOR_RESET=[0m"
+set "COLOR_GREEN=[32m"
+set "COLOR_YELLOW=[33m"
+set "COLOR_RED=[31m"
+set "COLOR_BLUE=[34m"
+set "COLOR_CYAN=[36m"
+
+:: Initialize logging
+echo %DATE% %TIME% - Starting ToolboxBS Performance Optimization > "%LOG_FILE%"
+
+:: Display header
+echo.
+echo %COLOR_CYAN%===============================================================================%COLOR_RESET%
+echo %COLOR_CYAN%  %SCRIPT_NAME% v%SCRIPT_VERSION%%COLOR_RESET%
+echo %COLOR_CYAN%  Optimizing Windows for better performance and privacy%COLOR_RESET%
+echo %COLOR_CYAN%===============================================================================%COLOR_RESET%
+echo.
+
+:: Function to log and display messages
+goto :skip_functions
+
+:log_message
+    echo %COLOR_GREEN%[%TIME%] %~1%COLOR_RESET%
+    echo %DATE% %TIME% - %~1 >> "%LOG_FILE%"
+    goto :eof
+
+:log_warning
+    echo %COLOR_YELLOW%[%TIME%] WARNING: %~1%COLOR_RESET%
+    echo %DATE% %TIME% - WARNING: %~1 >> "%LOG_FILE%"
+    goto :eof
+
+:log_error
+    echo %COLOR_RED%[%TIME%] ERROR: %~1%COLOR_RESET%
+    echo %DATE% %TIME% - ERROR: %~1 >> "%LOG_FILE%"
+    goto :eof
+
+:skip_functions
+
 :: Check if the script is running as admin
+call :log_message "Checking administrator privileges..."
 openfiles >nul 2>&1
 if %errorlevel% neq 0 (
-    color 4
-    echo This script requires administrator privileges.
-    echo Please run WinScript as an administrator.
+    call :log_error "Administrator privileges required!"
+    echo.
+    echo %COLOR_RED%This script requires administrator privileges.%COLOR_RESET%
+    echo %COLOR_YELLOW%Please run this script as an administrator.%COLOR_RESET%
+    echo.
     pause
-    exit
+    exit /b 1
 )
-:: Admin privileges confirmed, continue execution
-setlocal EnableExtensions DisableDelayedExpansion
-echo -- Creating a restore point:
-powershell -command "Enable-ComputerRestore -Drive $env:SystemDrive ; Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS""
-echo -- Set Ultimate Performance Power Plan
-powershell -command "$ultimatePerformance = powercfg -list | Select-String -Pattern 'Ultimate Performance'; if ($ultimatePerformance) { echo '-- - Power plan already exists' } else { echo '-- - Enabling Ultimate Performance'; $output = powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 2>&1; if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') { powercfg -RestoreDefaultSchemes } }"
-powershell -command "$ultimatePlanGUID = (powercfg -list | Select-String -Pattern 'Ultimate Performance').Line.Split()[3]; echo '-- - Activating Ultimate Performance'; powercfg -setactive $ultimatePlanGUID"
-echo -- Disabling Manual Services
+
+call :log_message "Administrator privileges confirmed."
+
+:: Confirm execution with user
+echo %COLOR_YELLOW%WARNING: This script will make significant changes to your system.%COLOR_RESET%
+echo %COLOR_YELLOW%It will optimize services, registry settings, and privacy options.%COLOR_RESET%
+echo.
+set /p "CONFIRM=Do you want to continue? (Y/N): "
+if /i not "%CONFIRM%"=="Y" (
+    call :log_message "Operation cancelled by user."
+    echo %COLOR_YELLOW%Operation cancelled.%COLOR_RESET%
+    exit /b 0
+)
+
+:: Create system restore point
+call :log_message "Creating system restore point..."
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Enable-ComputerRestore -Drive $env:SystemDrive -ErrorAction SilentlyContinue; Checkpoint-Computer -Description 'ToolboxBS Performance Optimization' -RestorePointType 'MODIFY_SETTINGS' -ErrorAction Stop; Write-Host 'Restore point created successfully.' } catch { Write-Host 'Failed to create restore point: ' + $_.Exception.Message; exit 1 }" 2>nul
+if %errorlevel% neq 0 (
+    call :log_warning "Failed to create restore point. Continuing anyway..."
+) else (
+    call :log_message "System restore point created successfully."
+)
+
+:: Configure Ultimate Performance Power Plan
+call :log_message "Configuring Ultimate Performance power plan..."
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ultimatePerformance = powercfg -list | Select-String -Pattern 'Ultimate Performance'; if ($ultimatePerformance) { Write-Host 'Ultimate Performance plan already exists.' } else { Write-Host 'Enabling Ultimate Performance plan...'; $output = powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 2>&1; if ($output -match 'Unable to create a new power scheme' -or $output -match 'The power scheme, subgroup or setting specified does not exist') { Write-Host 'Restoring default schemes...'; powercfg -RestoreDefaultSchemes } }" 2>nul
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { $ultimatePlanGUID = (powercfg -list | Select-String -Pattern 'Ultimate Performance').Line.Split()[3]; if ($ultimatePlanGUID) { Write-Host 'Activating Ultimate Performance plan...'; powercfg -setactive $ultimatePlanGUID; Write-Host 'Ultimate Performance plan activated.' } else { Write-Host 'Ultimate Performance plan not found.' } } catch { Write-Host 'Error configuring power plan: ' + $_.Exception.Message }" 2>nul
+
+:: Service optimization section
+call :log_message "Starting service optimization..."
+
+echo.
+echo %COLOR_BLUE%Configuring Windows services for optimal performance...%COLOR_RESET%
+echo %COLOR_YELLOW%Note: Services are set to 'demand' (manual) instead of disabled to maintain compatibility%COLOR_RESET%
+echo.
 sc config AJRouter start=disabled
 sc config ALG start=demand
 sc config AppIDSvc start=demand

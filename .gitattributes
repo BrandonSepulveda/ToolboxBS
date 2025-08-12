@@ -1,0 +1,160 @@
+# ToolboxBS .gitattributes
+# Define attribute settings for file types in the repository
+
+# === Auto detect text files and perform LF normalization ===
+* text=auto
+
+# === Explicitly declare text files you want to always be normalized and converted to native line endings on checkout ===
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.xml text eol=lf
+
+# === PowerShell files ===
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+*.ps1xml text eol=crlf
+
+# === Windows batch files ===
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# === Web files ===
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.htm text eol=lf
+*.jsp text eol=lf
+
+# === Configuration files ===
+*.ini text eol=crlf
+*.cfg text eol=lf
+*.conf text eol=lf
+*.config text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# === Documentation ===
+*.rst text eol=lf
+AUTHORS text eol=lf
+CHANGELOG* text eol=lf
+CHANGES* text eol=lf
+CONTRIBUTING* text eol=lf
+COPYING* text eol=lf
+COPYRIGHT* text eol=lf
+INSTALL* text eol=lf
+LICENSE* text eol=lf
+NEWS* text eol=lf
+README* text eol=lf
+TODO* text eol=lf
+
+# === Scripts ===
+*.sh text eol=lf
+
+# === Source code ===
+*.c text eol=lf
+*.cpp text eol=lf
+*.cs text eol=crlf
+*.h text eol=lf
+*.hpp text eol=lf
+*.java text eol=lf
+*.py text eol=lf
+*.rb text eol=lf
+*.php text eol=lf
+*.go text eol=lf
+
+# === Binary files ===
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.bmp binary
+*.tiff binary
+*.webp binary
+
+# === Archive files ===
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.rar binary
+
+# === Executable files ===
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.app binary
+
+# === Office documents ===
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+*.pdf binary
+
+# === Fonts ===
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+
+# === Audio/Video ===
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.wav binary
+*.mov binary
+
+# === Git LFS tracking (if using Git LFS) ===
+# Uncomment these if you plan to use Git LFS for large files
+# *.exe filter=lfs diff=lfs merge=lfs -text
+# *.zip filter=lfs diff=lfs merge=lfs -text
+# *.pdf filter=lfs diff=lfs merge=lfs -text
+
+# === Language-specific settings ===
+
+# PowerShell should maintain Windows line endings
+*.ps1 linguist-language=PowerShell
+
+# Batch files should maintain Windows line endings  
+*.bat linguist-language=Batchfile
+
+# Mark certain files as documentation
+*.md linguist-documentation=true
+docs/** linguist-documentation=true
+CHANGELOG* linguist-documentation=true
+LICENSE* linguist-documentation=true
+README* linguist-documentation=true
+
+# Mark certain files/directories as vendored (third-party)
+vendor/** linguist-vendored=true
+node_modules/** linguist-vendored=true
+lib/** linguist-vendored=true
+
+# Exclude certain files from diff
+*.min.js -diff
+*.min.css -diff
+
+# === Export-ignore (files not included in archive exports) ===
+.gitattributes export-ignore
+.gitignore export-ignore
+.github/ export-ignore
+docs/ export-ignore
+tests/ export-ignore
+test/ export-ignore
+*.test.* export-ignore
+*.spec.* export-ignore
+
+# === Merge strategies ===
+# For files that should not be merged automatically
+CHANGELOG.md merge=ours
+VERSION merge=ours
