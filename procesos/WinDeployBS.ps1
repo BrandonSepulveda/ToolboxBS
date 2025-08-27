@@ -1,15 +1,17 @@
 <#
 .SYNOPSIS
-    Crea una partición de arranque con los archivos de instalación de Windows modificando el BCD.
+    Crea una partición de arranque con los archivos de instalación de Windows, con opción de automatizar la instalación.
 
 .DESCRIPTION
-    Este script crea una nueva partición, copia el contenido del ISO de Windows y añade una
-    opción en el menú de arranque para iniciar el Instalador de Windows al reiniciar. Esto permite una
-    verdadera instalación limpia, incluyendo el formateo de la unidad principal del sistema.
+    Esta herramienta unificada permite dos acciones principales en una sola interfaz:
+    1. Descargar un archivo ISO oficial de Windows (10 u 11) usando la API de MSDL.
+    2. Crear una partición de arranque a partir de un archivo ISO, modificando el BCD para permitir
+       una instalación limpia de Windows. Incluye una opción para generar un archivo autounattend.xml
+       que automatiza el proceso de instalación hasta la selección manual del disco.
 
 .NOTES
-    Autor: Brandon Sepulveda (Lógica de BCD corregida por Gemini)
-    Version: 6.4 (Final Version - Reboot Button Removed)
+    Autor: Brandon Sepulveda 
+    Version: 7.8 (Complete Pre-Disk Automation)
     Requiere: PowerShell 5.1 o superior, ejecutándose como Administrador.
 #>
 
@@ -22,15 +24,21 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 #endregion
 
 #region --- GUI Definition (XAML) ---
-Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase, System.Windows.Forms
 
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="WinDeploy by: Brandon Sepulveda" Height="540" Width="520"
+        Title="WinDeploy Ultimate by: Brandon Sepulveda" Height="700" Width="600"
         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
         Background="#FF111827" Foreground="White" FontFamily="Segoe UI">
     <Window.Resources>
+        <!-- Colores base para selección para mejorar legibilidad -->
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF3B82F6"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FF3B82F6"/>
+
+        <!-- Estilo General para Botones -->
         <Style TargetType="{x:Type Button}">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -57,58 +65,194 @@ Add-Type -AssemblyName PresentationFramework
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <!-- Estilo para TextBoxes -->
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="#FF1F2937"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
+        </Style>
+        <!-- Estilo para ComboBoxes -->
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="#FF1F2937"/>
+            <Setter Property="Foreground" Value="Black"/> <!-- CAMBIO: Texto seleccionado en negro para legibilidad sobre fondo claro por defecto -->
+            <Setter Property="BorderBrush" Value="#FF374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <!-- Estilo para los items del dropdown del ComboBox -->
+        <Style TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- Estilo para ListBoxes -->
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="Background" Value="#FF1F2937"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF374151"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <!-- Estilo para los items del ListBox para asegurar visibilidad -->
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Padding" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                    <Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF374151"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!-- Estilo para GroupBoxes -->
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF374151"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+        <!-- Estilo para las Pestañas (TabControl) -->
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Foreground" Value="#FFD1D5DB"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border x:Name="Border" BorderThickness="0,0,0,2" BorderBrush="Transparent" Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FF374151"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#FF3B82F6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <TabControl x:Name="MainTabControl" Background="Transparent" BorderThickness="0">
+            <!-- Pestaña para Descargar ISO -->
+            <TabItem Header="1. Descargar ISO">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,25">
-            <TextBlock Text="WinDeploy" FontSize="28" FontWeight="Bold" Foreground="White"/>
-            <TextBlock Text="by: Brandon Sepulveda" FontSize="14" Foreground="#FF9CA3AF" Margin="0,0,0,10"/>
-            <TextBlock Text="Crea una partición de arranque para formatear e instalar Windows." TextWrapping="Wrap" Foreground="#FFD1D5DB"/>
-        </StackPanel>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,15">
+                        <TextBlock Text="Descargador de ISO de Windows" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Selecciona una versión oficial de Windows para descargar." TextWrapping="Wrap" Foreground="#FFD1D5DB"/>
+                    </StackPanel>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Margin="0,0,0,15">
-            <StackPanel>
-                <Label Content="1. Selecciona el Disco Principal a modificar:" Foreground="White"/>
-                <ComboBox x:Name="DiskComboBox" Height="30" VerticalContentAlignment="Center"/>
-            </StackPanel>
-        </Grid>
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <GroupBox Header="Versión de Windows">
+                                <ListBox x:Name="lstProducts" Height="150" SelectionMode="Single"/>
+                            </GroupBox>
+                            <GroupBox Header="Idioma">
+                                <ComboBox x:Name="cmbLanguages" Height="35"/>
+                            </GroupBox>
+                             <Button x:Name="btnGetDownloadLinks" Content="Obtener Enlaces" Background="#FF3B82F6" IsEnabled="False"/>
+                        </StackPanel>
 
-        <Grid Grid.Row="2" Margin="0,0,0,20">
-             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel>
-                <Label Content="2. Selecciona el archivo ISO de Windows:" Foreground="White"/>
-                <TextBox x:Name="IsoPathTextBox" Height="30" IsReadOnly="True" VerticalContentAlignment="Center" Background="#FF1F2937" BorderBrush="#FF374151"/>
-            </StackPanel>
-            <Button x:Name="SelectIsoButton" Content="Buscar ISO..." Grid.Column="1" Height="30" Width="100" Margin="10,24,0,0" VerticalAlignment="Top" Background="#FF3B82F6"/>
-        </Grid>
-        
-        <GroupBox Header="Opciones de Proceso" Grid.Row="3" Foreground="White" BorderBrush="#FF374151">
-            <StackPanel Margin="10,5">
-                <Button x:Name="CreateButton" Content="Crear Arranque de Instalación" Background="#FF3B82F6"/>
-                <Button x:Name="UndoButton" Content="Eliminar Arranque y Partición" Background="#FF374151"/>
-            </StackPanel>
-        </GroupBox>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                            <GroupBox Header="Enlaces de Descarga">
+                                <ListBox x:Name="lstDownloadLinks" Height="150" SelectionMode="Single"/>
+                            </GroupBox>
+                            <GroupBox Header="Ubicación de Descarga">
+                                <DockPanel>
+                                    <Button x:Name="btnBrowse" Content="..." DockPanel.Dock="Right" Width="40" Background="#FF374151"/>
+                                    <TextBox x:Name="txtSavePath" Height="35"/>
+                                </DockPanel>
+                            </GroupBox>
+                            <Button x:Name="btnStartDownload" Content="Iniciar Descarga en Navegador" Background="#FF10B981" IsEnabled="False"/>
+                            <Button x:Name="btnUseIso" Content="Usar este ISO para Crear Partición" Background="#FF8B5CF6" IsEnabled="False"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
 
-        <GroupBox Header="Progreso y Estado" Grid.Row="4" Margin="0,10,0,0" Foreground="White" BorderBrush="#FF374151">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock x:Name="StatusTextBlock" Text="Listo. Esperando instrucciones." TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" FontSize="14"/>
-                <ProgressBar x:Name="ProgressBar" Grid.Row="1" Height="8" Margin="5" Background="#FF1F2937" BorderBrush="#FF374151" BorderThickness="1"/>
-            </Grid>
-        </GroupBox>
+            <!-- Pestaña para Crear Partición -->
+            <TabItem Header="2. Crear Partición">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <TextBlock Text="WinDeploy" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="Crea una partición de arranque para formatear e instalar Windows." TextWrapping="Wrap" Foreground="#FFD1D5DB"/>
+                    </StackPanel>
+
+                    <GroupBox Header="1. Selecciona el Disco Principal a modificar" Grid.Row="1">
+                        <ComboBox x:Name="DiskComboBox" Height="35"/>
+                    </GroupBox>
+
+                    <GroupBox Header="2. Selecciona el archivo ISO de Windows" Grid.Row="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="IsoPathTextBox" Height="35" IsReadOnly="True"/>
+                            <Button x:Name="SelectIsoButton" Content="Buscar ISO..." Grid.Column="1" Width="110" Background="#FF3B82F6"/>
+                        </Grid>
+                    </GroupBox>
+                    
+                    <GroupBox Header="3. Opciones de Proceso" Grid.Row="3">
+                        <StackPanel>
+                            <CheckBox x:Name="AutomateInstallCheckBox" Content="Automatizar Instalación (Omitir selección de idioma, licencia, etc.)" Margin="5,5,5,10" Foreground="White"/>
+                            <TextBlock x:Name="AutomationWarningTextBlock" Text="AVISO: Esta opción omitirá las pantallas de configuración iniciales. Aún deberás seleccionar el disco de instalación manualmente." Foreground="#FFD1D5DB" FontWeight="Normal" TextWrapping="Wrap" Visibility="Collapsed"/>
+                            <Button x:Name="CreateButton" Content="Crear Arranque de Instalación" Background="#FF3B82F6"/>
+                            <Button x:Name="UndoButton" Content="Eliminar Arranque y Partición" Background="#FF374151"/>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Progreso y Estado" Grid.Row="5" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="StatusTextBlock" Text="Listo. Esperando instrucciones." TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14"/>
+                            <ProgressBar x:Name="ProgressBar" Grid.Row="1" Height="8" Margin="5" Background="#FF1F2937" BorderBrush="#FF374151" BorderThickness="1"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
 "@
@@ -118,7 +262,18 @@ Add-Type -AssemblyName PresentationFramework
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-# Get UI Elements
+# --- Controles Pestaña 1: Descargar ISO ---
+$mainTabControl = $window.FindName("MainTabControl")
+$lstProducts = $window.FindName("lstProducts")
+$cmbLanguages = $window.FindName("cmbLanguages")
+$btnGetDownloadLinks = $window.FindName("btnGetDownloadLinks")
+$lstDownloadLinks = $window.FindName("lstDownloadLinks")
+$txtSavePath = $window.FindName("txtSavePath")
+$btnBrowse = $window.FindName("btnBrowse")
+$btnStartDownload = $window.FindName("btnStartDownload")
+$btnUseIso = $window.FindName("btnUseIso")
+
+# --- Controles Pestaña 2: Crear Partición ---
 $diskComboBox = $window.FindName("DiskComboBox")
 $isoPathTextBox = $window.FindName("IsoPathTextBox")
 $selectIsoButton = $window.FindName("SelectIsoButton")
@@ -126,10 +281,18 @@ $createButton = $window.FindName("CreateButton")
 $undoButton = $window.FindName("UndoButton")
 $statusTextBlock = $window.FindName("StatusTextBlock")
 $progressBar = $window.FindName("ProgressBar")
+$automateInstallCheckBox = $window.FindName("AutomateInstallCheckBox")
+$automationWarningTextBlock = $window.FindName("AutomationWarningTextBlock")
 
-# Global variables
+
+# --- Global variables & Constantes ---
 $Global:PartitionLabel = "WinDeployBS"
 $Global:RglFileName = "WinDeploy.log"
+$apiUrl = "https://api.gravesoft.dev/msdl/"
+$products = @{
+    "2618" = "Windows 10 22H2 v1 (19045.2965)"
+    "3113" = "Windows 11 24H2 (26100.1742)"
+}
 #endregion
 
 #region --- Helper Functions ---
@@ -143,12 +306,13 @@ function Sync-Gui {
     }
 }
 
-function Set-UiState {
+function Set-DeployUiState {
     param([bool]$isEnabled)
     Sync-Gui -action {
         $diskComboBox.IsEnabled = $isEnabled
         $selectIsoButton.IsEnabled = $isEnabled
         $createButton.IsEnabled = $isEnabled
+        $automateInstallCheckBox.IsEnabled = $isEnabled
         if ($isEnabled) {
             Update-UndoButtonState
         } else {
@@ -221,11 +385,142 @@ function Update-UndoButtonState {
 }
 #endregion
 
-#region --- Event Handlers ---
+#region --- Event Handlers (Pestaña 1: Descargar ISO) ---
 
 $window.Add_SourceInitialized({
+    # Inicialización para Pestaña 2
     Load-Disks
     Update-UndoButtonState
+
+    # Inicialización para Pestaña 1
+    $txtSavePath.Text = "$env:USERPROFILE\Downloads"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $lstProducts.Items.Clear()
+    foreach ($key in $products.Keys) {
+        $productName = $products[$key]
+        $item = New-Object System.Windows.Controls.ListBoxItem
+        $item.Content = $productName
+        $item.Tag = $key
+        $lstProducts.Items.Add($item)
+    }
+})
+
+$lstProducts.Add_SelectionChanged({
+    if ($lstProducts.SelectedItem -ne $null) {
+        $selectedProductId = $lstProducts.SelectedItem.Tag
+        $selectedProductName = $lstProducts.SelectedItem.Content
+        
+        $statusTextBlock.Text = "Obteniendo idiomas para $selectedProductName..."
+        $progressBar.IsIndeterminate = $true
+        
+        try {
+            $url = "${apiUrl}skuinfo?product_id=${selectedProductId}"
+            $headers = @{ "User-Agent" = "PowerShell-Downloader" }
+            $result = Invoke-RestMethod -Uri $url -Method Get -Headers $headers -TimeoutSec 30
+            
+            if ($result) {
+                $cmbLanguages.Items.Clear()
+                foreach ($sku in $result.Skus) {
+                    $item = New-Object System.Windows.Controls.ComboBoxItem
+                    $item.Content = $sku.LocalizedLanguage
+                    $item.Tag = $sku.Id
+                    $cmbLanguages.Items.Add($item)
+                }
+                if ($cmbLanguages.Items.Count -gt 0) {
+                    $cmbLanguages.SelectedIndex = 0
+                    $btnGetDownloadLinks.IsEnabled = $true
+                }
+            }
+        } catch {
+            Show-MessageBox "No se pudo obtener la lista de idiomas: $($_.Exception.Message)" "Error de API" "Error"
+        } finally {
+            $statusTextBlock.Text = "Listo."
+            $progressBar.IsIndeterminate = $false
+        }
+    }
+})
+
+$btnGetDownloadLinks.Add_Click({
+    if ($cmbLanguages.SelectedItem -ne $null -and $lstProducts.SelectedItem -ne $null) {
+        $selectedProductId = $lstProducts.SelectedItem.Tag
+        $selectedSkuId = $cmbLanguages.SelectedItem.Tag
+        
+        $statusTextBlock.Text = "Obteniendo enlaces de descarga..."
+        $progressBar.IsIndeterminate = $true
+
+        try {
+            $url = "${apiUrl}proxy?product_id=${selectedProductId}&sku_id=${selectedSkuId}"
+            $headers = @{ "User-Agent" = "PowerShell-Downloader" }
+            $result = Invoke-RestMethod -Uri $url -Method Get -Headers $headers -TimeoutSec 60
+            
+            if ($result -and $result.ProductDownloadOptions) {
+                $lstDownloadLinks.Items.Clear()
+                foreach ($option in $result.ProductDownloadOptions) {
+                    $uri = $option.Uri
+                    $filename = $uri.Split('?')[0].Split('/')[-1]
+                    $item = New-Object System.Windows.Controls.ListBoxItem
+                    $item.Content = $filename
+                    $item.Tag = $uri
+                    $lstDownloadLinks.Items.Add($item)
+                }
+                if ($lstDownloadLinks.Items.Count -gt 0) {
+                    $lstDownloadLinks.SelectedIndex = 0
+                    $btnStartDownload.IsEnabled = $true
+                    $btnUseIso.IsEnabled = $true
+                }
+            }
+        } catch {
+            Show-MessageBox "No se pudieron obtener los enlaces de descarga: $($_.Exception.Message)" "Error de API" "Error"
+        } finally {
+            $statusTextBlock.Text = "Listo."
+            $progressBar.IsIndeterminate = $false
+        }
+    }
+})
+
+$btnBrowse.Add_Click({
+    $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+    $folderBrowser.Description = "Seleccionar carpeta para guardar el ISO"
+    $folderBrowser.SelectedPath = $txtSavePath.Text
+    if ($folderBrowser.ShowDialog() -eq "OK") {
+        $txtSavePath.Text = $folderBrowser.SelectedPath
+    }
+})
+
+$btnStartDownload.Add_Click({
+    if ($lstDownloadLinks.SelectedItem -ne $null) {
+        $downloadUrl = $lstDownloadLinks.SelectedItem.Tag
+        try {
+            Start-Process $downloadUrl
+            Show-MessageBox "Se ha abierto el enlace de descarga en tu navegador. Por favor, guarda el archivo en la ubicación seleccionada." "Descarga Iniciada" "Information"
+        } catch {
+            Show-MessageBox "No se pudo abrir el enlace en el navegador: $($_.Exception.Message)" "Error" "Error"
+        }
+    }
+})
+
+$btnUseIso.Add_Click({
+    if ($lstDownloadLinks.SelectedItem -ne $null) {
+        $filename = $lstDownloadLinks.SelectedItem.Content
+        $expectedPath = Join-Path $txtSavePath.Text $filename
+        
+        $isoPathTextBox.Text = $expectedPath
+        $mainTabControl.SelectedIndex = 1 # Cambia a la segunda pestaña
+        
+        Show-MessageBox "La ruta del ISO se ha copiado a la pestaña 'Crear Partición'.`n`nPor favor, asegúrate de que la descarga haya finalizado en esa ubicación antes de continuar." "Ruta Copiada" "Information"
+    }
+})
+
+#endregion
+
+#region --- Event Handlers (Pestaña 2: Crear Partición) ---
+
+$automateInstallCheckBox.Add_Checked({
+    $automationWarningTextBlock.Visibility = "Visible"
+})
+
+$automateInstallCheckBox.Add_Unchecked({
+    $automationWarningTextBlock.Visibility = "Collapsed"
 })
 
 $selectIsoButton.Add_Click({
@@ -251,6 +546,7 @@ $createButton.Add_Click({
     $selectedDiskInfo = $diskComboBox.SelectedItem
     $driveLetter = $selectedDiskInfo.Split(":")[0]
     $isoPath = $isoPathTextBox.Text
+    $shouldAutomate = $automateInstallCheckBox.IsChecked
 
     try {
         $isoSize = (Get-Item $isoPath).Length
@@ -267,21 +563,23 @@ $createButton.Add_Click({
         return
     }
 
-    $confirmationResult = Show-MessageBox ("ADVERTENCIA: Se va a modificar la estructura de tu disco y el menú de arranque. Asegúrate de tener un respaldo de tus datos importantes. ¿Deseas continuar?" -f $driveLetter, $requiredSpaceGB) "Confirmación Final" "Warning" "YesNo"
+    $confirmationMessage = "ADVERTENCIA: Se va a modificar la estructura de tu disco y el menú de arranque. Asegúrate de tener un respaldo de tus datos importantes. ¿Deseas continuar?"
+    
+    $confirmationResult = Show-MessageBox $confirmationMessage "Confirmación Final" "Warning" "YesNo"
     if ($confirmationResult -ne "Yes") {
         Sync-Gui -Action { $statusTextBlock.Text = "Operación cancelada por el usuario." }
         return
     }
 
     # --- Start Process in Background Job ---
-    Set-UiState -isEnabled $false
+    Set-DeployUiState -isEnabled $false
     Sync-Gui -Action { 
         $progressBar.IsIndeterminate = $true
         $statusTextBlock.Text = "Iniciando proceso..."
     }
 
     $scriptBlock = {
-        param($driveLetter, $isoPath, $requiredSpaceGB, $PartitionLabel, $RglFileName)
+        param($driveLetter, $isoPath, $requiredSpaceGB, $PartitionLabel, $RglFileName, $shouldAutomate)
         
         $isoDriveLetter = $null
         $newDriveLetter = $null
@@ -289,8 +587,6 @@ $createButton.Add_Click({
         $ramdiskGuid = $null
 
         function Get-IsUefiSystem {
-            # Comprueba una clave de registro que solo existe en sistemas UEFI.
-            # Esto es más compatible que Get-FirmwareType para versiones antiguas de PowerShell.
             return (Test-Path "HKLM:\System\CurrentControlSet\Control\SecureBoot\State")
         }
 
@@ -355,10 +651,79 @@ exit
             robocopy $sourcePath $destinationPath /E /R:3 /W:5 | Out-Null
             if ($LASTEXITCODE -ge 8) { throw "Robocopy falló al copiar los archivos." }
             
-            # Step 3: Create BCD entries (CORRECTED LOGIC)
-            $sdiPath = "\boot\boot.sdi" # Standard path for WinPE
+            # Step 2.5: Create autounattend.xml if requested
+            if ($shouldAutomate) {
+                $autounattendXml = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SetupUILanguage>
+                <UILanguage>es-ES</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>es-ES</InputLocale>
+            <SystemLocale>es-ES</SystemLocale>
+            <UILanguage>es-ES</UILanguage>
+            <UserLocale>es-ES</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ImageInstall>
+                <OSImage>
+                    <InstallFrom>
+                        <MetaData wcm:action="add">
+                            <Key>/IMAGE/NAME</Key>
+                            <Value>Windows 11 Pro</Value>
+                        </MetaData>
+                    </InstallFrom>
+                    <WillShowUI>OnError</WillShowUI>
+                </OSImage>
+            </ImageInstall>
+            <DiskConfiguration>
+                <WillShowUI>Always</WillShowUI>
+            </DiskConfiguration>
+            <UserData>
+                <AcceptEula>true</AcceptEula>
+                <ProductKey>
+                     <Key></Key>
+                </ProductKey>
+            </UserData>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <NetworkLocation>Work</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+            </OOBE>
+            <UserAccounts>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value></Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Description>Cuenta de Administrador Local</Description>
+                        <DisplayName>Usuario</DisplayName>
+                        <Group>Administrators</Group>
+                        <Name>Usuario</Name>
+                    </LocalAccount>
+                </LocalAccounts>
+            </UserAccounts>
+        </component>
+    </settings>
+</unattend>
+"@
+                $autounattendPath = Join-Path $destinationPath "autounattend.xml"
+                $autounattendXml | Out-File -FilePath $autounattendPath -Encoding utf8
+            }
+
+            # Step 3: Create BCD entries
+            $sdiPath = "\boot\boot.sdi"
             
-            # Create RAMDISK device entry
             $ramdiskOutput = Invoke-BcdEdit "/create /d `"WinDeployBS`" /device"
             if ($ramdiskOutput -match '\{[a-fA-F0-9\-]+\}') { $ramdiskGuid = $matches[0] }
             if (!$ramdiskGuid) { throw "No se pudo crear la entrada del dispositivo Ramdisk en BCD." }
@@ -366,7 +731,6 @@ exit
             Invoke-BcdEdit "/set $ramdiskGuid ramdisksdidevice `"partition=${newDriveLetter}:`""
             Invoke-BcdEdit "/set $ramdiskGuid ramdisksdipath `"$sdiPath`""
 
-            # Create OS Loader entry
             $osLoaderOutput = Invoke-BcdEdit "/create /d `"WinDeploy`" /application osloader"
             if ($osLoaderOutput -match '\{[a-fA-F0-9\-]+\}') { $osLoaderGuid = $matches[0] }
             if (!$osLoaderGuid) { throw "No se pudo crear la entrada OSLoader en BCD." }
@@ -381,7 +745,7 @@ exit
             Invoke-BcdEdit "/set $osLoaderGuid winpe `"yes`""
             
             Invoke-BcdEdit "/displayorder $osLoaderGuid /addlast"
-            Invoke-BcdEdit "/bootsequence $osLoaderGuid" # Set to boot into this entry on next restart
+            Invoke-BcdEdit "/bootsequence $osLoaderGuid"
             Invoke-BcdEdit "/timeout 10"
 
             # Step 4: Create log file for undo
@@ -389,7 +753,7 @@ exit
                 OriginalPartitionNumber = $partitionToShrink.PartitionNumber
                 DiskNumber = $diskNumber
                 OsLoaderGuid = $osLoaderGuid
-                RamdiskGuid = $ramdiskGuid # Save the new GUID
+                RamdiskGuid = $ramdiskGuid
             } | ConvertTo-Json
             
             $rglPath = Join-Path "${newDriveLetter}:\" $RglFileName
@@ -415,7 +779,7 @@ exit
         }
     }
 
-    $job = Start-Job -ScriptBlock $scriptBlock -ArgumentList $driveLetter, $isoPath, $requiredSpaceGB, $Global:PartitionLabel, $Global:RglFileName
+    $job = Start-Job -ScriptBlock $scriptBlock -ArgumentList $driveLetter, $isoPath, $requiredSpaceGB, $Global:PartitionLabel, $Global:RglFileName, $shouldAutomate
     
     $job | Wait-Job
     $result = $job | Receive-Job
@@ -433,7 +797,7 @@ exit
     
     Sync-Gui -Action { $progressBar.IsIndeterminate = $false; $progressBar.Value = 100 }
     $job | Remove-Job
-    Set-UiState -isEnabled $true
+    Set-DeployUiState -isEnabled $true
 })
 
 $undoButton.Add_Click({
@@ -446,7 +810,7 @@ $undoButton.Add_Click({
     $confirmationResult = Show-MessageBox ("Se eliminará la partición de instalación y su entrada de arranque. ¿Estás seguro?") "Confirmar Eliminación" "Warning" "YesNo"
     if ($confirmationResult -ne "Yes") { return }
 
-    Set-UiState -isEnabled $false
+    Set-DeployUiState -isEnabled $false
     Sync-Gui -Action { 
         $progressBar.IsIndeterminate = $true
         $statusTextBlock.Text = "Eliminando partición y arranque..."
@@ -459,11 +823,9 @@ $undoButton.Add_Click({
         }
         $rglContent = Get-Content -Path $rglPath | ConvertFrom-Json
         
-        # Delete BCD entries
         if ($rglContent.OsLoaderGuid) { bcdedit /delete $rglContent.OsLoaderGuid /f | Out-Null }
         if ($rglContent.RamdiskGuid) { bcdedit /delete $rglContent.RamdiskGuid /f | Out-Null }
         
-        # Delete partition and extend original
         $diskNumber = $rglContent.DiskNumber
         $partitionToExtendNumber = $rglContent.OriginalPartitionNumber
         
@@ -486,7 +848,7 @@ extend
         Show-MessageBox "Ocurrió un error: $($_.Exception.Message)" "Error" "Error"
         Sync-Gui -Action { $statusTextBlock.Text = "Falló el proceso de eliminación." }
     } finally {
-        Set-UiState -isEnabled $true
+        Set-DeployUiState -isEnabled $true
         Sync-Gui -Action { $progressBar.IsIndeterminate = $false; $progressBar.Value = 100 }
         Load-Disks
     }
