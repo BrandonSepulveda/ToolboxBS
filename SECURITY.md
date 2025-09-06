@@ -10,7 +10,7 @@ currently being supported with security updates.
 | beta    | :white_check_Brandon:|
 | Alpha   | :white_check_Brandon:|
 | 1.0.    | :white_check_Brandon:|
-| 1.1     | :white_check_Brandon:|
+| last    | :white_check_Brandon:|
 
 ## Reporting a Vulnerability
 
