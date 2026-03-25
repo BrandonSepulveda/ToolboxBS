@@ -1,6 +1,6 @@
 @echo off
 setlocal
-:: Comprobar si hay permisos de admin
+:: Comprobar si hay permisos de adminn
 openfiles >nul 2>&1
 if %errorlevel% neq 0 (
     echo Configurando permisos de administrador...
