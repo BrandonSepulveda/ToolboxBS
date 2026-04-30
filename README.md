@@ -79,7 +79,6 @@ Facilita la instalación de aplicaciones empresariales y de TI esenciales:
 - Utiliza Chocolatey para gestionar la instalación de forma eficiente.
 - Actualiza fácilmente aplicaciones existentes.
 
-<img width="976" height="757" alt="image" src="https://github.com/user-attachments/assets/a2d10b54-9af8-4eb2-a5ca-3e8b3b660a87" />
 
 
 ### 🔧 Verificación y Reparación del Sistema
@@ -97,7 +96,8 @@ Optimiza tu sistema eliminando archivos innecesarios y mejorando el rendimiento:
 
 - **Limpieza de Temporales**: Elimina archivos temporales para liberar espacio en disco.
 - **Optimización de RAM**: Utiliza herramientas avanzadas para gestionar eficientemente la memoria.
-<img width="1150" height="717" alt="image" src="https://github.com/user-attachments/assets/b9d7f542-1d54-4768-8967-f22de798ab36" />
+<img width="1195" height="735" alt="image" src="https://github.com/user-attachments/assets/d8262575-a18e-4aad-8f8e-f345bd63f4ca" />
+
 
 
 ---
