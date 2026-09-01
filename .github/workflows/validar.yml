@@ -43,14 +43,21 @@ jobs:
           $salida | ForEach-Object { Write-Host $_ }
 
           $texto = $salida -join "`n"
-          if ($texto -match 'DUPLICADOS|ERRORES DE SINTAXIS|FALLOS FUNCIONALES|CATEGORIA INVALIDA|SIN CODIGO') {
+
+          # -cmatch (sensible a mayusculas) a proposito: el SelfTest reporta los
+          # fallos en MAYUSCULA, y los mensajes de exito usan esas mismas
+          # palabras en minuscula ("sin ids duplicados", "compilan sin errores").
+          # Con -match, que ignora mayusculas, un exito se leia como fallo.
+          $fallos = 'IDS DUPLICADOS|SIN CODIGO:|CODIGO CON ERRORES|CATEGORIA INVALIDA|FALLOS FUNCIONALES|referencia ids inexistentes'
+          if ($texto -cmatch $fallos) {
             Write-Host "::error::El SelfTest reporto problemas."
             exit 1
           }
-          if ($texto -notmatch '\[selftest\] OK') {
+          if ($texto -cnotmatch '\[selftest\] OK') {
             Write-Host "::error::El SelfTest no llego a completarse."
             exit 1
           }
+          Write-Host "SelfTest correcto."
 
       - name: Regenerar el catalogo
         shell: powershell
