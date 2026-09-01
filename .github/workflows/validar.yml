@@ -1,0 +1,79 @@
+name: Validar ToolboxBS
+
+# Corre el SelfTest del propio script: comprueba que las herramientas del
+# catalogo compilen, que no haya ids duplicados y que la interfaz WPF se
+# construya. Si algo se rompe, se sabe aqui y no despues de la release.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/ToolboxBS.ps1'
+      - '.github/workflows/validar.yml'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  selftest:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sintaxis del script
+        shell: powershell
+        run: |
+          $errors = $null
+          $null = [System.Management.Automation.Language.Parser]::ParseFile(
+            "src/ToolboxBS.ps1", [ref]$null, [ref]$errors)
+          if ($errors.Count) {
+            $errors | ForEach-Object {
+              Write-Host "::error file=src/ToolboxBS.ps1,line=$($_.Extent.StartLineNumber)::$($_.Message)"
+            }
+            exit 1
+          }
+          Write-Host "Sintaxis correcta."
+
+      - name: SelfTest (catalogo, XAML e interfaz)
+        shell: powershell
+        run: |
+          $salida = & powershell -STA -NoProfile -ExecutionPolicy Bypass `
+                      -File src/ToolboxBS.ps1 -SelfTest 2>&1
+          $salida | ForEach-Object { Write-Host $_ }
+
+          $texto = $salida -join "`n"
+          if ($texto -match 'DUPLICADOS|ERRORES DE SINTAXIS|FALLOS FUNCIONALES|CATEGORIA INVALIDA|SIN CODIGO') {
+            Write-Host "::error::El SelfTest reporto problemas."
+            exit 1
+          }
+          if ($texto -notmatch '\[selftest\] OK') {
+            Write-Host "::error::El SelfTest no llego a completarse."
+            exit 1
+          }
+
+      - name: Regenerar el catalogo
+        shell: powershell
+        run: |
+          & powershell -NoProfile -ExecutionPolicy Bypass `
+              -File src/ToolboxBS.ps1 -ExportCatalog docs/catalogo.json
+          & powershell -NoProfile -ExecutionPolicy Bypass `
+              -File src/ToolboxBS.ps1 -ExportCatalog catalogo.full.json -WithCode
+
+      - name: Avisar si el catalogo publicado quedo desactualizado
+        shell: powershell
+        run: |
+          $diff = git diff --name-only -- docs/catalogo.json
+          if ($diff) {
+            Write-Host "::warning file=docs/catalogo.json::El catalogo publicado no coincide con el script. Regeneralo con: .\src\ToolboxBS.ps1 -ExportCatalog docs\catalogo.json"
+          } else {
+            Write-Host "docs/catalogo.json esta al dia."
+          }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: catalogo
+          path: |
+            docs/catalogo.json
+            catalogo.full.json
+          if-no-files-found: error
