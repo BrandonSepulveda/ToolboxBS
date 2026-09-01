@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     ToolboxBS v4 - Enterprise / La navaja suiza de Windows
 .DESCRIPTION
@@ -278,7 +278,7 @@ OK "CHKDSK quedara programado. Reinicia para que se ejecute (puede tardar 1-2 ho
         -Name 'Resetear Windows Update' -Desc 'Reconstruye SoftwareDistribution y catroot2, arregla el 90% de errores de update' -Code @'
 HR "RESET DE COMPONENTES DE WINDOWS UPDATE"
 Stop-Svc @("wuauserv","cryptSvc","bits","msiserver","usosvc","dosvc")
-Step "Renombrando cachés"
+Step "Renombrando caches"
 $stamp = Stamp
 foreach ($p in @("$env:SystemRoot\SoftwareDistribution","$env:SystemRoot\System32\catroot2")) {
     if (Test-Path $p) {
