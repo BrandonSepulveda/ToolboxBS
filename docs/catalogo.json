@@ -1,0 +1,2315 @@
+﻿[
+    {
+        "Id":  "repair-restore-point",
+        "Name":  "Crear punto de restauracion",
+        "Desc":  "Habilita la proteccion del sistema y crea un punto",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-sfc-dism",
+        "Name":  "Reparar Windows (SFC + DISM)",
+        "Desc":  "Verifica y repara la integridad del sistema. Tarda 15-40 min",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-chkdsk",
+        "Name":  "Programar CHKDSK",
+        "Desc":  "Revisa el disco de sistema en el proximo reinicio",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-wu-reset",
+        "Name":  "Resetear Windows Update",
+        "Desc":  "Reconstruye SoftwareDistribution y catroot2, arregla el 90% de errores de update",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-store",
+        "Name":  "Reparar Microsoft Store y apps",
+        "Desc":  "Limpia la cache de la Store y re-registra las aplicaciones UWP",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-explorer",
+        "Name":  "Reparar Explorador e iconos",
+        "Desc":  "Reconstruye la cache de iconos y miniaturas, y reinicia el Explorador",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-print",
+        "Name":  "Reparar cola de impresion",
+        "Desc":  "Detiene el spooler, borra trabajos atascados y lo reinicia",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-audio",
+        "Name":  "Reparar audio",
+        "Desc":  "Reinicia los servicios de sonido y lista los dispositivos",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-search",
+        "Name":  "Reconstruir busqueda de Windows",
+        "Desc":  "Regenera el indice cuando el buscador del menu Inicio deja de responder",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-network",
+        "Name":  "Restablecer red completa",
+        "Desc":  "Winsock, TCP/IP, DNS, firewall y renovacion de IP",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-firewall",
+        "Name":  "Restaurar firewall por defecto",
+        "Desc":  "Elimina reglas rotas y devuelve el firewall a los valores de fabrica",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-startmenu",
+        "Name":  "Reparar menu Inicio y barra",
+        "Desc":  "Reconstruye el paquete del Shell cuando el menu Inicio no abre",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-bsod",
+        "Name":  "Analizar pantallazos azules",
+        "Desc":  "Lee los minidumps, resume los codigos de parada y abre BlueScreenView",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-events",
+        "Name":  "Triaje de errores del sistema",
+        "Desc":  "Agrupa los errores criticos de los ultimos 7 dias por origen",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-memtest",
+        "Name":  "Diagnostico de memoria RAM",
+        "Desc":  "Revisa resultados previos y programa la prueba de memoria de Windows",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-battery",
+        "Name":  "Salud de la bateria",
+        "Desc":  "Informe de desgaste, ciclos y capacidad real frente a la de diseno",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-drivers-list",
+        "Name":  "Inventario de controladores",
+        "Desc":  "Exporta todos los drivers y senala los que estan fallando",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-drivers-backup",
+        "Name":  "Respaldar todos los drivers",
+        "Desc":  "Exporta los controladores a una carpeta para reinstalarlos tras formatear",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-drivers-restore",
+        "Name":  "Restaurar drivers respaldados",
+        "Desc":  "Reinstala los controladores desde la carpeta de respaldo mas reciente",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-winsxs",
+        "Name":  "Compactar WinSxS",
+        "Desc":  "Elimina versiones antiguas de componentes. Libera varios GB pero impide desinstalar updates",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-time",
+        "Name":  "Sincronizar reloj del sistema",
+        "Desc":  "Arregla certificados y accesos que fallan por hora incorrecta",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-netfx",
+        "Name":  "Verificar .NET y runtimes",
+        "Desc":  "Lista versiones de .NET, VC++ y habilita .NET 3.5 si falta",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-profile",
+        "Name":  "Auditar perfiles de usuario",
+        "Desc":  "Detecta perfiles corruptos, temporales o huerfanos y su peso en disco",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-uwp-core",
+        "Name":  "Reinstalar apps esenciales",
+        "Desc":  "Recupera Calculadora, Fotos, Camara, Notas y Terminal si fueron borradas",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-temp",
+        "Name":  "Purgar temporales",
+        "Desc":  "Temp de usuario y de Windows, Prefetch, informes de errores y cache de entrega",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-browsers",
+        "Name":  "Cache de navegadores",
+        "Desc":  "Chrome, Edge, Brave, Opera y Firefox. No borra contrasenas ni marcadores",
+        "Cat":  "clean",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-recycle",
+        "Name":  "Vaciar papelera",
+        "Desc":  "Vacia la papelera de reciclaje de todas las unidades",
+        "Cat":  "clean",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-winold",
+        "Name":  "Eliminar Windows.old",
+        "Desc":  "Borra la instalacion anterior. Libera 10-30 GB pero impide volver a la version previa",
+        "Cat":  "clean",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-thumbs",
+        "Name":  "Cache de miniaturas e iconos",
+        "Desc":  "Arregla miniaturas en blanco o iconos equivocados",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-logs",
+        "Name":  "Logs y volcados del sistema",
+        "Desc":  "CBS, DISM, informes de rendimiento y volcados de memoria antiguos",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-apps-cache",
+        "Name":  "Cache de aplicaciones",
+        "Desc":  "Teams, Discord, Spotify, Adobe, Zoom, Slack y la Store",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-cleanmgr",
+        "Name":  "Liberador de espacio automatico",
+        "Desc":  "Ejecuta cleanmgr con todas las categorias seguras preseleccionadas",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-restore-old",
+        "Name":  "Borrar puntos de restauracion viejos",
+        "Desc":  "Conserva unicamente el punto mas reciente y libera espacio de instantaneas",
+        "Cat":  "clean",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-downloads-old",
+        "Name":  "Descargas de mas de 90 dias",
+        "Desc":  "Lista primero lo que va a borrar de la carpeta Descargas y luego lo elimina",
+        "Cat":  "clean",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-space-report",
+        "Name":  "Que se esta comiendo el disco",
+        "Desc":  "Ranking de las 30 carpetas y los 30 archivos mas pesados del disco",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-hiberfil",
+        "Name":  "Desactivar hibernacion",
+        "Desc":  "Elimina hiberfil.sys y libera un espacio igual a la RAM instalada",
+        "Cat":  "clean",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "clean-eventlogs",
+        "Name":  "Vaciar registros de eventos",
+        "Desc":  "Limpia el Visor de eventos para partir de cero en un diagnostico",
+        "Cat":  "clean",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-all-users-temp",
+        "Name":  "Temporales de todos los perfiles",
+        "Desc":  "Recorre cada usuario del equipo y limpia sus temporales y cache",
+        "Cat":  "clean",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-ram",
+        "Name":  "Liberar RAM en espera",
+        "Desc":  "Vacia la standby list con RAMMap de Sysinternals y muestra el antes/despues",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-dupes",
+        "Name":  "Buscar archivos duplicados",
+        "Desc":  "Reporta duplicados grandes en el perfil de usuario. Solo informa, no borra nada",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-ultimate",
+        "Name":  "Plan de energia maximo",
+        "Desc":  "Activa Rendimiento maximo y desactiva el ahorro que frena la CPU",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-visual",
+        "Name":  "Efectos visuales a rendimiento",
+        "Desc":  "Quita animaciones, sombras y transparencias manteniendo las fuentes suavizadas",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-startup",
+        "Name":  "Auditar programas de inicio",
+        "Desc":  "Muestra todo lo que arranca con Windows y su impacto medido",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-services",
+        "Name":  "Optimizar servicios",
+        "Desc":  "Pasa a manual los servicios prescindibles. Respalda antes y es reversible",
+        "Cat":  "perf",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-sysmain",
+        "Name":  "Ajustar SysMain y Prefetch",
+        "Desc":  "Los desactiva solo si el disco de sistema es SSD, donde no aportan nada",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-trim",
+        "Name":  "Optimizar unidades (TRIM)",
+        "Desc":  "Lanza TRIM en SSD y desfragmentacion en discos mecanicos",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-telemetry",
+        "Name":  "Reducir telemetria",
+        "Desc":  "Desactiva el envio de diagnosticos, publicidad y sugerencias",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-bloat",
+        "Name":  "Quitar apps preinstaladas",
+        "Desc":  "Elimina bloatware de fabrica. No toca la Store, Terminal, Calculadora ni Fotos",
+        "Cat":  "perf",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-widgets",
+        "Name":  "Quitar Widgets, Chat y Copilot",
+        "Desc":  "Limpia la barra de tareas de Windows 11 y libera memoria en segundo plano",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-context",
+        "Name":  "Menu contextual clasico",
+        "Desc":  "Devuelve el clic derecho completo de Windows 10 en Windows 11",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-explorer-tweaks",
+        "Name":  "Explorador para tecnicos",
+        "Desc":  "Extensiones visibles, archivos ocultos, ruta completa y abrir en Este equipo",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-gaming",
+        "Name":  "Optimizacion para juegos",
+        "Desc":  "Desactiva GameDVR, activa GPU scheduling y prioriza tareas graficas",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-net-tweaks",
+        "Name":  "Afinar pila de red",
+        "Desc":  "Quita el throttling, aplica CTCP y reduce latencia de Nagle",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-boot",
+        "Name":  "Acelerar el arranque",
+        "Desc":  "Reduce el tiempo de espera del gestor y quita retardos de inicio de sesion",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-winutil",
+        "Name":  "Chris Titus WinUtil",
+        "Desc":  "Lanza la utilidad de la comunidad para tweaks avanzados",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-perfbat",
+        "Name":  "Performance.bat (BS)",
+        "Desc":  "Script propio de optimizacion de rendimiento del repositorio ToolboxBS",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-update-apps",
+        "Name":  "Actualizar todo el software",
+        "Desc":  "winget upgrade --all, incluyendo paquetes de version desconocida",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-install-winget",
+        "Name":  "Instalar o reparar Winget",
+        "Desc":  "Instala el Instalador de aplicaciones y sus dependencias sin pasar por la Store",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-activate",
+        "Name":  "Activar con licencia OEM",
+        "Desc":  "Recupera la clave grabada en el BIOS y reactiva Windows con ella",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-reboot-bios",
+        "Name":  "Reiniciar a la BIOS/UEFI",
+        "Desc":  "Reinicia el equipo directamente en la configuracion de firmware",
+        "Cat":  "perf",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "perf-drivers-oem",
+        "Name":  "Actualizador de drivers OEM",
+        "Desc":  "Detecta el fabricante y descarga su utilidad oficial de drivers",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-defender-status",
+        "Name":  "Estado de Microsoft Defender",
+        "Desc":  "Protecciones activas, firmas, exclusiones y amenazas detectadas",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-defender-scan",
+        "Name":  "Examen rapido de Defender",
+        "Desc":  "Actualiza firmas y ejecuta un analisis rapido de las zonas criticas",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-defender-full",
+        "Name":  "Examen completo de Defender",
+        "Desc":  "Analisis exhaustivo de todo el disco. Puede tardar horas",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-malware-tools",
+        "Name":  "Herramientas antimalware",
+        "Desc":  "Descarga ADWCleaner de Malwarebytes y el escaner KVRT de Kaspersky",
+        "Cat":  "sec",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-bitlocker",
+        "Name":  "BitLocker y claves de recuperacion",
+        "Desc":  "Estado del cifrado y exporta las claves antes de que sea tarde",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-accounts",
+        "Name":  "Auditar cuentas de usuario",
+        "Desc":  "Cuentas locales, quien es administrador y contrasenas que nunca expiran",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-logons",
+        "Name":  "Historial de inicios de sesion",
+        "Desc":  "Quien entro, cuando, y cuantos intentos fallidos hubo",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-autoruns",
+        "Name":  "Cazar persistencias sospechosas",
+        "Desc":  "Revisa autoarranques, tareas y servicios con binarios sin firmar o en rutas raras",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-ports",
+        "Name":  "Puertos y conexiones activas",
+        "Desc":  "Que esta escuchando, con que proceso y hacia donde sale el trafico",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-hosts",
+        "Name":  "Revisar archivo hosts",
+        "Desc":  "Detecta redirecciones inyectadas por malware o cracks",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-updates",
+        "Name":  "Parches instalados y pendientes",
+        "Desc":  "Historial de actualizaciones y busqueda de las que faltan",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-rdp",
+        "Name":  "Escritorio remoto y SMBv1",
+        "Desc":  "Revisa RDP, NLA y desactiva el protocolo SMBv1 vulnerable",
+        "Cat":  "sec",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-secureboot",
+        "Name":  "Arranque seguro y TPM",
+        "Desc":  "Verifica Secure Boot, TPM, virtualizacion y requisitos de Windows 11",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-uac-max",
+        "Name":  "Endurecer el sistema",
+        "Desc":  "Sube UAC al maximo, activa SmartScreen y bloquea macros de Office",
+        "Cat":  "sec",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-info",
+        "Name":  "Diagnostico de red completo",
+        "Desc":  "IP publica y privada, gateway, DNS, MAC, latencia y perdida de paquetes",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-speed",
+        "Name":  "Test de velocidad",
+        "Desc":  "Mide la velocidad real de bajada descargando un archivo de prueba",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-wifi-pass",
+        "Name":  "Contrasenas WiFi guardadas",
+        "Desc":  "Recupera las claves de todas las redes memorizadas por el equipo",
+        "Cat":  "net",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-scan-lan",
+        "Name":  "Escanear la red local",
+        "Desc":  "Descubre los dispositivos conectados, su IP, MAC y fabricante",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-dns-set",
+        "Name":  "DNS rapidos (Cloudflare)",
+        "Desc":  "Aplica 1.1.1.1 y 8.8.8.8 en todos los adaptadores activos",
+        "Cat":  "net",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "net-dns-flush",
+        "Name":  "Vaciar cache DNS",
+        "Desc":  "Soluciona paginas que cargan mal tras un cambio de servidor",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-trace",
+        "Name":  "Trazado de ruta y estabilidad",
+        "Desc":  "Traza el camino hasta Internet y detecta en que salto se pierde el paquete",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-adapters",
+        "Name":  "Gestionar adaptadores de red",
+        "Desc":  "Estado de cada tarjeta y reinicio del adaptador principal",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-proxy",
+        "Name":  "Revisar y limpiar proxy",
+        "Desc":  "Detecta proxies inyectados que rompen la navegacion y los elimina",
+        "Cat":  "net",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-shares",
+        "Name":  "Recursos y unidades de red",
+        "Desc":  "Que comparte este equipo y a que unidades de red esta conectado",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-report-html",
+        "Name":  "Reporte HTML del equipo",
+        "Desc":  "Informe completo con marca para entregar al cliente. Se abre al terminar",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-software",
+        "Name":  "Inventario de software",
+        "Desc":  "Todo lo instalado con version y editor, exportado a CSV",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-keys",
+        "Name":  "Claves de producto",
+        "Desc":  "Recupera la clave de Windows del BIOS y del registro antes de formatear",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-disks",
+        "Name":  "Salud de discos (SMART)",
+        "Desc":  "Horas de uso, reasignaciones, temperatura y vida util restante",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-temps",
+        "Name":  "Temperaturas y sensores",
+        "Desc":  "Lee los sensores termicos disponibles via WMI y ACPI",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-bench",
+        "Name":  "Benchmark rapido",
+        "Desc":  "Mide CPU, memoria y velocidad de disco en menos de un minuto",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-warranty",
+        "Name":  "Consultar garantia",
+        "Desc":  "Detecta el serial y abre el portal de garantia del fabricante ya rellenado",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-hardware",
+        "Name":  "Diagnostico profundo del sistema",
+        "Desc":  "SystemInfoPlus: recorrido completo de OS, CPU, RAM, discos, red y GPU",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-godmode",
+        "Name":  "Crear God Mode",
+        "Desc":  "Carpeta en el escritorio con las 260 opciones del Panel de control",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-sysinternals",
+        "Name":  "Suite Sysinternals",
+        "Desc":  "Descarga Autoruns, Process Explorer, TCPView y el resto de la suite",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-uninstaller",
+        "Name":  "Desinstalador de programas",
+        "Desc":  "Lista todo lo instalado por winget y permite desinstalar en lote",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-backup-profile",
+        "Name":  "Respaldar datos del usuario",
+        "Desc":  "Copia Escritorio, Documentos, Imagenes, Videos y Favoritos a la ruta que elijas",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-maint-task",
+        "Name":  "Mantenimiento automatico semanal",
+        "Desc":  "Crea una tarea programada que limpia temporales y actualiza software cada domingo",
+        "Cat":  "tools",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "tools-restore-manager",
+        "Name":  "Gestor de puntos de restauracion",
+        "Desc":  "Lista los puntos existentes, el espacio que ocupan y abre el asistente",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-hosts-edit",
+        "Name":  "Editar archivo hosts",
+        "Desc":  "Abre hosts en Notepad con permisos y crea copia de seguridad antes",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-admin-account",
+        "Name":  "Cuenta Administrador integrada",
+        "Desc":  "Activa la cuenta oculta de Administrador para rescatar un equipo bloqueado",
+        "Cat":  "tools",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-env",
+        "Name":  "Variables de entorno y PATH",
+        "Desc":  "Revisa el PATH, detecta rutas rotas y abre el editor del sistema",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-shell-folders",
+        "Name":  "Carpetas del sistema",
+        "Desc":  "Abre de golpe Inicio, Enviar a, Plantillas y otras carpetas ocultas utiles",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-download-windows",
+        "Name":  "Descargar Windows ISO",
+        "Desc":  "Abre el portal de descargas de imagenes de ToolboxBS",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-windeploy",
+        "Name":  "WinDeploy",
+        "Desc":  "Despliegue post-formateo desde la nube",
+        "Cat":  "tools",
+        "Risk":  "care",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-open-logs",
+        "Name":  "Abrir carpeta de ToolboxBS",
+        "Desc":  "Reportes, logs, respaldos y perfiles generados por la herramienta",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-taskmgr",
+        "Name":  "Administrador de tareas",
+        "Desc":  "Procesos, rendimiento e inicio",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-devmgmt",
+        "Name":  "Administrador de dispositivos",
+        "Desc":  "Drivers y hardware",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-services",
+        "Name":  "Servicios",
+        "Desc":  "Arranque y estado de servicios",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-diskmgmt",
+        "Name":  "Administracion de discos",
+        "Desc":  "Particiones y volumenes",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-eventvwr",
+        "Name":  "Visor de eventos",
+        "Desc":  "Registros del sistema",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-regedit",
+        "Name":  "Editor del registro",
+        "Desc":  "Claves y valores",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-compmgmt",
+        "Name":  "Administracion del equipo",
+        "Desc":  "Consola unificada",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-taskschd",
+        "Name":  "Programador de tareas",
+        "Desc":  "Tareas automaticas",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-lusrmgr",
+        "Name":  "Usuarios y grupos locales",
+        "Desc":  "Cuentas del equipo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-gpedit",
+        "Name":  "Directivas de grupo",
+        "Desc":  "Politicas locales (solo Pro)",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-perfmon",
+        "Name":  "Monitor de rendimiento",
+        "Desc":  "Contadores en detalle",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-resmon",
+        "Name":  "Monitor de recursos",
+        "Desc":  "CPU, disco, red y memoria en vivo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-msconfig",
+        "Name":  "Configuracion del sistema",
+        "Desc":  "Arranque y servicios",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-sysdm",
+        "Name":  "Propiedades del sistema",
+        "Desc":  "Nombre, restauracion y rendimiento",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-appwiz",
+        "Name":  "Programas y caracteristicas",
+        "Desc":  "Desinstalar software",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-ncpa",
+        "Name":  "Conexiones de red",
+        "Desc":  "Adaptadores",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-powercfg",
+        "Name":  "Opciones de energia",
+        "Desc":  "Planes de energia",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-optional",
+        "Name":  "Caracteristicas de Windows",
+        "Desc":  "Activar o desactivar componentes",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-cleanmgr",
+        "Name":  "Liberador de espacio",
+        "Desc":  "Limpieza clasica",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-control",
+        "Name":  "Panel de control",
+        "Desc":  "Panel clasico completo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-settings",
+        "Name":  "Configuracion de Windows",
+        "Desc":  "App moderna de ajustes",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-winupdate",
+        "Name":  "Windows Update",
+        "Desc":  "Buscar actualizaciones",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-defenderui",
+        "Name":  "Seguridad de Windows",
+        "Desc":  "Centro de seguridad",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-mstsc",
+        "Name":  "Escritorio remoto",
+        "Desc":  "Conectar a otro equipo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-msinfo",
+        "Name":  "Informacion del sistema",
+        "Desc":  "msinfo32 completo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-dxdiag",
+        "Name":  "Diagnostico DirectX",
+        "Desc":  "GPU, sonido y entrada",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-psconsole",
+        "Name":  "Consola PowerShell",
+        "Desc":  "Terminal elevada",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "abrir-wingetcli",
+        "Name":  "Consola Winget",
+        "Desc":  "Gestor de paquetes",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-googlechrome",
+        "Name":  "Google Chrome",
+        "Desc":  "Navegadores - El navegador mas usado del mundo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-brave",
+        "Name":  "Brave",
+        "Desc":  "Navegadores - Rapido y con bloqueo de anuncios integrado",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-mozillafirefox",
+        "Name":  "Mozilla Firefox",
+        "Desc":  "Navegadores - Navegador independiente centrado en privacidad",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-operagx",
+        "Name":  "Opera GX",
+        "Desc":  "Navegadores - Navegador para gamers con limitador de recursos",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-7zip",
+        "Name":  "7-Zip",
+        "Desc":  "Esenciales - Compresor de archivos open source",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-nanazip",
+        "Name":  "NanaZip",
+        "Desc":  "Esenciales - Fork moderno de 7-Zip integrado en Windows 11",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-winrar",
+        "Name":  "WinRAR",
+        "Desc":  "Esenciales - Compresor clasico con soporte RAR",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-adobeacrobatreader",
+        "Name":  "Adobe Acrobat Reader",
+        "Desc":  "Esenciales - Lector de PDF de referencia",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-sumatrapdf",
+        "Name":  "SumatraPDF",
+        "Desc":  "Esenciales - Lector de PDF ultraligero",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-notepad",
+        "Name":  "Notepad++",
+        "Desc":  "Esenciales - Editor de texto con resaltado de sintaxis",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-vlcmediaplayer",
+        "Name":  "VLC Media Player",
+        "Desc":  "Esenciales - Reproduce cualquier formato de video y audio",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-klitecodecpack",
+        "Name":  "K-Lite Codec Pack",
+        "Desc":  "Esenciales - Codecs para reproducir todo en Windows",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-microsoftpowertoys",
+        "Name":  "Microsoft PowerToys",
+        "Desc":  "Esenciales - Utilidades avanzadas: FancyZones, PowerRename, Peek",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-everything",
+        "Name":  "Everything",
+        "Desc":  "Esenciales - Busca cualquier archivo del disco al instante",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-windowsterminal",
+        "Name":  "Windows Terminal",
+        "Desc":  "Esenciales - Terminal moderna con pestanas",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-powershell7",
+        "Name":  "PowerShell 7",
+        "Desc":  "Esenciales - PowerShell multiplataforma actualizado",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-greenshot",
+        "Name":  "Greenshot",
+        "Desc":  "Esenciales - Capturas de pantalla con anotaciones",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-sharex",
+        "Name":  "ShareX",
+        "Desc":  "Esenciales - Capturas, grabacion y subida automatica",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-libreoffice",
+        "Name":  "LibreOffice",
+        "Desc":  "Ofimatica - Suite ofimatica libre compatible con Office",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-microsoft365",
+        "Name":  "Microsoft 365",
+        "Desc":  "Ofimatica - Instalador de Office / Microsoft 365",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-onlyoffice",
+        "Name":  "OnlyOffice",
+        "Desc":  "Ofimatica - Suite con maxima compatibilidad con formatos de Office",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-obsidian",
+        "Name":  "Obsidian",
+        "Desc":  "Ofimatica - Notas en Markdown enlazadas",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-notion",
+        "Name":  "Notion",
+        "Desc":  "Ofimatica - Espacio de trabajo todo en uno",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-cpuz",
+        "Name":  "CPU-Z",
+        "Desc":  "Diagnostico - Identifica CPU, placa base y memoria",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-gpuz",
+        "Name":  "GPU-Z",
+        "Desc":  "Diagnostico - Detalle completo de la tarjeta grafica",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-hwinfo",
+        "Name":  "HWiNFO",
+        "Desc":  "Diagnostico - Sensores y temperaturas de todo el equipo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-crystaldiskinfo",
+        "Name":  "CrystalDiskInfo",
+        "Desc":  "Diagnostico - Salud SMART de discos duros y SSD",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-crystaldiskmark",
+        "Name":  "CrystalDiskMark",
+        "Desc":  "Diagnostico - Mide la velocidad real del disco",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-hdsentinel",
+        "Name":  "HD Sentinel",
+        "Desc":  "Diagnostico - Monitorea y predice fallos de disco",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-aida64extreme",
+        "Name":  "AIDA64 Extreme",
+        "Desc":  "Diagnostico - Diagnostico y benchmark profesional (trial)",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-occt",
+        "Name":  "OCCT",
+        "Desc":  "Diagnostico - Prueba de estres de CPU, GPU y fuente",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-memtest86",
+        "Name":  "MemTest86",
+        "Desc":  "Diagnostico - Prueba exhaustiva de memoria RAM arrancable",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-wiztree",
+        "Name":  "WizTree",
+        "Desc":  "Diagnostico - Analiza que ocupa el disco en segundos",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-windirstat",
+        "Name":  "WinDirStat",
+        "Desc":  "Diagnostico - Mapa visual del uso de disco",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-revouninstaller",
+        "Name":  "Revo Uninstaller",
+        "Desc":  "Mantenimiento - Desinstala dejando el registro limpio",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-bcuninstaller",
+        "Name":  "BCUninstaller",
+        "Desc":  "Mantenimiento - Desinstalacion masiva de programas",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-bleachbit",
+        "Name":  "BleachBit",
+        "Desc":  "Mantenimiento - Limpieza profunda open source",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-treesizefree",
+        "Name":  "TreeSize Free",
+        "Desc":  "Mantenimiento - Encuentra las carpetas que llenan el disco",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-autoruns",
+        "Name":  "Autoruns",
+        "Desc":  "Mantenimiento - Control total de lo que arranca con Windows",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-processexplorer",
+        "Name":  "Process Explorer",
+        "Desc":  "Mantenimiento - Administrador de tareas con esteroides",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-sysinternalssuite",
+        "Name":  "Sysinternals Suite",
+        "Desc":  "Mantenimiento - Toda la suite de utilidades de Microsoft",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-unigetui",
+        "Name":  "UniGetUI",
+        "Desc":  "Mantenimiento - Interfaz grafica para winget, choco y scoop",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-chocolatey",
+        "Name":  "Chocolatey",
+        "Desc":  "Mantenimiento - Gestor de paquetes alternativo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-rufus",
+        "Name":  "Rufus",
+        "Desc":  "Instalacion - Crea USB de arranque desde una ISO",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-ventoy",
+        "Name":  "Ventoy",
+        "Desc":  "Instalacion - Un USB con multiples ISO arrancables",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-balenaetcher",
+        "Name":  "balenaEtcher",
+        "Desc":  "Instalacion - Graba imagenes en USB y tarjetas SD",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-macriumreflectfree",
+        "Name":  "Macrium Reflect Free",
+        "Desc":  "Instalacion - Clonado y respaldo completo de disco",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-veeamagent",
+        "Name":  "Veeam Agent",
+        "Desc":  "Instalacion - Respaldo de imagen del sistema",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-anydesk",
+        "Name":  "AnyDesk",
+        "Desc":  "Remoto - Escritorio remoto rapido y ligero",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-teamviewer",
+        "Name":  "TeamViewer",
+        "Desc":  "Remoto - Soporte remoto empresarial",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-rustdesk",
+        "Name":  "RustDesk",
+        "Desc":  "Remoto - Alternativa open source y autoalojable",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-zoom",
+        "Name":  "Zoom",
+        "Desc":  "Remoto - Videollamadas y reuniones",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-microsoftteams",
+        "Name":  "Microsoft Teams",
+        "Desc":  "Remoto - Colaboracion y reuniones de Microsoft",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-discord",
+        "Name":  "Discord",
+        "Desc":  "Remoto - Chat de voz, video y texto",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-whatsapp",
+        "Name":  "WhatsApp",
+        "Desc":  "Remoto - Cliente de escritorio de WhatsApp",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-telegram",
+        "Name":  "Telegram",
+        "Desc":  "Remoto - Mensajeria rapida y multiplataforma",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-visualstudiocode",
+        "Name":  "Visual Studio Code",
+        "Desc":  "Desarrollo - Editor de codigo de Microsoft",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-git",
+        "Name":  "Git",
+        "Desc":  "Desarrollo - Control de versiones",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-nodejslts",
+        "Name":  "Node.js LTS",
+        "Desc":  "Desarrollo - Entorno de ejecucion JavaScript",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-python3",
+        "Name":  "Python 3",
+        "Desc":  "Desarrollo - Lenguaje Python con pip",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-dockerdesktop",
+        "Name":  "Docker Desktop",
+        "Desc":  "Desarrollo - Contenedores en Windows",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-winscp",
+        "Name":  "WinSCP",
+        "Desc":  "Desarrollo - Cliente SFTP y FTP grafico",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-putty",
+        "Name":  "PuTTY",
+        "Desc":  "Desarrollo - Cliente SSH clasico",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-filezilla",
+        "Name":  "FileZilla",
+        "Desc":  "Desarrollo - Cliente FTP multiplataforma",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-malwarebytes",
+        "Name":  "Malwarebytes",
+        "Desc":  "Seguridad - Segunda opinion contra malware",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-bitwarden",
+        "Name":  "Bitwarden",
+        "Desc":  "Seguridad - Gestor de contrasenas open source",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-keepassxc",
+        "Name":  "KeePassXC",
+        "Desc":  "Seguridad - Boveda de contrasenas local",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-veracrypt",
+        "Name":  "VeraCrypt",
+        "Desc":  "Seguridad - Cifrado de discos y contenedores",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-wireshark",
+        "Name":  "Wireshark",
+        "Desc":  "Seguridad - Analizador de trafico de red",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-advancedipscanner",
+        "Name":  "Advanced IP Scanner",
+        "Desc":  "Seguridad - Escanea equipos de la red local",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-gimp",
+        "Name":  "GIMP",
+        "Desc":  "Multimedia - Edicion de imagen profesional y libre",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-paintnet",
+        "Name":  "Paint.NET",
+        "Desc":  "Multimedia - Editor de imagen sencillo y potente",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-inkscape",
+        "Name":  "Inkscape",
+        "Desc":  "Multimedia - Diseno vectorial",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-obsstudio",
+        "Name":  "OBS Studio",
+        "Desc":  "Multimedia - Grabacion y transmision en vivo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-handbrake",
+        "Name":  "HandBrake",
+        "Desc":  "Multimedia - Conversor de video",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-audacity",
+        "Name":  "Audacity",
+        "Desc":  "Multimedia - Edicion de audio multipista",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-spotify",
+        "Name":  "Spotify",
+        "Desc":  "Multimedia - Musica en streaming",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-dellcommandupdate",
+        "Name":  "Dell Command Update",
+        "Desc":  "Fabricantes - Drivers y BIOS oficiales de Dell",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-hpsupportassistant",
+        "Name":  "HP Support Assistant",
+        "Desc":  "Fabricantes - Soporte y drivers de HP",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-hpimageassistant",
+        "Name":  "HP Image Assistant",
+        "Desc":  "Fabricantes - Gestion de imagenes y drivers HP",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-lenovosystemupdate",
+        "Name":  "Lenovo System Update",
+        "Desc":  "Fabricantes - Drivers y BIOS de Lenovo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-lenovovantage",
+        "Name":  "Lenovo Vantage",
+        "Desc":  "Fabricantes - Centro de control Lenovo",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-myasus",
+        "Name":  "MyASUS",
+        "Desc":  "Fabricantes - Soporte y diagnostico ASUS",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-inteldsa",
+        "Name":  "Intel DSA",
+        "Desc":  "Fabricantes - Actualiza drivers Intel",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-nvidiaapp",
+        "Name":  "NVIDIA App",
+        "Desc":  "Fabricantes - Drivers y optimizacion NVIDIA",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-amdadrenalin",
+        "Name":  "AMD Adrenalin",
+        "Desc":  "Fabricantes - Drivers y control Radeon",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "app-nzxtcam",
+        "Name":  "NZXT CAM",
+        "Desc":  "Fabricantes - Monitorizacion de hardware NZXT",
+        "Cat":  "apps",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-wmi",
+        "Name":  "Reparar repositorio WMI",
+        "Desc":  "Arregla el origen de mil errores raros: informes vacios, Defender mudo, GPO que no aplican",
+        "Cat":  "repair",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-usb",
+        "Name":  "Reparar puertos USB",
+        "Desc":  "Quita los controladores USB para que Windows los reinstale limpios al reiniciar",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-bluetooth",
+        "Name":  "Reparar Bluetooth",
+        "Desc":  "Reinicia la pila de Bluetooth y lista los dispositivos emparejados",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-camera",
+        "Name":  "Reparar camara y microfono",
+        "Desc":  "Revisa permisos de privacidad, drivers y que ninguna app los tenga secuestrados",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-fileassoc",
+        "Name":  "Restaurar asociaciones de archivo",
+        "Desc":  "Arregla los .exe, .lnk o extensiones que abren con el programa equivocado",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-winre",
+        "Name":  "Verificar entorno de recuperacion",
+        "Desc":  "Comprueba que WinRE existe y funciona: sin el no hay reinicio avanzado ni restablecer PC",
+        "Cat":  "repair",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "repair-defender-reset",
+        "Name":  "Reactivar Microsoft Defender",
+        "Desc":  "Recupera Defender cuando un antivirus desinstalado o un crack lo dejo apagado",
+        "Cat":  "repair",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-driverstore",
+        "Name":  "Eliminar drivers huerfanos",
+        "Desc":  "Borra versiones antiguas de controladores del DriverStore. Suele liberar 2-8 GB",
+        "Cat":  "clean",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-old-profiles",
+        "Name":  "Perfiles sin usar hace 6 meses",
+        "Desc":  "Lista los perfiles abandonados y su peso. Solo informa: el borrado se confirma aparte",
+        "Cat":  "clean",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "clean-storage-sense",
+        "Name":  "Configurar Sensor de almacenamiento",
+        "Desc":  "Deja Windows limpiando temporales y papelera solo, cada mes",
+        "Cat":  "clean",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-background-apps",
+        "Name":  "Cortar apps en segundo plano",
+        "Desc":  "Impide que las apps de la Store consuman CPU y red sin estar abiertas",
+        "Cat":  "perf",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-onedrive",
+        "Name":  "Quitar OneDrive",
+        "Desc":  "Desinstala OneDrive y devuelve las carpetas del usuario al disco local",
+        "Cat":  "perf",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-bing-search",
+        "Name":  "Quitar Bing del menu Inicio",
+        "Desc":  "La busqueda deja de consultar internet y responde al instante",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-mouse",
+        "Name":  "Quitar aceleracion del mouse",
+        "Desc":  "Movimiento 1:1 del raton, como lo quieren los jugadores y disenadores",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "perf-notifications",
+        "Name":  "Silenciar notificaciones",
+        "Desc":  "Quita avisos, consejos y la pantalla de bienvenida tras cada actualizacion",
+        "Cat":  "perf",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "sec-ransomware",
+        "Name":  "Proteccion contra ransomware",
+        "Desc":  "Activa el acceso controlado a carpetas de Defender sobre Documentos, Fotos y Escritorio",
+        "Cat":  "sec",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "sec-audit",
+        "Name":  "Activar auditoria de seguridad",
+        "Desc":  "Registra inicios de sesion, cambios de cuentas y uso de privilegios para poder investigar despues",
+        "Cat":  "sec",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "sec-app-permissions",
+        "Name":  "Auditar permisos de aplicaciones",
+        "Desc":  "Que apps tienen acceso a camara, microfono, ubicacion y contactos",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "sec-certs",
+        "Name":  "Revisar certificados raiz",
+        "Desc":  "Detecta autoridades de certificacion instaladas por adware o proxies de interceptacion",
+        "Cat":  "sec",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-wifi-report",
+        "Name":  "Informe de WiFi de Windows",
+        "Desc":  "Genera el reporte oficial con el historial de conexiones, cortes y errores",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-firewall-rules",
+        "Name":  "Auditar reglas de firewall",
+        "Desc":  "Que programas tienen permitido entrar, y exporta todas las reglas a CSV",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-usage",
+        "Name":  "Consumo de red por adaptador",
+        "Desc":  "Cuantos datos ha movido cada tarjeta y que procesos tienen conexiones abiertas",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "net-vpn",
+        "Name":  "VPN y adaptadores virtuales",
+        "Desc":  "Detecta VPN, tuneles y adaptadores virtuales que pueden estar rompiendo la red",
+        "Cat":  "net",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-monitors",
+        "Name":  "Monitores y pantallas",
+        "Desc":  "Marca, modelo, serial, anio de fabricacion y resolucion de cada pantalla",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-gpu",
+        "Name":  "Tarjetas graficas",
+        "Desc":  "GPU, memoria, version y antiguedad del driver, y estado de DirectX",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-updates-history",
+        "Name":  "Historial de actualizaciones",
+        "Desc":  "Que se instalo, cuando, y cuales fallaron. Clave para culpar al parche correcto",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-boot-history",
+        "Name":  "Historial de encendidos",
+        "Desc":  "Cuando se enciende y apaga el equipo, cuanto tarda en arrancar y si hubo apagones",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-usb-history",
+        "Name":  "Dispositivos USB conectados",
+        "Desc":  "Todo lo que se ha conectado alguna vez por USB, util en auditorias y peritajes",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "info-office",
+        "Name":  "Estado de Office",
+        "Desc":  "Version, canal de actualizacion, activacion y cuenta asociada",
+        "Cat":  "info",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-safe-mode",
+        "Name":  "Reiniciar en modo seguro",
+        "Desc":  "Programa el arranque en modo seguro con red. Se revierte desde la misma tarjeta",
+        "Cat":  "tools",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "tools-recovery-usb",
+        "Name":  "Crear unidad de recuperacion",
+        "Desc":  "Abre el asistente para hacer un USB de rescate de este equipo",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-shutdown-timer",
+        "Name":  "Programar apagado",
+        "Desc":  "Apaga el equipo dentro de una hora. Se cancela desde la misma tarjeta",
+        "Cat":  "tools",
+        "Risk":  "care",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "tools-rdp-enable",
+        "Name":  "Habilitar escritorio remoto",
+        "Desc":  "Activa RDP con autenticacion de red y abre el puerto solo en la red privada",
+        "Cat":  "tools",
+        "Risk":  "danger",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "tools-clipboard",
+        "Name":  "Historial del portapapeles",
+        "Desc":  "Activa Win+V para recuperar lo ultimo que copiaste",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    },
+    {
+        "Id":  "tools-winget-restore",
+        "Name":  "Restaurar software desde export",
+        "Desc":  "Reinstala de golpe todo el software del archivo winget_export generado antes de formatear",
+        "Cat":  "tools",
+        "Risk":  "care",
+        "Run":  "term",
+        "Reversible":  false
+    },
+    {
+        "Id":  "tools-context-menu",
+        "Name":  "Menu contextual de tecnico",
+        "Desc":  "Agrega Abrir PowerShell aqui, Tomar propiedad y Copiar ruta al clic derecho",
+        "Cat":  "tools",
+        "Risk":  "safe",
+        "Run":  "inline",
+        "Reversible":  true
+    }
+]
