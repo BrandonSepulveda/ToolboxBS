@@ -521,24 +521,125 @@ INFO "Se abrio el Diagnostico de memoria de Windows: elige 'Reiniciar ahora' o '
 '@
 
     T -Id 'repair-battery' -Cat 'repair' -Icon 'E83F' -Risk 'safe' -Run 'inline' `
-        -Name 'Salud de la bateria' -Desc 'Informe de desgaste, ciclos y capacidad real frente a la de diseno' -Code @'
-HR "SALUD DE LA BATERIA"
-$bat = Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue
-if (-not $bat) { WARN "Este equipo no tiene bateria (escritorio)."; return }
+        -Name 'Salud y carga de la bateria' -Desc 'Porcentaje actual, autonomia restante, ciclos y desgaste real frente al de fabrica' -Code @'
+HR "BATERIA"
 
-$full = (Get-CimInstance -Namespace root\wmi -ClassName BatteryFullChargedCapacity -ErrorAction SilentlyContinue).FullChargedCapacity
-$dsg  = (Get-CimInstance -Namespace root\wmi -ClassName BatteryStaticData -ErrorAction SilentlyContinue).DesignedCapacity
-ROW "Nombre" $bat.Name
-ROW "Carga actual" "$($bat.EstimatedChargeRemaining)%"
-if ($dsg -and $full) {
+# Se consultan TRES fuentes distintas a proposito. Win32_Battery es WMI y en
+# bastantes portatiles devuelve vacio o incompleto; la API GetSystemPowerStatus
+# de Windows, en cambio, es la misma que usa el icono de la bandeja y casi
+# nunca falla. Si una fuente no responde, se sigue con la siguiente en vez de
+# cortar: pase lo que pase, abajo se generan el informe de powercfg y
+# BatteryInfoView.
+$hayBateria = $false
+$pct = $null
+$enCorriente = $null
+
+Step "Fuente 1: API de Windows (GetSystemPowerStatus)"
+try {
+    Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
+    $ps = [System.Windows.Forms.SystemInformation]::PowerStatus
+    ROW "Estado de carga" $ps.BatteryChargeStatus
+    ROW "Alimentacion" $(switch ($ps.PowerLineStatus) { "Online" { "conectado a la corriente" } "Offline" { "con bateria" } default { $ps.PowerLineStatus } })
+
+    if ($ps.BatteryChargeStatus -ne "NoSystemBattery") {
+        $hayBateria = $true
+        $enCorriente = ($ps.PowerLineStatus -eq "Online")
+        # BatteryLifePercent va de 0 a 1; Windows manda 255 (-> 2.55) si no lo sabe
+        if ($ps.BatteryLifePercent -ge 0 -and $ps.BatteryLifePercent -le 1) {
+            $pct = [int][math]::Round($ps.BatteryLifePercent * 100)
+        }
+        if ($ps.BatteryLifeRemaining -gt 0) {
+            $h = [math]::Floor($ps.BatteryLifeRemaining / 3600)
+            $m = [math]::Floor(($ps.BatteryLifeRemaining % 3600) / 60)
+            ROW "Autonomia restante" $(if ($h -gt 0) { "$h h $m min" } else { "$m min" })
+        }
+    }
+}
+catch { WARN "No se pudo consultar la API de energia: $($_.Exception.Message)" }
+
+Step "Fuente 2: WMI (Win32_Battery)"
+$bat = @(Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue)
+if ($bat.Count -eq 0) {
+    INFO "Win32_Battery no devolvio nada."
+}
+else {
+    $hayBateria = $true
+    $i = 0
+    foreach ($b in $bat) {
+        $i++
+        if ($bat.Count -gt 1) { Step "  Bateria $i de $($bat.Count)" }
+        if ($null -eq $pct -and $null -ne $b.EstimatedChargeRemaining) { $pct = [int]$b.EstimatedChargeRemaining }
+        ROW "Nombre" $b.Name
+        $estado = switch ($b.BatteryStatus) {
+            1 { "Descargando" } 2 { "Conectada a la corriente" } 3 { "Totalmente cargada" }
+            4 { "Baja" } 5 { "Critica" } 6 { "Cargando" } 7 { "Cargando (alta)" }
+            8 { "Cargando (baja)" } 9 { "Cargando (critica)" } 10 { "Sin definir" }
+            11 { "Parcialmente cargada" } default { "Desconocido ($($b.BatteryStatus))" }
+        }
+        ROW "Estado" $estado
+        if ($null -eq $enCorriente) { $enCorriente = ($b.BatteryStatus -in @(2, 6, 7, 8, 9)) }
+        # 71582788 es el centinela de "no lo se" que devuelve Windows
+        if ($b.EstimatedRunTime -and $b.EstimatedRunTime -lt 71582788) {
+            $h = [math]::Floor($b.EstimatedRunTime / 60); $m = $b.EstimatedRunTime % 60
+            ROW "Autonomia (WMI)" $(if ($h -gt 0) { "$h h $m min" } else { "$m min" })
+        }
+    }
+}
+
+# --- Carga actual: lo primero que uno quiere ver ---
+if ($null -ne $pct) {
+    $barra = ("#" * [math]::Round($pct / 5)).PadRight(20, ".")
+    Write-Host ""
+    Write-Host "    CARGA ACTUAL:  $pct%   [$barra]"
+    Write-Host ""
+    if ($enCorriente) { OK "Conectada a la corriente." }
+    elseif ($pct -le 15) { ERR "Carga muy baja: conecta el cargador." }
+    elseif ($pct -le 35) { WARN "Carga baja." }
+}
+elseif ($hayBateria) {
+    WARN "Hay bateria, pero ni la API ni WMI dieron el porcentaje."
+    INFO "El informe de powercfg de abajo lo trae de todas formas."
+}
+else {
+    WARN "No se detecto ninguna bateria: parece un equipo de escritorio."
+    INFO "PCSystemType = $((Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue).PCSystemType)  (1 = escritorio, 2 = portatil)"
+    INFO "Aun asi se genera el informe de powercfg, por si el portatil no reporta bien."
+}
+
+# --- Desgaste real: lo que de verdad dice si hay que cambiarla ---
+Step "Desgaste"
+$full = (Get-CimInstance -Namespace root\wmi -ClassName BatteryFullChargedCapacity -ErrorAction SilentlyContinue | Select-Object -First 1).FullChargedCapacity
+$est = Get-CimInstance -Namespace root\wmi -ClassName BatteryStaticData -ErrorAction SilentlyContinue | Select-Object -First 1
+$dsg = $est.DesignedCapacity
+
+if ($est) {
+    if ($est.DeviceName) { ROW "Modelo" $est.DeviceName }
+    if ($est.ManufactureName) { ROW "Fabricante" $est.ManufactureName }
+    if ($est.SerialNumber) { ROW "Numero de serie" $est.SerialNumber }
+    if ($est.Chemistry) {
+        $quim = switch ($est.Chemistry) { 1 { "Otra" } 2 { "Desconocida" } 3 { "Plomo-acido" } 4 { "NiCd" } 5 { "NiMH" } 6 { "Ion de litio" } 7 { "Zinc-aire" } 8 { "Polimero de litio" } default { $est.Chemistry } }
+        ROW "Quimica" $quim
+    }
+}
+
+$ciclos = (Get-CimInstance -Namespace root\wmi -ClassName BatteryCycleCount -ErrorAction SilentlyContinue | Select-Object -First 1).CycleCount
+if ($ciclos -and $ciclos -gt 0) {
+    ROW "Ciclos de carga" $ciclos
+    if ($ciclos -gt 1000) { WARN "  Por encima de 1000 ciclos: es normal que rinda menos." }
+}
+else { INFO "El firmware no expone el contador de ciclos (habitual en muchos portatiles)." }
+
+if ($dsg -and $full -and $dsg -gt 0) {
     $salud = [math]::Round(($full / $dsg) * 100, 1)
-    ROW "Capacidad de diseno" "$dsg mWh"
-    ROW "Capacidad real" "$full mWh"
-    ROW "SALUD" "$salud %"
-    if ($salud -lt 60) { ERR "Bateria degradada, se recomienda reemplazo." }
-    elseif ($salud -lt 80) { WARN "Desgaste notable." }
+    ROW "Capacidad de fabrica" "$dsg mWh"
+    ROW "Capacidad real hoy" "$full mWh"
+    ROW "SALUD" "$salud %  (se perdio $([math]::Round(100 - $salud, 1))%)"
+    if ($salud -lt 60) { ERR "Bateria degradada: se recomienda reemplazo." }
+    elseif ($salud -lt 80) { WARN "Desgaste notable, aun usable." }
     else { OK "Bateria en buen estado." }
 }
+else { INFO "El firmware no expone las capacidades de diseno y carga; el informe de powercfg de abajo si las trae." }
+
 Step "Generando informe HTML de powercfg"
 $f = Join-Path (BSDir "reportes") ("bateria_" + (Stamp) + ".html")
 powercfg /batteryreport /output "$f" | Out-Null
@@ -548,6 +649,10 @@ Step "Informe de eficiencia energetica"
 $f2 = Join-Path (BSDir "reportes") ("energia_" + (Stamp) + ".html")
 powercfg /energy /output "$f2" /duration 30 | Out-Null
 if (Test-Path $f2) { OK "Analisis de energia: $f2" }
+
+Step "BatteryInfoView"
+$exe = Get-NirTool "batteryinfoview.zip" "BatteryInfoView.exe"
+if ($exe) { Start-Process $exe } else { INFO "Los datos de arriba salen del propio Windows y no dependen de esta utilidad." }
 '@
 
     T -Id 'repair-drivers-list' -Cat 'repair' -Icon 'E7F8' -Risk 'safe' -Run 'inline' `
@@ -4449,7 +4554,7 @@ $xaml = @'
                 <TextBlock x:Name="DashSub" Text="Estado del equipo en tiempo real" FontSize="13" Foreground="{StaticResource Zinc400}" Margin="0,4,0,22"/>
 
                 <TextBlock Text="ESTADO EN VIVO" FontSize="10.5" FontWeight="Bold" Foreground="{StaticResource Zinc500}" Margin="0,0,0,10"/>
-                <UniformGrid Columns="4">
+                <UniformGrid x:Name="StatGrid" Columns="4">
                   <Border Style="{StaticResource StatCard}">
                     <StackPanel>
                       <TextBlock Text="PROCESADOR" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Zinc500}"/>
@@ -4479,6 +4584,16 @@ $xaml = @'
                       <TextBlock Text="ENCENDIDO" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Zinc500}"/>
                       <TextBlock x:Name="StUp" Text="--" FontSize="26" FontWeight="Bold" Foreground="{StaticResource AccentOrange}" Margin="0,4,0,0"/>
                       <TextBlock x:Name="StUpTxt" Text="" FontSize="10" Foreground="{StaticResource Zinc500}" Margin="0,12,0,0"/>
+                    </StackPanel>
+                  </Border>
+                  <!-- Solo se muestra en portatiles: en escritorio queda oculta y
+                       la cuadricula vuelve a 4 columnas. -->
+                  <Border x:Name="CardBat" Style="{StaticResource StatCard}" Visibility="Collapsed">
+                    <StackPanel>
+                      <TextBlock x:Name="StBatLbl" Text="BATERIA" FontSize="10" FontWeight="Bold" Foreground="{StaticResource Zinc500}"/>
+                      <TextBlock x:Name="StBat" Text="--%" FontSize="26" FontWeight="Bold" Foreground="{StaticResource AccentGreen}" Margin="0,4,0,0"/>
+                      <ProgressBar x:Name="BarBat" Height="4" Maximum="100" Value="0" Foreground="{StaticResource AccentGreen}" Background="{StaticResource Zinc800}" BorderThickness="0" Margin="0,6,0,0"/>
+                      <TextBlock x:Name="StBatTxt" Text="" FontSize="10" Foreground="{StaticResource Zinc500}" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/>
                     </StackPanel>
                   </Border>
                 </UniformGrid>
@@ -5157,6 +5272,79 @@ function Update-Stats {
             (UI 'StDisk').Foreground = Brush $col
             (UI 'BarDisk').Foreground = Brush $col
         }
+
+        Update-Bateria
+    }
+    catch { }
+}
+
+# Solo tiene sentido en portatiles. En escritorio la tarjeta queda oculta y la
+# cuadricula se queda en 4 columnas.
+function Update-Bateria {
+    try {
+        # La API de Windows es la misma que alimenta el icono de la bandeja y
+        # responde en portatiles donde Win32_Battery viene vacio. WMI se usa
+        # solo como respaldo.
+        $ps = [System.Windows.Forms.SystemInformation]::PowerStatus
+        $pct = $null
+        $cargando = $null
+
+        if ($ps.BatteryChargeStatus -ne 'NoSystemBattery') {
+            if ($ps.BatteryLifePercent -ge 0 -and $ps.BatteryLifePercent -le 1) {
+                $pct = [int][math]::Round($ps.BatteryLifePercent * 100)
+            }
+            $cargando = ($ps.PowerLineStatus -eq 'Online')
+        }
+
+        if ($null -eq $pct) {
+            $bat = Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($bat) {
+                $pct = [int]$bat.EstimatedChargeRemaining
+                # 1 descargando, 2 en corriente, 6-9 cargando
+                if ($null -eq $cargando) { $cargando = $bat.BatteryStatus -in @(2, 6, 7, 8, 9) }
+            }
+        }
+
+        if ($null -eq $pct) {
+            (UI 'CardBat').Visibility = 'Collapsed'
+            (UI 'StatGrid').Columns = 4
+            return
+        }
+        (UI 'CardBat').Visibility = 'Visible'
+        (UI 'StatGrid').Columns = 5
+
+        (UI 'StBat').Text = "$pct%"
+        (UI 'BarBat').Value = $pct
+        (UI 'StBatLbl').Text = if ($cargando) { "BATERIA - CARGANDO" } else { "BATERIA" }
+
+        $col = if ($pct -le 15 -and -not $cargando) { 'AccentRed' }
+        elseif ($pct -le 35 -and -not $cargando) { 'AccentYellow' }
+        elseif ($cargando) { 'AccentCyan' }
+        else { 'AccentGreen' }
+        (UI 'StBat').Foreground = Brush $col
+        (UI 'BarBat').Foreground = Brush $col
+
+        # Salud real: capacidad a plena carga frente a la de diseno
+        $detalle = @()
+        $full = (Get-CimInstance -Namespace root\wmi -ClassName BatteryFullChargedCapacity -ErrorAction SilentlyContinue | Select-Object -First 1).FullChargedCapacity
+        $dsg = (Get-CimInstance -Namespace root\wmi -ClassName BatteryStaticData -ErrorAction SilentlyContinue | Select-Object -First 1).DesignedCapacity
+        if ($full -and $dsg -and $dsg -gt 0) {
+            $detalle += "salud $([math]::Round(($full / $dsg) * 100, 0))%"
+        }
+        if ($cargando) { $detalle += "conectada" }
+        elseif ($ps.BatteryLifeRemaining -gt 0) {
+            # la API lo da en segundos
+            $h = [math]::Floor($ps.BatteryLifeRemaining / 3600)
+            $m = [math]::Floor(($ps.BatteryLifeRemaining % 3600) / 60)
+            $detalle += if ($h -gt 0) { "quedan ${h}h ${m}m" } else { "quedan ${m}m" }
+        }
+        elseif ($bat -and $bat.EstimatedRunTime -and $bat.EstimatedRunTime -lt 71582788) {
+            # WMI lo da en minutos; 71582788 es su centinela de "no lo se"
+            $h = [math]::Floor($bat.EstimatedRunTime / 60)
+            $m = $bat.EstimatedRunTime % 60
+            $detalle += if ($h -gt 0) { "quedan ${h}h ${m}m" } else { "quedan ${m}m" }
+        }
+        (UI 'StBatTxt').Text = ($detalle -join "  |  ")
     }
     catch { }
 }
