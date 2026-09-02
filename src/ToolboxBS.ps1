@@ -524,121 +524,166 @@ INFO "Se abrio el Diagnostico de memoria de Windows: elige 'Reiniciar ahora' o '
         -Name 'Salud y carga de la bateria' -Desc 'Porcentaje actual, autonomia restante, ciclos y desgaste real frente al de fabrica' -Code @'
 HR "BATERIA"
 
-# Se consultan TRES fuentes distintas a proposito. Win32_Battery es WMI y en
-# bastantes portatiles devuelve vacio o incompleto; la API GetSystemPowerStatus
-# de Windows, en cambio, es la misma que usa el icono de la bandeja y casi
-# nunca falla. Si una fuente no responde, se sigue con la siguiente en vez de
-# cortar: pase lo que pase, abajo se generan el informe de powercfg y
-# BatteryInfoView.
+# Se consultan CUATRO fuentes distintas a proposito, porque ninguna es fiable
+# por si sola: en unos portatiles calla WMI, en otros el firmware no expone las
+# capacidades. Se prueban todas, se muestra que dijo cada una y el porcentaje
+# se toma de la primera que lo de. Ninguna corta la ejecucion.
+$pct = $null; $origen = ""; $enCorriente = $null; $salud = $null; $ciclos = $null
 $hayBateria = $false
-$pct = $null
-$enCorriente = $null
 
+# --- Fuente 1: API de Windows, la del icono de la bandeja ---
 Step "Fuente 1: API de Windows (GetSystemPowerStatus)"
 try {
     Add-Type -AssemblyName System.Windows.Forms -ErrorAction Stop
     $ps = [System.Windows.Forms.SystemInformation]::PowerStatus
     ROW "Estado de carga" $ps.BatteryChargeStatus
     ROW "Alimentacion" $(switch ($ps.PowerLineStatus) { "Online" { "conectado a la corriente" } "Offline" { "con bateria" } default { $ps.PowerLineStatus } })
-
     if ($ps.BatteryChargeStatus -ne "NoSystemBattery") {
         $hayBateria = $true
         $enCorriente = ($ps.PowerLineStatus -eq "Online")
         # BatteryLifePercent va de 0 a 1; Windows manda 255 (-> 2.55) si no lo sabe
         if ($ps.BatteryLifePercent -ge 0 -and $ps.BatteryLifePercent -le 1) {
             $pct = [int][math]::Round($ps.BatteryLifePercent * 100)
+            $origen = "API de Windows"
+            ROW "  Porcentaje" "$pct%"
         }
         if ($ps.BatteryLifeRemaining -gt 0) {
             $h = [math]::Floor($ps.BatteryLifeRemaining / 3600)
             $m = [math]::Floor(($ps.BatteryLifeRemaining % 3600) / 60)
-            ROW "Autonomia restante" $(if ($h -gt 0) { "$h h $m min" } else { "$m min" })
+            ROW "  Autonomia restante" $(if ($h -gt 0) { "$h h $m min" } else { "$m min" })
         }
     }
 }
-catch { WARN "No se pudo consultar la API de energia: $($_.Exception.Message)" }
+catch { WARN "No se pudo consultar: $($_.Exception.Message)" }
 
+# --- Fuente 2: WMI clasico ---
 Step "Fuente 2: WMI (Win32_Battery)"
 $bat = @(Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue)
-if ($bat.Count -eq 0) {
-    INFO "Win32_Battery no devolvio nada."
-}
+if ($bat.Count -eq 0) { INFO "No devolvio nada." }
 else {
     $hayBateria = $true
-    $i = 0
     foreach ($b in $bat) {
-        $i++
-        if ($bat.Count -gt 1) { Step "  Bateria $i de $($bat.Count)" }
-        if ($null -eq $pct -and $null -ne $b.EstimatedChargeRemaining) { $pct = [int]$b.EstimatedChargeRemaining }
         ROW "Nombre" $b.Name
-        $estado = switch ($b.BatteryStatus) {
-            1 { "Descargando" } 2 { "Conectada a la corriente" } 3 { "Totalmente cargada" }
-            4 { "Baja" } 5 { "Critica" } 6 { "Cargando" } 7 { "Cargando (alta)" }
-            8 { "Cargando (baja)" } 9 { "Cargando (critica)" } 10 { "Sin definir" }
-            11 { "Parcialmente cargada" } default { "Desconocido ($($b.BatteryStatus))" }
+        ROW "Estado" $(switch ($b.BatteryStatus) {
+                1 { "Descargando" } 2 { "Conectada a la corriente" } 3 { "Totalmente cargada" }
+                4 { "Baja" } 5 { "Critica" } 6 { "Cargando" } 7 { "Cargando (alta)" }
+                8 { "Cargando (baja)" } 9 { "Cargando (critica)" } 10 { "Sin definir" }
+                11 { "Parcialmente cargada" } default { "Desconocido ($($b.BatteryStatus))" } })
+        if ($null -ne $b.EstimatedChargeRemaining) {
+            ROW "  Porcentaje" "$([int]$b.EstimatedChargeRemaining)%"
+            if ($null -eq $pct) { $pct = [int]$b.EstimatedChargeRemaining; $origen = "Win32_Battery" }
         }
-        ROW "Estado" $estado
         if ($null -eq $enCorriente) { $enCorriente = ($b.BatteryStatus -in @(2, 6, 7, 8, 9)) }
-        # 71582788 es el centinela de "no lo se" que devuelve Windows
-        if ($b.EstimatedRunTime -and $b.EstimatedRunTime -lt 71582788) {
-            $h = [math]::Floor($b.EstimatedRunTime / 60); $m = $b.EstimatedRunTime % 60
-            ROW "Autonomia (WMI)" $(if ($h -gt 0) { "$h h $m min" } else { "$m min" })
-        }
     }
 }
 
-# --- Carga actual: lo primero que uno quiere ver ---
+# --- Fuente 3: calcularlo nosotros desde las capacidades reales ---
+Step "Fuente 3: calculado desde la capacidad real (root\wmi)"
+$st = Get-CimInstance -Namespace root\wmi -ClassName BatteryStatus -ErrorAction SilentlyContinue | Select-Object -First 1
+$fcc = (Get-CimInstance -Namespace root\wmi -ClassName BatteryFullChargedCapacity -ErrorAction SilentlyContinue | Select-Object -First 1).FullChargedCapacity
+$est = Get-CimInstance -Namespace root\wmi -ClassName BatteryStaticData -ErrorAction SilentlyContinue | Select-Object -First 1
+
+if ($st -and $fcc -gt 0) {
+    $hayBateria = $true
+    ROW "Capacidad restante" "$($st.RemainingCapacity) mWh"
+    ROW "Capacidad a plena carga" "$fcc mWh"
+    $calc = [int][math]::Round(($st.RemainingCapacity / $fcc) * 100)
+    ROW "  Porcentaje calculado" "$calc%"
+    if ($null -eq $pct) { $pct = $calc; $origen = "capacidad real" }
+    elseif ([math]::Abs($calc - $pct) -gt 3) { INFO "  Difiere $([math]::Abs($calc - $pct)) puntos de la otra fuente; el calculado es el fiel a la capacidad real." }
+    if ($st.Voltage) { ROW "Voltaje" "$([math]::Round($st.Voltage / 1000, 2)) V" }
+    if ($st.ChargeRate -gt 0) { ROW "Ritmo de carga" "$($st.ChargeRate) mW" }
+    if ($st.DischargeRate -gt 0) { ROW "Ritmo de descarga" "$($st.DischargeRate) mW" }
+    if ($null -eq $enCorriente) { $enCorriente = [bool]$st.PowerOnline }
+}
+else { INFO "El firmware no expone la capacidad restante por esta via." }
+
+if ($est -and $est.DesignedCapacity -gt 0 -and $fcc -gt 0) {
+    $salud = [math]::Round(($fcc / $est.DesignedCapacity) * 100, 1)
+    ROW "Capacidad de fabrica" "$($est.DesignedCapacity) mWh"
+    ROW "  SALUD" "$salud %"
+}
+$ciclos = (Get-CimInstance -Namespace root\wmi -ClassName BatteryCycleCount -ErrorAction SilentlyContinue | Select-Object -First 1).CycleCount
+
+# --- Fuente 4: BatteryInfoView, que lee el firmware por su cuenta ---
+Step "Fuente 4: BatteryInfoView"
+$biv = @{}
+$exeBiv = Get-NirTool "batteryinfoview.zip" "BatteryInfoView.exe"
+if ($exeBiv) {
+    try {
+        $csv = Join-Path (Split-Path $exeBiv) "bs_bateria.csv"
+        if (Test-Path -LiteralPath $csv) { Remove-Item -LiteralPath $csv -Force -ErrorAction SilentlyContinue }
+        $p = Start-Process -FilePath $exeBiv -ArgumentList @("/scomma", $csv) -PassThru -WindowStyle Hidden
+        $null = $p.WaitForExit(20000)
+        if (-not $p.HasExited) { $p.Kill() }
+        Start-Sleep -Milliseconds 400
+        if (Test-Path -LiteralPath $csv) {
+            foreach ($linea in (Get-Content -LiteralPath $csv | Select-Object -Skip 1)) {
+                $trozos = $linea -split ",", 2
+                if ($trozos.Count -eq 2) {
+                    $k = $trozos[0].Trim()
+                    $v = ($trozos[1] -replace ",+$", "").Trim()
+                    if ($k -and $v) { $biv[$k] = $v }
+                }
+            }
+        }
+    }
+    catch { WARN "No se pudo leer la exportacion: $($_.Exception.Message)" }
+}
+
+if ($biv.Count -gt 0) {
+    $hayBateria = $true
+    foreach ($k in @("Battery Name", "Manufacture Name", "Serial Number", "Manufacture Date", "Chemistry",
+            "Current Capacity (in %)", "Battery Health", "Number of charge/discharge cycles",
+            "Battery Temperature", "Remaining battery time for the current activity (Estimated)")) {
+        if ($biv[$k]) { ROW $k $biv[$k] }
+    }
+    $m = [regex]::Match([string]$biv["Current Capacity (in %)"], "(\d+)")
+    if ($m.Success -and $null -eq $pct) { $pct = [int]$m.Groups[1].Value; $origen = "BatteryInfoView" }
+    if ($null -eq $ciclos) {
+        $mc = [regex]::Match([string]$biv["Number of charge/discharge cycles"], "(\d+)")
+        if ($mc.Success -and [int]$mc.Groups[1].Value -gt 0) { $ciclos = [int]$mc.Groups[1].Value }
+    }
+    if ($null -eq $salud) {
+        # admite decimales con punto o con coma: "80.9 %" y "80,9 %"
+        $ms = [regex]::Match([string]$biv["Battery Health"], "(\d+(?:[.,]\d+)?)")
+        if ($ms.Success) {
+            $txt = $ms.Groups[1].Value -replace ",", "."
+            $salud = [double]::Parse($txt, [System.Globalization.CultureInfo]::InvariantCulture)
+        }
+    }
+}
+else { INFO "Sin datos por esta via (Defender puede bloquear NirSoft; el resto no depende de ella)." }
+
+# --- Resumen ---
+HR "RESUMEN"
 if ($null -ne $pct) {
     $barra = ("#" * [math]::Round($pct / 5)).PadRight(20, ".")
     Write-Host ""
     Write-Host "    CARGA ACTUAL:  $pct%   [$barra]"
+    Write-Host "    fuente: $origen"
     Write-Host ""
     if ($enCorriente) { OK "Conectada a la corriente." }
     elseif ($pct -le 15) { ERR "Carga muy baja: conecta el cargador." }
     elseif ($pct -le 35) { WARN "Carga baja." }
+    else { OK "Carga correcta." }
 }
-elseif ($hayBateria) {
-    WARN "Hay bateria, pero ni la API ni WMI dieron el porcentaje."
-    INFO "El informe de powercfg de abajo lo trae de todas formas."
-}
+elseif ($hayBateria) { WARN "Hay bateria, pero ninguna de las cuatro fuentes dio el porcentaje." }
 else {
     WARN "No se detecto ninguna bateria: parece un equipo de escritorio."
     INFO "PCSystemType = $((Get-CimInstance Win32_ComputerSystem -ErrorAction SilentlyContinue).PCSystemType)  (1 = escritorio, 2 = portatil)"
-    INFO "Aun asi se genera el informe de powercfg, por si el portatil no reporta bien."
 }
 
-# --- Desgaste real: lo que de verdad dice si hay que cambiarla ---
-Step "Desgaste"
-$full = (Get-CimInstance -Namespace root\wmi -ClassName BatteryFullChargedCapacity -ErrorAction SilentlyContinue | Select-Object -First 1).FullChargedCapacity
-$est = Get-CimInstance -Namespace root\wmi -ClassName BatteryStaticData -ErrorAction SilentlyContinue | Select-Object -First 1
-$dsg = $est.DesignedCapacity
-
-if ($est) {
-    if ($est.DeviceName) { ROW "Modelo" $est.DeviceName }
-    if ($est.ManufactureName) { ROW "Fabricante" $est.ManufactureName }
-    if ($est.SerialNumber) { ROW "Numero de serie" $est.SerialNumber }
-    if ($est.Chemistry) {
-        $quim = switch ($est.Chemistry) { 1 { "Otra" } 2 { "Desconocida" } 3 { "Plomo-acido" } 4 { "NiCd" } 5 { "NiMH" } 6 { "Ion de litio" } 7 { "Zinc-aire" } 8 { "Polimero de litio" } default { $est.Chemistry } }
-        ROW "Quimica" $quim
-    }
-}
-
-$ciclos = (Get-CimInstance -Namespace root\wmi -ClassName BatteryCycleCount -ErrorAction SilentlyContinue | Select-Object -First 1).CycleCount
-if ($ciclos -and $ciclos -gt 0) {
+if ($null -ne $ciclos -and $ciclos -gt 0) {
     ROW "Ciclos de carga" $ciclos
-    if ($ciclos -gt 1000) { WARN "  Por encima de 1000 ciclos: es normal que rinda menos." }
+    if ($ciclos -gt 1000) { WARN "Por encima de 1000 ciclos: es normal que rinda menos." }
 }
-else { INFO "El firmware no expone el contador de ciclos (habitual en muchos portatiles)." }
-
-if ($dsg -and $full -and $dsg -gt 0) {
-    $salud = [math]::Round(($full / $dsg) * 100, 1)
-    ROW "Capacidad de fabrica" "$dsg mWh"
-    ROW "Capacidad real hoy" "$full mWh"
-    ROW "SALUD" "$salud %  (se perdio $([math]::Round(100 - $salud, 1))%)"
+if ($null -ne $salud) {
+    ROW "SALUD DE LA BATERIA" "$salud %  (se perdio $([math]::Round(100 - $salud, 1))%)"
     if ($salud -lt 60) { ERR "Bateria degradada: se recomienda reemplazo." }
     elseif ($salud -lt 80) { WARN "Desgaste notable, aun usable." }
     else { OK "Bateria en buen estado." }
 }
-else { INFO "El firmware no expone las capacidades de diseno y carga; el informe de powercfg de abajo si las trae." }
 
 Step "Generando informe HTML de powercfg"
 $f = Join-Path (BSDir "reportes") ("bateria_" + (Stamp) + ".html")
@@ -650,9 +695,7 @@ $f2 = Join-Path (BSDir "reportes") ("energia_" + (Stamp) + ".html")
 powercfg /energy /output "$f2" /duration 30 | Out-Null
 if (Test-Path $f2) { OK "Analisis de energia: $f2" }
 
-Step "BatteryInfoView"
-$exe = Get-NirTool "batteryinfoview.zip" "BatteryInfoView.exe"
-if ($exe) { Start-Process $exe } else { INFO "Los datos de arriba salen del propio Windows y no dependen de esta utilidad." }
+if ($exeBiv -and $hayBateria) { Step "Abriendo BatteryInfoView"; Start-Process $exeBiv }
 '@
 
     T -Id 'repair-drivers-list' -Cat 'repair' -Icon 'E7F8' -Risk 'safe' -Run 'inline' `
