@@ -136,8 +136,8 @@
     },
     {
         "Id":  "repair-battery",
-        "Name":  "Salud de la bateria",
-        "Desc":  "Informe de desgaste, ciclos y capacidad real frente a la de diseno",
+        "Name":  "Salud y carga de la bateria",
+        "Desc":  "Porcentaje actual, autonomia restante, ciclos y desgaste real frente al de fabrica",
         "Cat":  "repair",
         "Risk":  "safe",
         "Run":  "inline",
